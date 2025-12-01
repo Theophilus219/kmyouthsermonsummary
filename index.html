@@ -3,247 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모험과 소망: 대림절 메시지</title>
+    <title>Adventure & Advent: The Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
     <style>
+        /* Typography Setup */
+        :root {
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --font-kr: 'Noto Sans KR', sans-serif;
+        }
+        
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            scroll-behavior: smooth;
+            background-color: #050505;
+            color: #e5e5e5;
+            font-family: var(--font-kr);
+            overflow-x: hidden;
+            line-height: 1.8;
         }
-        .font-serif {
-            font-family: 'Playfair Display', serif;
+
+        .font-serif-en { font-family: var(--font-serif); }
+        .font-sans-en { font-family: var(--font-sans); }
+        
+        /* Smooth Scroll & Parallax */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
-        .text-glow {
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+
+        /* Text Gradient */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .bg-gradient-radial {
-            background-image: radial-gradient(circle at center, var(--tw-gradient-stops));
-        }
-        .reveal {
+
+        /* Fade Up Animation */
+        .fade-up {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s ease-out;
+            transform: translateY(40px);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
         }
-        .reveal.active {
+        .fade-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Divider Line Animation */
+        .line-grow {
+            width: 0;
+            transition: width 1.5s ease-in-out;
+        }
+        .line-grow.visible {
+            width: 100px;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-white overflow-x-hidden">
+<body>
 
-    <!-- Hero Section -->
-    <header class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519681393798-3828fbdb4fc4?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/80 to-slate-950"></div>
+    <!-- 1. Hero Section -->
+    <section class="relative h-screen flex items-center justify-center parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1519681393798-3828fbdb4fc4?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
         
-        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto reveal active">
-            <span class="inline-block py-1 px-3 border border-amber-500 rounded-full text-amber-400 text-sm tracking-widest mb-4 uppercase">The First Sunday of Advent</span>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
-                당신의 인생은 <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">모험</span>입니까?
-            </h1>
-            <p class="text-lg md:text-2xl text-gray-300 font-light max-w-2xl mx-auto">
-                위험을 무릅쓰는 삶과 소망을 기다리는 삶.<br>그 차이는 무엇일까요?
+        <div class="relative z-10 text-center px-6">
+            <p class="font-sans-en text-xs tracking-[0.4em] text-gray-400 mb-6 uppercase fade-up">The First Sunday of Advent</p>
+            <h1 class="font-serif-en text-6xl md:text-8xl lg:text-9xl text-white italic mb-2 fade-up" style="transition-delay: 0.2s;">Adventure</h1>
+            <div class="h-px bg-white/30 w-0 mx-auto my-6 line-grow"></div>
+            <p class="text-lg md:text-xl font-light text-gray-200 fade-up" style="transition-delay: 0.4s;">
+                당신의 인생은 모험입니까?<br>
+                <span class="text-sm md:text-base text-gray-400 font-sans-en mt-2 block">Is your life a risky adventure?</span>
             </p>
-            <div class="mt-10 animate-bounce">
-                <i class="fas fa-chevron-down text-amber-500 text-2xl"></i>
-            </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Section 1: The Nature of Adventure -->
-    <section class="py-24 px-6 bg-slate-950 relative">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div class="reveal">
-                <div class="text-6xl text-slate-700 mb-6"><i class="fas fa-mountain"></i></div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-6">모험을 좋아하는 사람</h2>
-                <p class="text-gray-400 text-lg leading-relaxed mb-6">
-                    그런 사람은 대개 평범하지 않습니다. 왜냐하면 모험은 위험을 무릅쓰는 일이기 때문입니다.
-                    대부분의 사람들은 <span class="text-white font-bold border-b-2 border-amber-500">안전</span>을 원합니다.
-                    <span class="text-white font-bold border-b-2 border-amber-500">안정감</span>을 원합니다.
-                </p>
-                <div class="flex items-center space-x-4 text-slate-500">
-                    <div class="flex flex-col items-center">
-                        <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
-                        <span class="text-xs">RISK</span>
-                    </div>
-                    <div class="w-12 h-px bg-slate-700"></div>
-                    <div class="flex flex-col items-center text-amber-600">
-                        <i class="fas fa-shield-alt text-2xl mb-2"></i>
-                        <span class="text-xs text-amber-500 font-bold">SAFETY</span>
-                    </div>
+    <!-- 2. The Context: Risk vs Safety -->
+    <section class="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="fade-up">
+                <span class="text-amber-600 font-sans-en text-xs font-bold tracking-widest uppercase mb-4 block">The Nature of Risk</span>
+                <h2 class="text-4xl md:text-5xl font-serif-en text-white mb-6 leading-tight">
+                    Extraordinary<br>
+                    <span class="text-gray-500 italic">Means Dangerous.</span>
+                </h2>
+                <div class="space-y-6 text-gray-400 font-light">
+                    <p>
+                        모험을 즐기는 사람은 평범하지 않습니다. 모험은 본질적으로 위험을 무릅쓰는 일이기 때문입니다.
+                        <br><span class="text-xs font-sans-en text-gray-600">Adventure inherently involves facing risks.</span>
+                    </p>
+                    <p>
+                        대부분의 사람들은 위험보다는 <span class="text-white border-b border-gray-600 pb-1">안전</span>을, 불안보다는 <span class="text-white border-b border-gray-600 pb-1">안정감</span>을 원합니다.
+                        <br><span class="text-xs font-sans-en text-gray-600">Most people desire safety over risk, stability over anxiety.</span>
+                    </p>
                 </div>
             </div>
-            <div class="relative h-96 rounded-2xl overflow-hidden shadow-2xl shadow-slate-900 reveal delay-200">
-                <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=2092&auto=format&fit=crop" alt="Adventure" class="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-                <div class="absolute bottom-6 left-6">
-                    <p class="text-2xl font-serif italic text-white">"Adventure"</p>
-                </div>
+            <div class="relative h-[600px] overflow-hidden fade-up" style="transition-delay: 0.2s;">
+                <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=2092&auto=format&fit=crop" alt="Mountain Climber" class="absolute inset-0 w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-1000 ease-in-out">
             </div>
         </div>
     </section>
 
-    <!-- Section 2: Etymology (Infographic Style) -->
-    <section class="py-24 bg-slate-900 border-y border-slate-800">
-        <div class="max-w-4xl mx-auto px-6 text-center reveal">
-            <h3 class="text-amber-500 font-bold tracking-widest mb-12">ETYMOLOGY</h3>
-            
-            <div class="grid md:grid-cols-3 gap-8 items-center justify-center">
-                <!-- Ad -->
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 transform hover:-translate-y-2 transition duration-300">
-                    <span class="block text-4xl md:text-6xl font-black text-white mb-2 font-serif">Ad</span>
-                    <span class="text-slate-400 text-sm">Latin</span>
-                    <p class="mt-4 text-amber-400 font-bold">~를 향하여</p>
-                    <p class="text-slate-500 text-xs">(Towards)</p>
-                </div>
-
-                <div class="text-4xl text-slate-600 font-black">+</div>
-
-                <!-- Vent -->
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 transform hover:-translate-y-2 transition duration-300">
-                    <span class="block text-4xl md:text-6xl font-black text-white mb-2 font-serif">Vent</span>
-                    <span class="text-slate-400 text-sm">Latin</span>
-                    <p class="mt-4 text-amber-400 font-bold">오다</p>
-                    <p class="text-slate-500 text-xs">(To come)</p>
-                </div>
-            </div>
-
-            <div class="mt-16 bg-slate-950 p-8 rounded-2xl border border-purple-900/50 shadow-[0_0_30px_rgba(88,28,135,0.2)] reveal">
-                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-12">
-                    <div class="text-center">
-                        <h4 class="text-2xl font-bold text-gray-400">Adventure</h4>
-                        <p class="text-sm text-gray-600">모험</p>
-                    </div>
-                    <div class="text-3xl text-purple-500"><i class="fas fa-equals"></i></div>
-                    <div class="text-center">
-                        <h4 class="text-4xl font-black text-white text-glow">Advent</h4>
-                        <p class="text-sm text-purple-400 font-bold mt-1">대림절 (기다림)</p>
-                    </div>
-                </div>
-                <p class="mt-8 text-gray-300 leading-relaxed max-w-2xl mx-auto">
-                    두 단어의 어원은 같습니다.<br>
-                    하지만 결정적인 차이가 하나 있습니다.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 3: Unknown vs Known -->
-    <section class="py-24 px-6 bg-gradient-to-b from-slate-900 to-indigo-950">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 reveal">무엇이 오고 있는가?</h2>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Card 1: The Unknown -->
-                <div class="group bg-slate-800 hover:bg-slate-700 p-10 rounded-3xl transition duration-500 reveal border-l-4 border-gray-500">
-                    <div class="text-4xl mb-6 text-gray-500 group-hover:text-white transition"><i class="fas fa-question"></i></div>
-                    <h3 class="text-2xl font-bold text-white mb-4">모르는 것이 올 때</h3>
-                    <p class="text-gray-400 mb-6">무엇이 닥칠지 모르는 상황이 다가오면 그것은 <strong class="text-white">위기</strong>이고 <strong class="text-white">위험한 모험</strong>이 됩니다.</p>
-                    <ul class="space-y-2 text-sm text-gray-500">
-                        <li><i class="fas fa-times text-red-500 mr-2"></i>불안함 (Anxiety)</li>
-                        <li><i class="fas fa-times text-red-500 mr-2"></i>두려움 (Fear)</li>
-                    </ul>
-                </div>
-
-                <!-- Card 2: The Known -->
-                <div class="group bg-indigo-900/40 hover:bg-indigo-900/60 p-10 rounded-3xl transition duration-500 reveal delay-200 border-l-4 border-amber-400 shadow-lg shadow-indigo-900/20">
-                    <div class="text-4xl mb-6 text-amber-400"><i class="fas fa-star"></i></div>
-                    <h3 class="text-2xl font-bold text-white mb-4">아는 것이 올 때</h3>
-                    <p class="text-indigo-200 mb-6">누가 오시는지, 무엇이 오는지 정확히 알 때 그것은 <strong class="text-amber-400">소망(Hope)</strong>이 됩니다.</p>
-                    <ul class="space-y-2 text-sm text-indigo-300">
-                        <li><i class="fas fa-check text-green-400 mr-2"></i>기대감 (Expectation)</li>
-                        <li><i class="fas fa-check text-green-400 mr-2"></i>평안 (Peace)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 4: Jesus & Salvation -->
-    <section class="py-32 px-6 relative overflow-hidden bg-slate-950">
-        <!-- Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/30 via-slate-950 to-slate-950"></div>
+    <!-- 3. Etymology: Minimalist Graphic -->
+    <section class="py-40 bg-[#0a0a0a] border-y border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-gray-700"></div>
         
-        <div class="relative z-10 max-w-4xl mx-auto text-center">
-            <div class="inline-block p-4 rounded-full bg-slate-800/50 mb-8 backdrop-blur-sm reveal">
-                <i class="fas fa-bible text-gray-400 mr-2"></i>
-                <span class="text-gray-300 text-sm">로마서 10:13</span>
+        <div class="max-w-4xl mx-auto text-center px-6">
+            <div class="fade-up">
+                <h3 class="font-sans-en text-sm text-gray-500 tracking-[0.5em] uppercase mb-12">Etymology</h3>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-24 mb-16">
+                    <div class="text-center">
+                        <span class="block text-6xl md:text-8xl font-serif-en text-gray-700">Ad</span>
+                        <span class="text-xs font-sans-en text-gray-500 tracking-widest mt-2 uppercase">Towards (~를 향하여)</span>
+                    </div>
+                    <div class="text-2xl text-gray-800 font-light">+</div>
+                    <div class="text-center">
+                        <span class="block text-6xl md:text-8xl font-serif-en text-gray-700">Vent</span>
+                        <span class="text-xs font-sans-en text-gray-500 tracking-widest mt-2 uppercase">To Come (오다)</span>
+                    </div>
+                </div>
+
+                <p class="text-xl md:text-3xl text-white font-light leading-relaxed">
+                    <span class="font-serif-en italic text-amber-600">Adventure</span> and <span class="font-serif-en italic text-purple-400">Advent</span><br>
+                    come from the same root.
+                </p>
+                <p class="mt-6 text-gray-500 text-sm md:text-base">
+                    모험과 대림절, 두 단어의 뿌리는 같습니다.<br>
+                    하지만 결정적인 차이가 있습니다.
+                </p>
             </div>
-            
-            <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight reveal">
-                "누구든지 주의 이름을 부르는 자는<br>
-                <span class="text-amber-400 text-glow">구원</span>을 받으리라"
+        </div>
+    </section>
+
+    <!-- 4. Unknown vs Known: Split Screen -->
+    <section class="grid md:grid-cols-2 min-h-screen">
+        <!-- Left: Adventure (Unknown) -->
+        <div class="relative bg-zinc-900 flex items-center justify-center p-12 overflow-hidden group">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1485546784815-e380f3297414?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 transition duration-700"></div>
+            <div class="relative z-10 text-center fade-up">
+                <h3 class="text-4xl font-serif-en text-gray-300 mb-4 italic">The Unknown</h3>
+                <p class="text-gray-400 text-sm mb-6 font-sans-en tracking-widest uppercase">Approaching Mystery</p>
+                <div class="h-px w-12 bg-gray-600 mx-auto mb-8"></div>
+                <p class="text-gray-300 leading-relaxed font-light">
+                    모르는 것이 다가오면 위기입니다.<br>
+                    그것은 위험한 모험이 됩니다.<br><br>
+                    <span class="text-xs font-sans-en text-gray-500">When the unknown approaches,<br>it becomes a crisis, a dangerous adventure.</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Advent (Known) -->
+        <div class="relative bg-slate-900 flex items-center justify-center p-12 overflow-hidden group">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-40 transition duration-700"></div>
+            <div class="relative z-10 text-center fade-up" style="transition-delay: 0.2s;">
+                <h3 class="text-4xl font-serif-en text-amber-100 mb-4 italic">The Known</h3>
+                <p class="text-amber-500 text-sm mb-6 font-sans-en tracking-widest uppercase">Approaching Hope</p>
+                <div class="h-px w-12 bg-amber-600 mx-auto mb-8"></div>
+                <p class="text-gray-200 leading-relaxed font-light">
+                    아는 것이 다가오면 소망입니다.<br>
+                    예수님이 오신다는 것을 알기에.<br><br>
+                    <span class="text-xs font-sans-en text-gray-400">When the Known approaches, it is Hope.<br>Because we know Jesus is coming.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. The Message: Joel 2:32 -->
+    <section class="py-40 px-6 relative bg-black flex items-center justify-center">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-black to-black"></div>
+        xs
+        <div class="max-w-4xl mx-auto text-center relative z-10 fade-up">
+            <i class="fas fa-quote-left text-4xl text-gray-800 mb-8"></i>
+            <h2 class="text-3xl md:text-5xl font-light leading-snug text-white mb-10">
+                누구든지 주의 이름을 <span class="font-serif-en italic text-amber-500">부르는</span> 자는<br>
+                <span class="text-gradient-gold font-bold">구원</span>을 받으리라
             </h2>
-
-            <p class="text-xl text-gray-400 mb-16 reveal">
-                예수님을 모르는 사람에게 그분의 오심은 모험이지만,<br>
-                <span class="text-white font-bold">예수님을 아는 사람에게는 소망입니다.</span>
+            <p class="text-xl md:text-2xl font-serif-en text-gray-500 italic mb-16">
+                "Everyone who calls on the name of the Lord will be saved."
+                <span class="block text-xs font-sans-en not-italic mt-4 tracking-widest uppercase opacity-50">Joel 2:32</span>
             </p>
 
-            <!-- Interactive Definition Cards -->
-            <div class="grid md:grid-cols-2 gap-6 text-left reveal">
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700">
-                    <div class="text-amber-500 font-bold mb-2 text-sm">MEANING 01</div>
-                    <h3 class="text-xl font-bold text-white mb-3">내가 안다는 것</h3>
-                    <p class="text-gray-400 text-sm">"내가 당신을 압니다."<br>단순한 지식이 아닌 인격적인 앎을 의미합니다.</p>
+            <div class="grid md:grid-cols-2 gap-12 text-left border-t border-white/10 pt-12">
+                <div>
+                    <h4 class="text-white text-lg mb-2">To Know Him <span class="text-xs text-gray-500 block font-sans-en uppercase mt-1">내가 안다는 것</span></h4>
+                    <p class="text-gray-500 text-sm font-light">
+                        단순한 지식이 아닙니다. 인격적인 만남입니다.<br>
+                        "I know You personally."
+                    </p>
                 </div>
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700">
-                    <div class="text-amber-500 font-bold mb-2 text-sm">MEANING 02</div>
-                    <h3 class="text-xl font-bold text-white mb-3">인정한다는 것</h3>
-                    <p class="text-gray-400 text-sm">"하나님이 구원을 베푸실 전능자이심을 인정합니다."<br>그분의 존재와 능력을 신뢰하는 고백입니다.</p>
+                <div>
+                    <h4 class="text-white text-lg mb-2">To Acknowledge Him <span class="text-xs text-gray-500 block font-sans-en uppercase mt-1">인정한다는 것</span></h4>
+                    <p class="text-gray-500 text-sm font-light">
+                        그분이 구원을 베푸실 전능자이심을 인정합니다.<br>
+                        "I acknowledge You are the Almighty Savior."
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Conclusion: Advent Sunday -->
-    <footer class="py-24 px-6 bg-black text-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
-        <div class="max-w-3xl mx-auto relative z-10 reveal">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_20px_rgba(124,58,237,0.5)]">
-                <i class="fas fa-candle-holder text-white text-2xl"></i>
-            </div>
+    <!-- 6. Footer: The Light -->
+    <footer class="h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden">
+        <!-- Background Subtle Glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[100px]"></div>
+
+        <div class="text-center fade-up relative z-10">
+            <!-- Candle Icon (Minimal) -->
+            <div class="w-px h-24 bg-gradient-to-t from-gray-800 to-gray-500 mx-auto mb-2"></div>
+            <div class="w-1.5 h-4 bg-amber-100 rounded-full mx-auto animate-pulse blur-[1px] mb-8 shadow-[0_0_20px_#fbbf24]"></div>
+
+            <p class="font-sans-en text-xs tracking-[0.3em] text-gray-500 uppercase mb-6">Conclusion</p>
+            <h2 class="text-4xl md:text-5xl text-white font-serif-en italic mb-8">From Adventure to Hope</h2>
             
-            <h2 class="text-4xl font-bold text-white mb-6">오늘은 대림절 첫 번째 주일</h2>
-            <p class="text-lg text-gray-300 leading-relaxed mb-10">
+            <p class="text-gray-400 font-light leading-relaxed max-w-lg mx-auto mb-12">
                 예수님이 우리를 아시고, 우리가 예수님을 압니다.<br>
                 그렇기에 우리의 인생은 막연한 모험이 아닙니다.<br>
-                매일 하나님의 이름을 부르며 구원받은 자로 살아가는 것.<br><br>
-                <span class="text-2xl text-amber-400 font-serif italic">그것이 우리의 소망입니다.</span>
+                <br>
+                <span class="text-white">매일 그 이름을 부르며 소망 안에 거하십시오.</span>
             </p>
-            
-            <button class="bg-amber-500 hover:bg-amber-600 text-black font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-lg">
-                소망으로 시작하기
-            </button>
-            
-            <div class="mt-16 text-xs text-gray-700">
-                © 2024 Advent Message Promotion. All rights reserved.
+
+            <div class="text-xs text-gray-700 font-sans-en uppercase tracking-wider">
+                © 2024 First Sunday of Advent
             </div>
         </div>
     </footer>
 
     <script>
-        // Simple Scroll Reveal Animation
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 150;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
-        }
-        window.addEventListener("scroll", reveal);
-        // Trigger once on load
-        reveal();
+        // Intersection Observer for Scroll Animations
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Once visible, stop observing
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-up, .line-grow');
+            fadeElements.forEach(el => observer.observe(el));
+        });
     </script>
 </body>
 </html>
