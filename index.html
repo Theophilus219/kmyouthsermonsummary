@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advent 3rd Sunday: Joy (10:16 Ratio)</title>
+    <title>Advent 3rd Sunday: Joy (Horizontal Motion)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -25,7 +25,7 @@
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
             scrollbar-width: none; 
-            /* Critical for mobile feel: Allow vertical panning natively */
+            /* Allow vertical scroll natively, but we handle horizontal in JS */
             touch-action: pan-y; 
         }
         .scroll-container::-webkit-scrollbar { 
@@ -41,6 +41,7 @@
             scroll-snap-align: start;
             scroll-snap-stop: always;
             position: relative;
+            perspective: 1000px; /* For 3D rotation effect */
         }
 
         .eng-font { font-family: 'Montserrat', sans-serif; }
@@ -53,11 +54,11 @@
             font-weight: 500;
         }
 
-        /* 2. Card Styling - UPDATED TO 10:16 Ratio (5:8) */
+        /* 2. Card Styling - UPDATED TO 10.5:16 Ratio */
         .story-card {
-            aspect-ratio: 10 / 16; /* Wider than 9:16 */
+            aspect-ratio: 10.5 / 16; /* New Ratio */
             width: 100%;
-            max-width: 440px; /* Increased max-width for new ratio */
+            max-width: 420px; 
             max-height: 90vh;
             position: relative;
             overflow: hidden;
@@ -67,20 +68,40 @@
             background-color: #121212;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border-radius: 20px;
-
-            /* Animation Initial State */
+            
+            /* Initial State for Scroll Animation */
             opacity: 0;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            /* Will be controlled by JS for drag, CSS for entry */
+            transform-origin: center bottom; 
+            transition: transform 0.1s linear, opacity 0.5s ease;
         }
 
+        /* Active State (Entry Animation) */
         .story-card.active {
             opacity: 1;
-            transform: scale(1) translateY(0);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            /* Note: We handle transform in JS for dragging. 
+               This is just the resting state */
         }
 
-        /* 3. Internal Animations */
+        /* Dragging Class (Removes transition for 1:1 movement) */
+        .story-card.is-dragging {
+            transition: none;
+            cursor: grabbing;
+        }
+
+        /* Fly Out Animation Class */
+        .story-card.fly-out-left {
+            transition: all 0.5s ease-out;
+            transform: translateX(-150%) rotate(-20deg) !important;
+            opacity: 0;
+        }
+        .story-card.fly-out-right {
+            transition: all 0.5s ease-out;
+            transform: translateX(150%) rotate(20deg) !important;
+            opacity: 0;
+        }
+
+        /* 3. Internal Content Animations */
         .story-card .anim-text, 
         .story-card .anim-box,
         .story-card .anim-icon {
@@ -137,8 +158,8 @@
 
 <div class="scroll-container" id="mainContainer">
 
-    <!-- Section 1: Intro -->
-    <section class="snap-section" id="sec-1">
+    <!-- Section 1 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-1">
             <div class="absolute top-[-50px] right-[-50px] w-60 h-60 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
             <div class="flex-grow flex flex-col justify-center h-full z-10">
@@ -158,11 +179,11 @@
                 </div>
             </div>
         </div>
-        <div class="nav-cue"><i class="fas fa-chevron-down"></i> Scroll</div>
+        <div class="nav-cue"><i class="fas fa-chevron-down"></i> Scroll or Swipe</div>
     </section>
 
-    <!-- Section 2: Emotions -->
-    <section class="snap-section" id="sec-2">
+    <!-- Section 2 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-2">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">01</span>
@@ -191,8 +212,8 @@
         </div>
     </section>
 
-    <!-- Section 3: Warning -->
-    <section class="snap-section" id="sec-3">
+    <!-- Section 3 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-warning">
             <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
@@ -216,8 +237,8 @@
         </div>
     </section>
 
-    <!-- Section 4: False Joy -->
-    <section class="snap-section" id="sec-4">
+    <!-- Section 4 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-3">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">03</span>
@@ -241,8 +262,8 @@
         </div>
     </section>
 
-    <!-- Section 5: Fear -->
-    <section class="snap-section" id="sec-5">
+    <!-- Section 5 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-4">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">04</span>
@@ -268,8 +289,8 @@
         </div>
     </section>
 
-    <!-- Section 6: Solution -->
-    <section class="snap-section" id="sec-6">
+    <!-- Section 6 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-5">
             <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400 rounded-full blur-[100px] opacity-20"></div>
             <div class="flex justify-between items-center mb-8 anim-text">
@@ -299,8 +320,8 @@
         </div>
     </section>
 
-    <!-- Section 7: Reality -->
-    <section class="snap-section" id="sec-7">
+    <!-- Section 7 -->
+    <section class="snap-section">
         <div class="story-card bg-gray-900">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">06</span>
@@ -322,8 +343,8 @@
         </div>
     </section>
 
-    <!-- Section 8: The Secret -->
-    <section class="snap-section" id="sec-8">
+    <!-- Section 8 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-6">
             <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-800/60 to-transparent pointer-events-none"></div>
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
@@ -358,8 +379,8 @@
         </div>
     </section>
 
-    <!-- Section 9: Conclusion -->
-    <section class="snap-section" id="sec-9">
+    <!-- Section 9 -->
+    <section class="snap-section">
         <div class="story-card bg-gradient-7">
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">FINAL</span>
@@ -397,15 +418,19 @@
 
 <script>
     /* =========================================
-       1. Animation Observer
+       1. Animation Observer (Entry Animations)
        ========================================= */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const card = entry.target.querySelector('.story-card');
-                if(card) card.classList.add('active');
+                if(card) {
+                    card.classList.add('active');
+                    // Reset any drag transforms when card becomes active (centering)
+                    card.style.transform = ''; 
+                }
                 
-                // Track active index
+                // Update active index
                 const allSections = document.querySelectorAll('.snap-section');
                 allSections.forEach((sec, idx) => {
                     if(sec === entry.target) {
@@ -414,28 +439,30 @@
                 });
             } else {
                  const card = entry.target.querySelector('.story-card');
-                 if(card) card.classList.remove('active');
+                 if(card) {
+                     card.classList.remove('active');
+                     card.classList.remove('fly-out-left', 'fly-out-right'); // Reset fly-out classes
+                 }
             }
         });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.5 }); // High threshold for better snapping accuracy
 
     const sections = document.querySelectorAll('.snap-section');
     sections.forEach(section => observer.observe(section));
 
     /* =========================================
-       2. Natural Hybrid Navigation Logic
+       2. Draggable Card Logic
        ========================================= */
     const container = document.getElementById('mainContainer');
     let currentIndex = 0;
     let isNavigating = false;
     const totalSections = sections.length;
 
+    // Helper to scroll
     const scrollToSection = (index) => {
         if (index < 0 || index >= totalSections || isNavigating) return;
-        
         isNavigating = true;
         sections[index].scrollIntoView({ behavior: 'smooth' });
-        
         setTimeout(() => { isNavigating = false; }, 800);
     };
 
@@ -443,40 +470,77 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
             e.preventDefault();
-            scrollToSection(currentIndex + 1);
+            // Simulate fly out left (Next)
+            const currentCard = sections[currentIndex].querySelector('.story-card');
+            if(currentCard) currentCard.classList.add('fly-out-left');
+            setTimeout(() => scrollToSection(currentIndex + 1), 300);
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
             e.preventDefault();
-            scrollToSection(currentIndex - 1);
+            // Simulate fly out right (Prev)
+            const currentCard = sections[currentIndex].querySelector('.story-card');
+            if(currentCard) currentCard.classList.add('fly-out-right');
+            setTimeout(() => scrollToSection(currentIndex - 1), 300);
         }
     });
 
-    // Touch Swipe Logic (Improved for Natural Feel)
-    let touchStartX = 0;
-    let touchStartY = 0;
+    // Touch Drag Variables
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let activeCard = null;
 
     container.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true }); // Allow default vertical scroll handling
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        activeCard = sections[currentIndex].querySelector('.story-card');
+        if(activeCard) {
+            activeCard.classList.add('is-dragging'); // Disable transition for direct control
+        }
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging || !activeCard) return;
+        
+        currentX = e.touches[0].clientX;
+        const diffX = currentX - startX;
+
+        // Apply visual drag to card
+        // Rotate slightly based on distance for realism
+        const rotation = diffX * 0.05; 
+        activeCard.style.transform = `translateX(${diffX}px) rotate(${rotation}deg)`;
+
+    }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-        
-        const diffX = touchStartX - touchEndX;
-        const diffY = touchStartY - touchEndY;
+        if (!isDragging || !activeCard) return;
+        isDragging = false;
+        activeCard.classList.remove('is-dragging'); // Re-enable transition
 
-        // Trigger horizontal nav ONLY if swipe is significantly horizontal
-        // AND greater than vertical movement (to avoid triggering on diagonal scrolls)
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-            if (diffX > 0) {
-                // Swiped Left -> Go Next
-                scrollToSection(currentIndex + 1);
+        const diffX = currentX - startX;
+        const threshold = window.innerWidth * 0.25; // Drag 25% of screen width to trigger
+
+        if (Math.abs(diffX) > threshold) {
+            // Trigger Navigation
+            if (diffX < 0) {
+                // Dragged Left -> Next
+                activeCard.classList.add('fly-out-left');
+                // Use style to ensure override of drag transform immediately
+                activeCard.style.transform = `translateX(-150%) rotate(-20deg)`;
+                setTimeout(() => scrollToSection(currentIndex + 1), 300);
             } else {
-                // Swiped Right -> Go Prev
-                scrollToSection(currentIndex - 1);
+                // Dragged Right -> Prev
+                activeCard.classList.add('fly-out-right');
+                activeCard.style.transform = `translateX(150%) rotate(20deg)`;
+                setTimeout(() => scrollToSection(currentIndex - 1), 300);
             }
+        } else {
+            // Revert (Snap back)
+            activeCard.style.transform = ''; // Removes inline style, CSS transition handles snap back
         }
+        
+        // Reset variables
+        startX = 0;
+        currentX = 0;
     }, { passive: true });
 
 </script>
