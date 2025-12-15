@@ -3,403 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advent 3rd Sunday: Joy (Animated)</title>
+    <title>Advent 3rd Sunday: Joy (Final Color Fixed)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
-        /* 1. Base Setup & Scroll Snap */
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #050505;
-            color: white;
+        /* 1. Scroll Snap Setup */
+        html, body {
             margin: 0;
             padding: 0;
-            
-            /* Snapping Logic */
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .scroll-container {
             height: 100vh;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
         }
 
-        .container-wrapper {
+        .snap-section {
+            height: 100vh;
+            width: 100%;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 40px; /* Gap between cards */
-            padding-top: 5vh;
-            padding-bottom: 5vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
         }
 
         .eng-font { font-family: 'Montserrat', sans-serif; }
         .eng-sub {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem; /* Slightly larger */
+            color: rgba(255, 255, 255, 0.7); /* Increased opacity for visibility */
             margin-top: 0.5rem;
             line-height: 1.4;
             font-weight: 500;
         }
 
-        /* 2. Card Styling & Animation Base */
+        /* 2. Card Styling */
         .story-card {
-            /* Layout */
             aspect-ratio: 9 / 16;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh; /* Prevent overflowing on small screens */
+            width: 100%;
+            max-width: 420px;
+            max-height: 90vh;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            
-            /* UI Safe Zones */
             padding: 4rem 2rem 5rem 2rem;
-            
             background-color: #121212;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border-radius: 20px;
-            
-            /* Scroll Snap Alignment */
-            scroll-snap-align: center;
-            scroll-snap-stop: always;
 
-            /* Initial Animation State */
-            opacity: 0.3;
-            transform: scale(0.9);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Smooth Easing */
+            /* Initial State */
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* Active State (Triggered by JS) */
         .story-card.active {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
 
-        /* 3. Internal Element Animations */
-        
-        /* Default State: Hidden/Offset */
+        /* 3. Animation Elements */
         .story-card .anim-text, 
         .story-card .anim-box,
         .story-card .anim-icon {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transition: all 0.6s ease-out;
         }
         
-        /* Active State: Revealed with Staggered Delays */
-        .story-card.active .anim-text {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .story-card.active .anim-text { opacity: 1; transform: translateY(0); }
+        .story-card.active .anim-icon { opacity: 1; transform: translateY(0) scale(1); transition-delay: 0.2s; }
+        .story-card.active .anim-box { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
         
-        .story-card.active .anim-icon {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            transition-delay: 0.2s; /* Icons pop in later */
-        }
-
-        .story-card.active .anim-box {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.4s; /* Boxes appear last */
-        }
-        
-        /* Specific element delays */
-        .story-card.active h1 { transition-delay: 0.1s; }
-        .story-card.active h2 { transition-delay: 0.2s; }
-        .story-card.active p  { transition-delay: 0.3s; }
-
         /* Design Utilities */
         .glass-box {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08); /* Slightly lighter background */
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 1.5rem;
         }
-        .neon-text { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+        .neon-text { text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
 
         /* Gradients */
         .bg-gradient-1 { background: linear-gradient(145deg, #2e0249, #570a57); }
-        .bg-gradient-2 { background: linear-gradient(145deg, #0f0c29, #302b63, #24243e); }
-        .bg-gradient-warning { background: linear-gradient(145deg, #1a1a1a, #4a0404); }
-        .bg-gradient-3 { background: linear-gradient(145deg, #642b73, #c6426e); }
-        .bg-gradient-4 { background: linear-gradient(145deg, #000000, #434343); }
-        .bg-gradient-5 { background: linear-gradient(145deg, #1A2980, #26D0CE); }
-        .bg-gradient-6 { background: linear-gradient(145deg, #ff9966, #ff5e62); }
-        .bg-gradient-7 { background: linear-gradient(145deg, #b91d73, #F2994A); }
+        .bg-gradient-2 { background: linear-gradient(145deg, #0f0c29, #201b45, #24243e); }
+        .bg-gradient-warning { background: linear-gradient(145deg, #1a1a1a, #380404); }
+        .bg-gradient-3 { background: linear-gradient(145deg, #4a1955, #962f51); }
+        .bg-gradient-4 { background: linear-gradient(145deg, #0a0a0a, #2d2d2d); }
+        .bg-gradient-5 { background: linear-gradient(145deg, #0f1642, #146b69); }
+        .bg-gradient-6 { background: linear-gradient(145deg, #9f3c1d, #c24145); }
+        .bg-gradient-7 { background: linear-gradient(145deg, #8a1455, #d97d2e); }
 
     </style>
 </head>
 <body>
 
-<div class="container-wrapper">
+<div class="scroll-container">
 
-    <!-- Card 1: Intro -->
-    <div class="story-card bg-gradient-1">
-        <div class="absolute top-[-50px] right-[-50px] w-60 h-60 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
-        <div class="flex-grow flex flex-col justify-center h-full z-10">
-            <p class="eng-font text-sm font-bold tracking-[0.4em] mb-2 text-purple-200 anim-text">ADVENT WEEK 03</p>
-            <h1 class="eng-font text-[5rem] font-black leading-none tracking-tighter mb-4 neon-text anim-text">
-                JOY<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500">FULL</span>
-            </h1>
-            <div class="glass-box mt-8 anim-box">
-                <p class="text-lg font-bold mb-1">오늘의 테마 : 기쁨 🎉</p>
-                <p class="eng-sub text-white/60 mb-2">Today's Theme is Joy.</p>
-                <p class="text-sm text-gray-300 font-light leading-relaxed">
-                    크리스마스를 기다리는<br>
-                    우리의 세 번째 마음입니다.
-                </p>
-                <p class="eng-sub">It is our third heart waiting for Christmas.</p>
+    <!-- Section 1: Intro -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-1">
+            <div class="absolute top-[-50px] right-[-50px] w-60 h-60 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
+            <div class="flex-grow flex flex-col justify-center h-full z-10">
+                <p class="eng-font text-sm font-bold tracking-[0.4em] mb-2 text-purple-200 anim-text">ADVENT WEEK 03</p>
+                <h1 class="eng-font text-[5rem] font-black leading-none tracking-tighter mb-4 neon-text anim-text text-white">
+                    JOY<br>
+                    <!-- Fixed Gradient Text Contrast -->
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-pink-500" style="-webkit-background-clip: text;">FULL</span>
+                </h1>
+                <div class="glass-box mt-8 anim-box">
+                    <p class="text-lg font-bold mb-1 text-white">오늘의 테마 : 기쁨 🎉</p>
+                    <p class="eng-sub mb-2">Today's Theme is Joy.</p>
+                    <p class="text-sm text-gray-200 font-light leading-relaxed">
+                        크리스마스를 기다리는<br>
+                        우리의 세 번째 마음입니다.
+                    </p>
+                    <p class="eng-sub">It is our third heart waiting for Christmas.</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Card 2: Inside Out -->
-    <div class="story-card bg-gradient-2">
-        <div class="flex justify-between items-center mb-8 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">01</span>
-            <div class="flex space-x-2">
-                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+    <!-- Section 2: Emotions -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-2">
+            <div class="flex justify-between items-center mb-8 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">01</span>
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-yellow-400 box-shadow"></div>
+                    <div class="w-3 h-3 rounded-full bg-blue-500 box-shadow"></div>
+                    <div class="w-3 h-3 rounded-full bg-red-500 box-shadow"></div>
+                </div>
+            </div>
+            <div class="flex-grow flex flex-col justify-center">
+                <h2 class="text-3xl font-bold mb-2 leading-snug text-white anim-text">
+                    네 마음속<br>
+                    <span class="text-yellow-400">컨트롤 본부</span>는<br>
+                    안녕해?
+                </h2>
+                <p class="eng-font text-sm text-gray-300 italic mb-6 anim-text">Like the movie 'Inside Out'</p>
+                <div class="glass-box border-l-4 border-yellow-400 anim-box">
+                    <p class="text-sm leading-relaxed text-gray-100">
+                        기쁨이, 슬픔이, 소심이...<br>
+                        우리 안엔 참 많은 감정이 살아.<br>
+                        하지만 <strong>이유 없는 감정</strong>은 없어.
+                    </p>
+                    <p class="eng-sub">Joy, Sadness, Fear...<br>There is no emotion without context.</p>
+                </div>
             </div>
         </div>
-        <div class="flex-grow flex flex-col justify-center">
-            <h2 class="text-3xl font-bold mb-2 leading-snug anim-text">
-                네 마음속<br>
-                <span class="text-yellow-400">컨트롤 본부</span>는<br>
-                안녕해?
-            </h2>
-            <p class="eng-font text-sm text-gray-400 italic mb-6 anim-text">Like the movie 'Inside Out'</p>
-            <div class="glass-box border-l-4 border-yellow-400 anim-box">
-                <p class="text-sm leading-relaxed text-gray-200">
-                    기쁨이, 슬픔이, 소심이...<br>
-                    우리 안엔 참 많은 감정이 살아.<br>
-                    하지만 <strong>이유 없는 감정</strong>은 없어.
-                </p>
-                <p class="eng-sub">Joy, Sadness, Fear...<br>There is no emotion without context.</p>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    <!-- Card 3: Context Warning -->
-    <div class="story-card bg-gradient-warning">
-        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
-        <div class="flex justify-between items-center mb-8 z-10 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">02</span>
-        </div>
-        <div class="flex-grow flex flex-col justify-center z-10">
-            <div class="mb-4 anim-icon">
-                <i class="fas fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i>
-                <h2 class="eng-font text-4xl font-black uppercase text-gray-200">Context<br>Check</h2>
+    <!-- Section 3: Warning -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-warning">
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+            <div class="flex justify-between items-center mb-8 z-10 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">02</span>
             </div>
-            <div class="anim-text">
-                <p class="text-xl font-bold text-white mb-2">"맥락 없는 기쁨은 위험해"</p>
-                <p class="eng-sub mb-4">The Bible warns against joy without context.</p>
-                <p class="text-sm text-gray-400 leading-relaxed">
-                    성경은 우리가 <strong>'무엇 때문에'</strong><br>
-                    기뻐하는지 아주 중요하게 봐.
-                </p>
-                <p class="eng-sub">It matters what makes us rejoice.<br>What is the source of your joy?</p>
+            <div class="flex-grow flex flex-col justify-center z-10">
+                <div class="mb-4 anim-icon">
+                    <i class="fas fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i>
+                    <h2 class="eng-font text-4xl font-black uppercase text-gray-100">Context<br>Check</h2>
+                </div>
+                <div class="anim-text">
+                    <p class="text-xl font-bold text-white mb-2">"맥락 없는 기쁨은 위험해"</p>
+                    <p class="eng-sub mb-4">The Bible warns against joy without context.</p>
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        성경은 우리가 <strong>'무엇 때문에'</strong><br>
+                        기뻐하는지 아주 중요하게 봐.
+                    </p>
+                    <p class="eng-sub">It matters what makes us rejoice.<br>What is the source of your joy?</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Card 4: False Joy -->
-    <div class="story-card bg-gradient-3">
-        <div class="flex justify-between items-center mb-8 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">03</span>
+    <!-- Section 4: False Joy -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-3">
+            <div class="flex justify-between items-center mb-8 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">03</span>
+            </div>
+            <div class="flex-grow flex flex-col justify-center text-center">
+                <h2 class="eng-font text-5xl font-black text-white/10 absolute top-20 left-0 w-full anim-text">FAKE<br>JOY</h2>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-bold mb-2 text-white anim-text">이스라엘의 실수</h3>
+                    <p class="eng-sub mb-4 anim-text">The Mistake of Israel</p>
+
+                    <div class="anim-box glass-box bg-white/5 border-none">
+                        <p class="text-sm leading-7 text-gray-100 mb-2">
+                            그들은 하나님 때문이 아니라,<br>
+                            <span class="text-pink-300 font-bold">우상 숭배</span>와 <span class="text-pink-300 font-bold">혐오</span>로 기뻐했어.<br>
+                            그건 진짜가 아니야.
+                        </p>
+                        <p class="eng-sub">They rejoiced in idolatry and hatred,<br>not in God. That was not true joy.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="flex-grow flex flex-col justify-center text-center">
-            <h2 class="eng-font text-5xl font-black text-white/10 absolute top-20 left-0 w-full anim-text">FAKE<br>JOY</h2>
-            <div class="relative z-10">
-                <h3 class="text-2xl font-bold mb-2 anim-text">이스라엘의 실수</h3>
-                <p class="eng-sub mb-4 anim-text">The Mistake of Israel</p>
+    </section>
+
+    <!-- Section 5: Fear (Color Fixed) -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-4">
+            <div class="flex justify-between items-center mb-8 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">04</span>
+            </div>
+            <div class="flex-grow flex flex-col justify-center">
+                <p class="eng-font text-xs text-gray-400 tracking-widest mb-2 anim-text">DEEP INSIDE</p>
+                <h2 class="text-2xl font-bold mb-6 text-white anim-text">사실은...<br>두려웠던 거야 😨</h2>
+                
+                <div class="glass-box mb-4 border-l-0 border-r-4 border-gray-500 anim-box">
+                    <p class="text-sm text-gray-200 leading-relaxed italic">
+                        "다시는 악을 두려워하지 않을 거야"
+                    </p>
+                    <!-- Fixed gray color from 500 to 400 -->
+                    <p class="eng-sub text-gray-400 not-italic mt-1">"You shall not fear evil anymore." (Zeph 3:15)</p>
+                </div>
+                <div class="anim-text">
+                    <p class="text-sm leading-relaxed text-gray-300">
+                        이 말씀은 그들 마음 깊은 곳에<br>
+                        <strong>죄로 인한 두려움</strong>이 있었다는 증거야.
+                    </p>
+                    <p class="eng-sub text-gray-400">Deep down, they were filled with fear caused by sin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Solution (Color Fixed) -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-5">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400 rounded-full blur-[100px] opacity-20"></div>
+            <div class="flex justify-between items-center mb-8 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">05</span>
+            </div>
+            <div class="flex-grow flex flex-col justify-center">
+                <!-- Fixed Gradient Text -->
+                <h2 class="eng-font text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 anim-text" style="-webkit-background-clip: text;">
+                    BUT<br>GOD.
+                </h2>
+                <div class="my-6 anim-box">
+                    <p class="text-xl font-bold mb-2 text-white">두려움 삭제 버튼 🔘</p>
+                    <p class="text-sm text-gray-200 leading-relaxed mb-4">
+                        "우리를 혼자 두지 않으시겠다."<br>
+                        이건 단순히 옆에 계신다는 위로가 아냐.<br>
+                        <br>
+                        우리를 외롭게 만들었던 가장 큰 원인,<br>
+                        <strong class="text-cyan-300 border-b border-cyan-300">'죄의 문제'를 뿌리째 해결하셨다</strong>는 뜻이지.
+                    </p>
+                    <!-- Lightened sub-text -->
+                    <p class="eng-sub text-cyan-100">
+                        He didn't just stay with us. He fundamentally solved the problem of sin that separated us from Him.
+                    </p>
+                </div>
+                <div class="glass-box bg-blue-900/40 border-blue-400/30 anim-box">
+                    <p class="eng-font text-lg font-bold text-center text-blue-100">"GOD IS WITH US"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Reality (Color Fixed - Major) -->
+    <section class="snap-section">
+        <div class="story-card bg-gray-900">
+            <div class="flex justify-between items-center mb-8 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">06</span>
+            </div>
+            <div class="flex-grow flex flex-col justify-center">
+                <!-- Changed from gray-600 to gray-400 -->
+                <i class="fas fa-moon text-4xl text-gray-400 mb-6 anim-icon"></i>
+                <h2 class="text-2xl font-bold mb-2 text-white anim-text">오늘 밤은<br>울어도 괜찮아 🌙</h2>
+                <p class="eng-sub mb-4 anim-text">Weeping may tarry for the night.</p>
+                
+                <div class="anim-box">
+                    <!-- Changed from gray-400/600 to gray-300/400 -->
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        억지로 웃으려 하지 마.<br>
+                        여전히 문제들이 우리를 아프게 할 때,<br>
+                        다윗도 우리처럼 밤새 울었어.
+                    </p>
+                    <p class="eng-sub text-gray-400">Don't force a smile. Even David wept when problems overwhelmed him.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: David's Secret -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-6">
+            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-800/60 to-transparent pointer-events-none"></div>
+            <div class="flex justify-between items-center mb-8 z-10 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">07</span>
+            </div>
+            <div class="flex-grow flex flex-col justify-center z-10">
+                <p class="text-xs font-bold text-yellow-200 mb-1 anim-text">THE SECRET OF JOY</p>
+                <h2 class="eng-font text-3xl font-black mb-6 leading-tight text-white anim-text">
+                    WAITING FOR<br>
+                    <span class="text-yellow-300 text-4xl">HIM</span>
+                </h2>
+
+                <div class="space-y-4 anim-box">
+                    <div>
+                        <p class="text-sm text-white font-bold leading-relaxed">다윗은 하나님의 성전을 기다렸어.</p>
+                        <p class="eng-sub text-white/80">David waited for God's Temple.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-white leading-relaxed">
+                            그건 결국 우리와 함께하실<br>
+                            <strong class="text-yellow-300 border-b border-yellow-300">예수님</strong>을 기다린 거야.
+                        </p>
+                        <p class="eng-sub text-white/80">He was waiting for Jesus to be with us.</p>
+                    </div>
+                </div>
+
+                <div class="glass-box bg-white/10 text-center mt-6 anim-box">
+                    <p class="text-sm font-bold text-white">그 '기대'가 내일의 기쁨이 되었지.</p>
+                    <p class="eng-sub text-white/90">That expectation became his joy for tomorrow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9: Conclusion -->
+    <section class="snap-section">
+        <div class="story-card bg-gradient-7">
+            <div class="flex justify-between items-center mb-8 z-10 anim-text">
+                <span class="eng-font font-bold text-2xl text-white/30">FINAL</span>
+            </div>
+
+            <div class="flex-grow flex flex-col justify-center items-center text-center z-10">
+                <h2 class="eng-font text-4xl font-black mb-2 text-white anim-text">
+                    OUR<br>TOMORROW
+                </h2>
+                <p class="text-xs font-bold text-yellow-200 uppercase tracking-widest mb-6 anim-text">Maranatha</p>
 
                 <div class="anim-box">
-                    <p class="text-sm leading-7 text-gray-200 mb-2">
-                        그들은 하나님 때문이 아니라,<br>
-                        <span class="text-pink-300 font-bold">우상 숭배</span>와 <span class="text-pink-300 font-bold">혐오</span>로 기뻐했어.<br>
-                        그건 진짜가 아니야.
+                    <p class="text-sm text-white leading-relaxed mb-1">
+                        2천 년 전 우리에게 오신 그분을 기억하며<br>
+                        우리는 <strong>마지막 날</strong>을 바라보며 살아가.
                     </p>
-                    <p class="eng-sub">They rejoiced in idolatry and hatred,<br>not in God. That was not true joy.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 5: Fear -->
-    <div class="story-card bg-gradient-4">
-        <div class="flex justify-between items-center mb-8 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">04</span>
-        </div>
-        <div class="flex-grow flex flex-col justify-center">
-            <p class="eng-font text-xs text-gray-400 tracking-widest mb-2 anim-text">DEEP INSIDE</p>
-            <h2 class="text-2xl font-bold mb-6 anim-text">사실은...<br>두려웠던 거야 😨</h2>
-            
-            <div class="glass-box mb-4 border-l-0 border-r-4 border-gray-600 anim-box">
-                <p class="text-sm text-gray-300 leading-relaxed italic">
-                    "다시는 악을 두려워하지 않을 거야"
-                </p>
-                <p class="eng-sub text-gray-500 not-italic mt-1">"You shall not fear evil anymore." (Zeph 3:15)</p>
-            </div>
-            <div class="anim-text">
-                <p class="text-sm leading-relaxed text-gray-400">
-                    이 말씀은 그들 마음 깊은 곳에<br>
-                    <strong>죄로 인한 두려움</strong>이 있었다는 증거야.
-                </p>
-                <p class="eng-sub text-gray-600">Deep down, they were filled with fear caused by sin.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 6: Solution -->
-    <div class="story-card bg-gradient-5">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400 rounded-full blur-[100px] opacity-20"></div>
-        <div class="flex justify-between items-center mb-8 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">05</span>
-        </div>
-        <div class="flex-grow flex flex-col justify-center">
-            <h2 class="eng-font text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-300 anim-text">
-                BUT<br>GOD.
-            </h2>
-            <div class="my-6 anim-box">
-                <p class="text-xl font-bold mb-2">두려움 삭제 버튼 🔘</p>
-                <p class="text-sm text-gray-200 leading-relaxed mb-4">
-                    "우리를 혼자 두지 않으시겠다."<br>
-                    이건 단순히 옆에 계신다는 위로가 아냐.<br>
-                    <br>
-                    우리를 외롭게 만들었던 가장 큰 원인,<br>
-                    <strong class="text-cyan-300 border-b border-cyan-300">'죄의 문제'를 뿌리째 해결하셨다</strong>는 뜻이지.
-                </p>
-                <p class="eng-sub text-cyan-100/70">
-                    He didn't just stay with us. He fundamentally solved the problem of sin that separated us from Him.
-                </p>
-            </div>
-            <div class="glass-box bg-blue-900/30 border-blue-500/30 anim-box">
-                <p class="eng-font text-lg font-bold text-center text-blue-100">"GOD IS WITH US"</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 7: Reality -->
-    <div class="story-card bg-gray-900">
-         <div class="flex justify-between items-center mb-8 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">06</span>
-        </div>
-        <div class="flex-grow flex flex-col justify-center">
-            <i class="fas fa-moon text-4xl text-gray-600 mb-6 anim-icon"></i>
-            <h2 class="text-2xl font-bold mb-2 anim-text">오늘 밤은<br>울어도 괜찮아 🌙</h2>
-            <p class="eng-sub mb-4 anim-text">Weeping may tarry for the night.</p>
-            
-            <div class="anim-box">
-                <p class="text-sm text-gray-400 leading-relaxed">
-                    억지로 웃으려 하지 마.<br>
-                    여전히 문제들이 우리를 아프게 할 때,<br>
-                    다윗도 우리처럼 밤새 울었어.
-                </p>
-                <p class="eng-sub text-gray-600">Don't force a smile. Even David wept when problems overwhelmed him.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 8: David's Secret -->
-    <div class="story-card bg-gradient-6">
-        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-600/50 to-transparent pointer-events-none"></div>
-        <div class="flex justify-between items-center mb-8 z-10 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">07</span>
-        </div>
-        <div class="flex-grow flex flex-col justify-center z-10">
-            <p class="text-xs font-bold text-yellow-200 mb-1 anim-text">THE SECRET OF JOY</p>
-            <h2 class="eng-font text-3xl font-black mb-6 leading-tight anim-text">
-                WAITING FOR<br>
-                <span class="text-yellow-300 text-4xl">HIM</span>
-            </h2>
-
-            <div class="space-y-4 anim-box">
-                <div>
-                    <p class="text-sm text-white font-bold leading-relaxed">다윗은 하나님의 성전을 기다렸어.</p>
-                    <p class="eng-sub text-white/70">David waited for God's Temple.</p>
-                </div>
-                <div>
-                    <p class="text-sm text-white leading-relaxed">
-                        그건 결국 우리와 함께하실<br>
-                        <strong class="text-yellow-300 border-b border-yellow-300">예수님</strong>을 기다린 거야.
+                    <p class="eng-sub text-white/80 mb-6">
+                        Remembering Him who came 2000 years ago, we live looking forward to the final day.
                     </p>
-                    <p class="eng-sub text-white/70">He was waiting for Jesus to be with us.</p>
+                </div>
+
+                <div class="bg-black/30 backdrop-blur-md p-5 rounded-xl border border-white/20 w-full anim-box">
+                    <p class="text-base font-bold text-white mb-1">"아침에는 기쁨이 오리이다"</p>
+                    <p class="eng-sub text-white/90 italic">Joy comes with the morning.<br>Let's expect the joy of hope.</p>
                 </div>
             </div>
 
-            <div class="glass-box bg-white/10 text-center mt-6 anim-box">
-                <p class="text-sm font-bold text-white">그 '기대'가 내일의 기쁨이 되었지.</p>
-                <p class="eng-sub text-white/80">That expectation became his joy for tomorrow.</p>
+            <div class="absolute bottom-6 w-full text-center left-0 anim-icon">
+                <i class="fas fa-sun text-yellow-300 animate-pulse text-2xl"></i>
             </div>
         </div>
-    </div>
-
-    <!-- Card 9: Conclusion -->
-    <div class="story-card bg-gradient-7">
-        <div class="flex justify-between items-center mb-8 z-10 anim-text">
-            <span class="eng-font font-bold text-2xl text-white/20">FINAL</span>
-        </div>
-
-        <div class="flex-grow flex flex-col justify-center items-center text-center z-10">
-            <h2 class="eng-font text-4xl font-black mb-2 text-white anim-text">
-                OUR<br>TOMORROW
-            </h2>
-            <p class="text-xs font-bold text-yellow-200 uppercase tracking-widest mb-6 anim-text">Maranatha</p>
-
-            <div class="anim-box">
-                <p class="text-sm text-white leading-relaxed mb-1">
-                    2천 년 전 우리에게 오신 그분을 기억하며<br>
-                    우리는 <strong>마지막 날</strong>을 바라보며 살아가.
-                </p>
-                <p class="eng-sub text-white/60 mb-6">
-                    Remembering Him who came 2000 years ago, we live looking forward to the final day.
-                </p>
-            </div>
-
-            <div class="bg-black/30 backdrop-blur-md p-5 rounded-xl border border-white/20 w-full anim-box">
-                <p class="text-base font-bold text-white mb-1">"아침에는 기쁨이 오리이다"</p>
-                <p class="eng-sub text-white/70 italic">Joy comes with the morning.<br>Let's expect the joy of hope.</p>
-            </div>
-        </div>
-
-        <div class="absolute bottom-6 w-full text-center left-0 anim-icon">
-             <i class="fas fa-sun text-yellow-300 animate-pulse text-2xl"></i>
-        </div>
-    </div>
+    </section>
 
 </div>
 
 <!-- Scroll Interaction Script -->
 <script>
-    // Create an Intersection Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active');
+                const card = entry.target.querySelector('.story-card');
+                if(card) card.classList.add('active');
             } else {
-                // Optional: Remove active class to re-animate when scrolling back up
-                entry.target.classList.remove('active');
+                 const card = entry.target.querySelector('.story-card');
+                 if(card) card.classList.remove('active');
             }
         });
     }, {
-        threshold: 0.3 // Trigger when 30% of the card is visible
+        threshold: 0.4
     });
 
-    // Observe all story cards
-    document.querySelectorAll('.story-card').forEach(card => {
-        observer.observe(card);
+    document.querySelectorAll('.snap-section').forEach(section => {
+        observer.observe(section);
     });
 </script>
 
