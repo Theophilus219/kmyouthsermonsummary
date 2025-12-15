@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advent 3rd Sunday: Joy (9:16 Ratio)</title>
+    <title>Advent 3rd Sunday: Joy (10:16 Ratio)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,9 +14,8 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Hide default scrollbars */
+            overflow: hidden;
             background-color: #000;
-            touch-action: none; /* Disable browser handling of gestures */
         }
 
         .scroll-container {
@@ -25,10 +24,12 @@
             overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
-            scrollbar-width: none; /* Firefox hide scrollbar */
+            scrollbar-width: none; 
+            /* Critical for mobile feel: Allow vertical panning natively */
+            touch-action: pan-y; 
         }
         .scroll-container::-webkit-scrollbar { 
-            display: none; /* Chrome/Safari hide scrollbar */
+            display: none; 
         }
 
         .snap-section {
@@ -52,12 +53,12 @@
             font-weight: 500;
         }
 
-        /* 2. Card Styling - UPDATED TO 9:16 Ratio */
+        /* 2. Card Styling - UPDATED TO 10:16 Ratio (5:8) */
         .story-card {
-            aspect-ratio: 9 / 16; /* 9:16 Standard Story Ratio */
+            aspect-ratio: 10 / 16; /* Wider than 9:16 */
             width: 100%;
-            max-width: 420px; /* Slightly wider to fit 9:16 content comfortably */
-            max-height: 95vh;
+            max-width: 440px; /* Increased max-width for new ratio */
+            max-height: 90vh;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -422,7 +423,7 @@
     sections.forEach(section => observer.observe(section));
 
     /* =========================================
-       2. Dual Navigation Logic
+       2. Natural Hybrid Navigation Logic
        ========================================= */
     const container = document.getElementById('mainContainer');
     let currentIndex = 0;
@@ -438,7 +439,7 @@
         setTimeout(() => { isNavigating = false; }, 800);
     };
 
-    // Keyboard
+    // Keyboard support
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
             e.preventDefault();
@@ -449,39 +450,34 @@
         }
     });
 
-    // Mouse Wheel (Horizontal support)
-    container.addEventListener('wheel', (e) => {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-            e.preventDefault();
-            if (Math.abs(e.deltaX) > 20) {
-                if (e.deltaX > 0) scrollToSection(currentIndex + 1);
-                else scrollToSection(currentIndex - 1);
-            }
-        }
-    }, { passive: false });
-
-    // Touch Swipe
+    // Touch Swipe Logic (Improved for Natural Feel)
     let touchStartX = 0;
     let touchStartY = 0;
 
     container.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
         touchStartY = e.changedTouches[0].screenY;
-    }, { passive: false });
+    }, { passive: true }); // Allow default vertical scroll handling
 
     container.addEventListener('touchend', (e) => {
         const touchEndX = e.changedTouches[0].screenX;
         const touchEndY = e.changedTouches[0].screenY;
+        
         const diffX = touchStartX - touchEndX;
         const diffY = touchStartY - touchEndY;
 
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) scrollToSection(currentIndex + 1);
-                else scrollToSection(currentIndex - 1);
+        // Trigger horizontal nav ONLY if swipe is significantly horizontal
+        // AND greater than vertical movement (to avoid triggering on diagonal scrolls)
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                // Swiped Left -> Go Next
+                scrollToSection(currentIndex + 1);
+            } else {
+                // Swiped Right -> Go Prev
+                scrollToSection(currentIndex - 1);
             }
-        } 
-    }, { passive: false });
+        }
+    }, { passive: true });
 
 </script>
 
