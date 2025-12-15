@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advent 3rd Sunday: Joy (Raised Position)</title>
+    <title>Advent 3rd Sunday: Joy (Balanced Position)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -36,14 +36,14 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            align-items: center; /* Vertically Center */
+            align-items: center;
             scroll-snap-align: start;
             scroll-snap-stop: always;
             position: relative;
             perspective: 1000px;
             
-            /* KEY CHANGE: Push visual center UP */
-            padding-bottom: 15vh; 
+            /* Adjusted Position: Less padding than before (15vh -> 6vh) */
+            padding-bottom: 6vh; 
             box-sizing: border-box;
         }
 
@@ -62,7 +62,7 @@
             aspect-ratio: 10.5 / 16; 
             width: 100%;
             max-width: 420px; 
-            max-height: 85vh; /* Slightly reduced max-height to ensure fit with padding */
+            max-height: 88vh; /* Optimized max-height */
             position: relative;
             overflow: hidden;
             display: flex;
@@ -72,24 +72,21 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border-radius: 20px;
             
-            /* Initial State for Scroll Animation */
+            /* Initial State */
             opacity: 0;
             transform-origin: center bottom; 
             transition: transform 0.1s linear, opacity 0.5s ease;
         }
 
-        /* Active State (Entry Animation) */
         .story-card.active {
             opacity: 1;
         }
 
-        /* Dragging Class */
         .story-card.is-dragging {
             transition: none;
             cursor: grabbing;
         }
 
-        /* Fly Out Animation Class */
         .story-card.fly-out-left {
             transition: all 0.5s ease-out;
             transform: translateX(-150%) rotate(-20deg) !important;
@@ -134,10 +131,10 @@
         .bg-gradient-6 { background: linear-gradient(145deg, #9f3c1d, #c24145); }
         .bg-gradient-7 { background: linear-gradient(145deg, #8a1455, #d97d2e); }
 
-        /* Navigation Cue - Adjusted Position */
+        /* Navigation Cue */
         .nav-cue {
             position: absolute;
-            bottom: 5vh; /* Higher up because of padding-bottom on container */
+            bottom: 2vh;
             left: 50%;
             transform: translateX(-50%);
             color: rgba(255,255,255,0.3);
@@ -445,7 +442,7 @@
                  }
             }
         });
-    }, { threshold: 0.5 }); // High threshold for better snapping accuracy
+    }, { threshold: 0.5 }); 
 
     const sections = document.querySelectorAll('.snap-section');
     sections.forEach(section => observer.observe(section));
@@ -524,7 +521,6 @@
             if (diffX < 0) {
                 // Dragged Left -> Next
                 activeCard.classList.add('fly-out-left');
-                // Use style to ensure override of drag transform immediately
                 activeCard.style.transform = `translateX(-150%) rotate(-20deg)`;
                 setTimeout(() => scrollToSection(currentIndex + 1), 300);
             } else {
@@ -535,10 +531,9 @@
             }
         } else {
             // Revert (Snap back)
-            activeCard.style.transform = ''; // Removes inline style, CSS transition handles snap back
+            activeCard.style.transform = ''; 
         }
         
-        // Reset variables
         startX = 0;
         currentX = 0;
     }, { passive: true });
