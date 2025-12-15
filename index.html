@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advent 3rd Sunday: Joy (Dual Scroll)</title>
+    <title>Advent 3rd Sunday: Joy (9:16 Ratio)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
             height: 100%;
             overflow: hidden; /* Hide default scrollbars */
             background-color: #000;
-            touch-action: none; /* Disable browser handling of gestures to implement custom swipe */
+            touch-action: none; /* Disable browser handling of gestures */
         }
 
         .scroll-container {
@@ -52,11 +52,11 @@
             font-weight: 500;
         }
 
-        /* 2. Card Styling - 8:16 (1:2) Ratio */
+        /* 2. Card Styling - UPDATED TO 9:16 Ratio */
         .story-card {
-            aspect-ratio: 1 / 2;
+            aspect-ratio: 9 / 16; /* 9:16 Standard Story Ratio */
             width: 100%;
-            max-width: 400px;
+            max-width: 420px; /* Slightly wider to fit 9:16 content comfortably */
             max-height: 95vh;
             position: relative;
             overflow: hidden;
@@ -112,7 +112,7 @@
         .bg-gradient-6 { background: linear-gradient(145deg, #9f3c1d, #c24145); }
         .bg-gradient-7 { background: linear-gradient(145deg, #8a1455, #d97d2e); }
 
-        /* Navigation Arrows (Visual Cue) */
+        /* Navigation Cue */
         .nav-cue {
             position: absolute;
             bottom: 20px;
@@ -396,7 +396,7 @@
 
 <script>
     /* =========================================
-       1. Animation Observer (Existing Logic)
+       1. Animation Observer
        ========================================= */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -404,7 +404,7 @@
                 const card = entry.target.querySelector('.story-card');
                 if(card) card.classList.add('active');
                 
-                // Track current active index for navigation
+                // Track active index
                 const allSections = document.querySelectorAll('.snap-section');
                 allSections.forEach((sec, idx) => {
                     if(sec === entry.target) {
@@ -422,25 +422,23 @@
     sections.forEach(section => observer.observe(section));
 
     /* =========================================
-       2. Dual Navigation Logic (New Feature)
+       2. Dual Navigation Logic
        ========================================= */
     const container = document.getElementById('mainContainer');
     let currentIndex = 0;
     let isNavigating = false;
     const totalSections = sections.length;
 
-    // Helper to scroll to specific section
     const scrollToSection = (index) => {
         if (index < 0 || index >= totalSections || isNavigating) return;
         
         isNavigating = true;
         sections[index].scrollIntoView({ behavior: 'smooth' });
         
-        // Lock navigation briefly to prevent rapid jumping
         setTimeout(() => { isNavigating = false; }, 800);
     };
 
-    // A. Keyboard Support (Arrow Keys)
+    // Keyboard
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
             e.preventDefault();
@@ -451,22 +449,18 @@
         }
     });
 
-    // B. Mouse Wheel Horizontal & Vertical Support
+    // Mouse Wheel (Horizontal support)
     container.addEventListener('wheel', (e) => {
-        // Only intervene if standard snap hasn't caught it OR specific horizontal gesture
-        // Check if deltaX (horizontal) is dominant
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
             e.preventDefault();
-            if (Math.abs(e.deltaX) > 20) { // Threshold
+            if (Math.abs(e.deltaX) > 20) {
                 if (e.deltaX > 0) scrollToSection(currentIndex + 1);
                 else scrollToSection(currentIndex - 1);
             }
         }
-        // Vertical wheel is handled natively by CSS Scroll Snap usually, 
-        // but we can augment it if desired. Leaving native for smoothness.
     }, { passive: false });
 
-    // C. Touch Swipe Support (Left/Right to Nav)
+    // Touch Swipe
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -478,24 +472,15 @@
     container.addEventListener('touchend', (e) => {
         const touchEndX = e.changedTouches[0].screenX;
         const touchEndY = e.changedTouches[0].screenY;
-        
         const diffX = touchStartX - touchEndX;
         const diffY = touchStartY - touchEndY;
 
-        // Check if Horizontal Swipe is dominant
         if (Math.abs(diffX) > Math.abs(diffY)) {
-            // Horizontal Swipe
-            if (Math.abs(diffX) > 50) { // Threshold
-                if (diffX > 0) {
-                    // Swipe Left -> Next
-                    scrollToSection(currentIndex + 1);
-                } else {
-                    // Swipe Right -> Prev
-                    scrollToSection(currentIndex - 1);
-                }
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) scrollToSection(currentIndex + 1);
+                else scrollToSection(currentIndex - 1);
             }
         } 
-        // Vertical Swipe is handled natively by CSS Scroll Snap
     }, { passive: false });
 
 </script>
