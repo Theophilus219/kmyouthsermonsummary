@@ -2,27 +2,33 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advent 3rd Sunday: Joy (Final Color Fixed)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Advent 3rd Sunday: Joy (Dual Scroll)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
-        /* 1. Scroll Snap Setup */
+        /* 1. Global Setup */
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
+            overflow: hidden; /* Hide default scrollbars */
             background-color: #000;
+            touch-action: none; /* Disable browser handling of gestures to implement custom swipe */
         }
 
         .scroll-container {
             height: 100vh;
             overflow-y: scroll;
+            overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox hide scrollbar */
+        }
+        .scroll-container::-webkit-scrollbar { 
+            display: none; /* Chrome/Safari hide scrollbar */
         }
 
         .snap-section {
@@ -39,19 +45,19 @@
         .eng-font { font-family: 'Montserrat', sans-serif; }
         .eng-sub {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem; /* Slightly larger */
-            color: rgba(255, 255, 255, 0.7); /* Increased opacity for visibility */
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
             margin-top: 0.5rem;
             line-height: 1.4;
             font-weight: 500;
         }
 
-        /* 2. Card Styling */
+        /* 2. Card Styling - 8:16 (1:2) Ratio */
         .story-card {
-            aspect-ratio: 9 / 16;
+            aspect-ratio: 1 / 2;
             width: 100%;
-            max-width: 420px;
-            max-height: 90vh;
+            max-width: 400px;
+            max-height: 95vh;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -61,7 +67,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border-radius: 20px;
 
-            /* Initial State */
+            /* Animation Initial State */
             opacity: 0;
             transform: scale(0.9) translateY(20px);
             transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
@@ -73,7 +79,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
 
-        /* 3. Animation Elements */
+        /* 3. Internal Animations */
         .story-card .anim-text, 
         .story-card .anim-box,
         .story-card .anim-icon {
@@ -88,7 +94,7 @@
         
         /* Design Utilities */
         .glass-box {
-            background: rgba(255, 255, 255, 0.08); /* Slightly lighter background */
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
@@ -106,21 +112,38 @@
         .bg-gradient-6 { background: linear-gradient(145deg, #9f3c1d, #c24145); }
         .bg-gradient-7 { background: linear-gradient(145deg, #8a1455, #d97d2e); }
 
+        /* Navigation Arrows (Visual Cue) */
+        .nav-cue {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            animation: bounce 2s infinite;
+            pointer-events: none;
+            z-index: 50;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
     </style>
 </head>
 <body>
 
-<div class="scroll-container">
+<div class="scroll-container" id="mainContainer">
 
     <!-- Section 1: Intro -->
-    <section class="snap-section">
+    <section class="snap-section" id="sec-1">
         <div class="story-card bg-gradient-1">
             <div class="absolute top-[-50px] right-[-50px] w-60 h-60 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
             <div class="flex-grow flex flex-col justify-center h-full z-10">
                 <p class="eng-font text-sm font-bold tracking-[0.4em] mb-2 text-purple-200 anim-text">ADVENT WEEK 03</p>
                 <h1 class="eng-font text-[5rem] font-black leading-none tracking-tighter mb-4 neon-text anim-text text-white">
                     JOY<br>
-                    <!-- Fixed Gradient Text Contrast -->
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-pink-500" style="-webkit-background-clip: text;">FULL</span>
                 </h1>
                 <div class="glass-box mt-8 anim-box">
@@ -134,10 +157,11 @@
                 </div>
             </div>
         </div>
+        <div class="nav-cue"><i class="fas fa-chevron-down"></i> Scroll</div>
     </section>
 
     <!-- Section 2: Emotions -->
-    <section class="snap-section">
+    <section class="snap-section" id="sec-2">
         <div class="story-card bg-gradient-2">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">01</span>
@@ -167,7 +191,7 @@
     </section>
 
     <!-- Section 3: Warning -->
-    <section class="snap-section">
+    <section class="snap-section" id="sec-3">
         <div class="story-card bg-gradient-warning">
             <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
@@ -192,7 +216,7 @@
     </section>
 
     <!-- Section 4: False Joy -->
-    <section class="snap-section">
+    <section class="snap-section" id="sec-4">
         <div class="story-card bg-gradient-3">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">03</span>
@@ -216,8 +240,8 @@
         </div>
     </section>
 
-    <!-- Section 5: Fear (Color Fixed) -->
-    <section class="snap-section">
+    <!-- Section 5: Fear -->
+    <section class="snap-section" id="sec-5">
         <div class="story-card bg-gradient-4">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">04</span>
@@ -230,7 +254,6 @@
                     <p class="text-sm text-gray-200 leading-relaxed italic">
                         "다시는 악을 두려워하지 않을 거야"
                     </p>
-                    <!-- Fixed gray color from 500 to 400 -->
                     <p class="eng-sub text-gray-400 not-italic mt-1">"You shall not fear evil anymore." (Zeph 3:15)</p>
                 </div>
                 <div class="anim-text">
@@ -244,15 +267,14 @@
         </div>
     </section>
 
-    <!-- Section 6: Solution (Color Fixed) -->
-    <section class="snap-section">
+    <!-- Section 6: Solution -->
+    <section class="snap-section" id="sec-6">
         <div class="story-card bg-gradient-5">
             <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400 rounded-full blur-[100px] opacity-20"></div>
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">05</span>
             </div>
             <div class="flex-grow flex flex-col justify-center">
-                <!-- Fixed Gradient Text -->
                 <h2 class="eng-font text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 anim-text" style="-webkit-background-clip: text;">
                     BUT<br>GOD.
                 </h2>
@@ -265,7 +287,6 @@
                         우리를 외롭게 만들었던 가장 큰 원인,<br>
                         <strong class="text-cyan-300 border-b border-cyan-300">'죄의 문제'를 뿌리째 해결하셨다</strong>는 뜻이지.
                     </p>
-                    <!-- Lightened sub-text -->
                     <p class="eng-sub text-cyan-100">
                         He didn't just stay with us. He fundamentally solved the problem of sin that separated us from Him.
                     </p>
@@ -277,20 +298,18 @@
         </div>
     </section>
 
-    <!-- Section 7: Reality (Color Fixed - Major) -->
-    <section class="snap-section">
+    <!-- Section 7: Reality -->
+    <section class="snap-section" id="sec-7">
         <div class="story-card bg-gray-900">
             <div class="flex justify-between items-center mb-8 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">06</span>
             </div>
             <div class="flex-grow flex flex-col justify-center">
-                <!-- Changed from gray-600 to gray-400 -->
                 <i class="fas fa-moon text-4xl text-gray-400 mb-6 anim-icon"></i>
                 <h2 class="text-2xl font-bold mb-2 text-white anim-text">오늘 밤은<br>울어도 괜찮아 🌙</h2>
                 <p class="eng-sub mb-4 anim-text">Weeping may tarry for the night.</p>
                 
                 <div class="anim-box">
-                    <!-- Changed from gray-400/600 to gray-300/400 -->
                     <p class="text-sm text-gray-300 leading-relaxed">
                         억지로 웃으려 하지 마.<br>
                         여전히 문제들이 우리를 아프게 할 때,<br>
@@ -302,8 +321,8 @@
         </div>
     </section>
 
-    <!-- Section 8: David's Secret -->
-    <section class="snap-section">
+    <!-- Section 8: The Secret -->
+    <section class="snap-section" id="sec-8">
         <div class="story-card bg-gradient-6">
             <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-800/60 to-transparent pointer-events-none"></div>
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
@@ -339,7 +358,7 @@
     </section>
 
     <!-- Section 9: Conclusion -->
-    <section class="snap-section">
+    <section class="snap-section" id="sec-9">
         <div class="story-card bg-gradient-7">
             <div class="flex justify-between items-center mb-8 z-10 anim-text">
                 <span class="eng-font font-bold text-2xl text-white/30">FINAL</span>
@@ -375,25 +394,110 @@
 
 </div>
 
-<!-- Scroll Interaction Script -->
 <script>
+    /* =========================================
+       1. Animation Observer (Existing Logic)
+       ========================================= */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const card = entry.target.querySelector('.story-card');
                 if(card) card.classList.add('active');
+                
+                // Track current active index for navigation
+                const allSections = document.querySelectorAll('.snap-section');
+                allSections.forEach((sec, idx) => {
+                    if(sec === entry.target) {
+                        currentIndex = idx;
+                    }
+                });
             } else {
                  const card = entry.target.querySelector('.story-card');
                  if(card) card.classList.remove('active');
             }
         });
-    }, {
-        threshold: 0.4
+    }, { threshold: 0.4 });
+
+    const sections = document.querySelectorAll('.snap-section');
+    sections.forEach(section => observer.observe(section));
+
+    /* =========================================
+       2. Dual Navigation Logic (New Feature)
+       ========================================= */
+    const container = document.getElementById('mainContainer');
+    let currentIndex = 0;
+    let isNavigating = false;
+    const totalSections = sections.length;
+
+    // Helper to scroll to specific section
+    const scrollToSection = (index) => {
+        if (index < 0 || index >= totalSections || isNavigating) return;
+        
+        isNavigating = true;
+        sections[index].scrollIntoView({ behavior: 'smooth' });
+        
+        // Lock navigation briefly to prevent rapid jumping
+        setTimeout(() => { isNavigating = false; }, 800);
+    };
+
+    // A. Keyboard Support (Arrow Keys)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            scrollToSection(currentIndex + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            scrollToSection(currentIndex - 1);
+        }
     });
 
-    document.querySelectorAll('.snap-section').forEach(section => {
-        observer.observe(section);
-    });
+    // B. Mouse Wheel Horizontal & Vertical Support
+    container.addEventListener('wheel', (e) => {
+        // Only intervene if standard snap hasn't caught it OR specific horizontal gesture
+        // Check if deltaX (horizontal) is dominant
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            if (Math.abs(e.deltaX) > 20) { // Threshold
+                if (e.deltaX > 0) scrollToSection(currentIndex + 1);
+                else scrollToSection(currentIndex - 1);
+            }
+        }
+        // Vertical wheel is handled natively by CSS Scroll Snap usually, 
+        // but we can augment it if desired. Leaving native for smoothness.
+    }, { passive: false });
+
+    // C. Touch Swipe Support (Left/Right to Nav)
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: false });
+
+    container.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+
+        // Check if Horizontal Swipe is dominant
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal Swipe
+            if (Math.abs(diffX) > 50) { // Threshold
+                if (diffX > 0) {
+                    // Swipe Left -> Next
+                    scrollToSection(currentIndex + 1);
+                } else {
+                    // Swipe Right -> Prev
+                    scrollToSection(currentIndex - 1);
+                }
+            }
+        } 
+        // Vertical Swipe is handled natively by CSS Scroll Snap
+    }, { passive: false });
+
 </script>
 
 </body>
