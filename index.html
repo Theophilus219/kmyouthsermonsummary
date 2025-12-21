@@ -3,542 +3,564 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Advent 3rd Sunday: Joy (Balanced Position)</title>
+    <title>God's Love: Raham & Naham</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Noto+Sans+KR:wght@300;500;700&family=Noto+Serif+Hebrew:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        /* Custom Scrollbar Hide */
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* 1. Global Setup */
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
+        /* Typography */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #ffffff;
+            overflow: hidden; /* JS will handle scroll mostly, or snap */
         }
-
-        .scroll-container {
-            height: 100vh;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-            scrollbar-width: none; 
-            touch-action: pan-y; 
-        }
-        .scroll-container::-webkit-scrollbar { 
-            display: none; 
-        }
-
-        .snap-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
+        .font-eng { font-family: 'Montserrat', sans-serif; }
+        .font-hebrew { font-family: 'Noto Serif Hebrew', serif; }
+        
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             position: relative;
-            perspective: 1000px;
-            
-            /* Adjusted Position: Less padding than before (15vh -> 6vh) */
-            padding-bottom: 6vh; 
-            box-sizing: border-box;
+            z-index: 10;
+            overflow: hidden; /* Keep internal background text inside */
+            /* Instagram Safe Zone Padding */
+            padding-top: 5rem;    
+            padding-bottom: 5rem; 
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
 
-        .eng-font { font-family: 'Montserrat', sans-serif; }
-        .eng-sub {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.5rem;
-            line-height: 1.4;
-            font-weight: 500;
-        }
+        /* Neon Gradients for Backgrounds */
+        .bg-gradient-1 { background: radial-gradient(circle at top right, #4f46e5, #0f172a 60%); }
+        .bg-gradient-2 { background: radial-gradient(circle at bottom left, #db2777, #0f172a 60%); }
+        .bg-gradient-3 { background: radial-gradient(circle at center, #0891b2, #0f172a 70%); }
+        .bg-gradient-4 { background: radial-gradient(circle at top left, #7c3aed, #000000 60%); }
+        .bg-gradient-5 { background: radial-gradient(circle at bottom right, #ea580c, #1e1b4b 60%); }
 
-        /* 2. Card Styling - 10.5:16 Ratio */
-        .story-card {
-            aspect-ratio: 10.5 / 16; 
-            width: 100%;
-            max-width: 420px; 
-            max-height: 88vh; /* Optimized max-height */
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 4rem 2rem 5rem 2rem;
-            background-color: #121212;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-radius: 20px;
-            
-            /* Initial State */
+        /* Animation Classes */
+        .reveal-text {
             opacity: 0;
-            transform-origin: center bottom; 
-            transition: transform 0.1s linear, opacity 0.5s ease;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative; /* Ensure text is above absolute backgrounds */
+            z-index: 20;
+        }
+        .reveal-active .reveal-text {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .story-card.active {
+        .zoom-card {
+            transform: scale(0.9);
+            opacity: 0.5;
+            transition: all 0.8s ease-out;
+        }
+        .reveal-active .zoom-card {
+            transform: scale(1);
             opacity: 1;
         }
 
-        .story-card.is-dragging {
-            transition: none;
-            cursor: grabbing;
+        /* Snap Container */
+        #snap-container {
+            height: 100vh;
+            width: 100vw;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+        section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
         }
 
-        .story-card.fly-out-left {
-            transition: all 0.5s ease-out;
-            transform: translateX(-150%) rotate(-20deg) !important;
-            opacity: 0;
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
-        .story-card.fly-out-right {
-            transition: all 0.5s ease-out;
-            transform: translateX(150%) rotate(20deg) !important;
-            opacity: 0;
-        }
-
-        /* 3. Internal Content Animations */
-        .story-card .anim-text, 
-        .story-card .anim-box,
-        .story-card .anim-icon {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease-out;
-        }
-        
-        .story-card.active .anim-text { opacity: 1; transform: translateY(0); }
-        .story-card.active .anim-icon { opacity: 1; transform: translateY(0) scale(1); transition-delay: 0.2s; }
-        .story-card.active .anim-box { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
-        
-        /* Design Utilities */
-        .glass-box {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            padding: 1.5rem;
-        }
-        .neon-text { text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
-
-        /* Gradients */
-        .bg-gradient-1 { background: linear-gradient(145deg, #2e0249, #570a57); }
-        .bg-gradient-2 { background: linear-gradient(145deg, #0f0c29, #201b45, #24243e); }
-        .bg-gradient-warning { background: linear-gradient(145deg, #1a1a1a, #380404); }
-        .bg-gradient-3 { background: linear-gradient(145deg, #4a1955, #962f51); }
-        .bg-gradient-4 { background: linear-gradient(145deg, #0a0a0a, #2d2d2d); }
-        .bg-gradient-5 { background: linear-gradient(145deg, #0f1642, #146b69); }
-        .bg-gradient-6 { background: linear-gradient(145deg, #9f3c1d, #c24145); }
-        .bg-gradient-7 { background: linear-gradient(145deg, #8a1455, #d97d2e); }
-
-        /* Navigation Cue */
-        .nav-cue {
-            position: absolute;
-            bottom: 2vh;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.3);
-            font-size: 0.8rem;
-            animation: bounce 2s infinite;
-            pointer-events: none;
-            z-index: 50;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
-        }
-
+        .animate-float { animation: float 3s ease-in-out infinite; }
     </style>
 </head>
 <body>
 
-<div class="scroll-container" id="mainContainer">
+    <!-- Scroll Container -->
+    <main id="snap-container">
 
-    <!-- Section 1 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-1">
-            <div class="absolute top-[-50px] right-[-50px] w-60 h-60 bg-purple-500 rounded-full blur-[80px] opacity-40"></div>
-            <div class="flex-grow flex flex-col justify-center h-full z-10">
-                <p class="eng-font text-sm font-bold tracking-[0.4em] mb-2 text-purple-200 anim-text">ADVENT WEEK 03</p>
-                <h1 class="eng-font text-[5rem] font-black leading-none tracking-tighter mb-4 neon-text anim-text text-white">
-                    JOY<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-pink-500" style="-webkit-background-clip: text;">FULL</span>
-                </h1>
-                <div class="glass-box mt-8 anim-box">
-                    <p class="text-lg font-bold mb-1 text-white">오늘의 테마 : 기쁨 🎉</p>
-                    <p class="eng-sub mb-2">Today's Theme is Joy.</p>
-                    <p class="text-sm text-gray-200 font-light leading-relaxed">
-                        크리스마스를 기다리는<br>
-                        우리의 세 번째 마음입니다.
+        <!-- Slide 1: Intro -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-1 p-6 reveal-section" data-index="0">
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+                <i class="fas fa-heart text-[20rem] absolute -top-20 -right-20 text-indigo-500"></i>
+            </div>
+            
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-between zoom-card">
+                <div class="text-center mt-4">
+                    <span class="font-eng text-indigo-300 text-sm font-bold tracking-widest uppercase mb-2 block reveal-text" style="transition-delay: 100ms;">Love Language</span>
+                    <h1 class="text-3xl font-bold leading-tight mb-3 reveal-text" style="transition-delay: 200ms;">
+                        너는 사랑을<br>어떻게 표현해?
+                    </h1>
+                    <p class="font-eng text-sm text-indigo-100 font-medium reveal-text tracking-wide" style="transition-delay: 250ms;">
+                        What's your Love Language?
                     </p>
-                    <p class="eng-sub">It is our third heart waiting for Christmas.</p>
                 </div>
-            </div>
-        </div>
-        <div class="nav-cue"><i class="fas fa-chevron-down"></i> Scroll or Swipe</div>
-    </section>
+                
+                <div class="flex-1 flex flex-col justify-center gap-6 reveal-text" style="transition-delay: 300ms;">
+                    <p class="text-gray-200 text-base leading-relaxed text-center font-medium">
+                        인정하는 말, 선물, 스킨십...<br>
+                        사랑을 표현하는 방법은 참 많아.<br>
+                        근데 하나님은 좀 특별한 단어를 쓰셔.
+                    </p>
+                    <p class="font-eng text-sm text-gray-300 text-center font-medium">
+                        But God uses a very special word<br>to show His love.
+                    </p>
 
-    <!-- Section 2 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-2">
-            <div class="flex justify-between items-center mb-8 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">01</span>
-                <div class="flex space-x-2">
-                    <div class="w-3 h-3 rounded-full bg-yellow-400 box-shadow"></div>
-                    <div class="w-3 h-3 rounded-full bg-blue-500 box-shadow"></div>
-                    <div class="w-3 h-3 rounded-full bg-red-500 box-shadow"></div>
+                    <div class="flex justify-center gap-6 text-2xl mt-2 animate-float">
+                        <i class="fas fa-gift text-pink-400"></i>
+                        <i class="fas fa-clock text-cyan-400"></i>
+                        <i class="fas fa-hand-holding-heart text-yellow-400"></i>
+                    </div>
+                </div>
+
+                <div class="text-center reveal-text" style="transition-delay: 400ms;">
+                    <p class="font-eng text-sm text-gray-400 mb-2 font-bold">SCROLL / SWIPE</p>
+                    <i class="fas fa-chevron-down animate-bounce text-white"></i>
                 </div>
             </div>
-            <div class="flex-grow flex flex-col justify-center">
-                <h2 class="text-3xl font-bold mb-2 leading-snug text-white anim-text">
-                    네 마음속<br>
-                    <span class="text-yellow-400">컨트롤 본부</span>는<br>
-                    안녕해?
+        </section>
+
+        <!-- Slide 2: Definition -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-black p-6 reveal-section" data-index="1">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center items-center zoom-card text-center"
+                 style="box-shadow: 0 0 20px rgba(34, 211, 238, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05); border: 1px solid rgba(34, 211, 238, 0.3);">
+                
+                <h2 class="font-eng text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-4 reveal-text" style="transition-delay: 100ms;">
+                    COMPASSION
                 </h2>
-                <p class="eng-font text-sm text-gray-300 italic mb-6 anim-text">Like the movie 'Inside Out'</p>
-                <div class="glass-box border-l-4 border-yellow-400 anim-box">
-                    <p class="text-sm leading-relaxed text-gray-100">
-                        기쁨이, 슬픔이, 소심이...<br>
-                        우리 안엔 참 많은 감정이 살아.<br>
-                        하지만 <strong>이유 없는 감정</strong>은 없어.
-                    </p>
-                    <p class="eng-sub">Joy, Sadness, Fear...<br>There is no emotion without context.</p>
-                </div>
+                <h3 class="text-3xl font-bold mb-8 reveal-text" style="transition-delay: 200ms;">'긍휼'</h3>
+                
+                <div class="w-16 h-1 bg-cyan-500 rounded-full mb-12 reveal-text" style="transition-delay: 250ms;"></div>
+                
+                <p class="text-gray-200 mb-6 leading-relaxed text-lg reveal-text font-medium" style="transition-delay: 300ms;">
+                    영어로는 <span class="text-cyan-400 font-bold">Compassion.</span><br>
+                    성경에선 Pity, Mercy로 번역되기도 해.
+                </p>
+                <p class="font-eng text-cyan-200 text-sm font-medium reveal-text" style="transition-delay: 350ms;">
+                    The Bible often calls it 'Pity' or 'Mercy'.
+                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section 3 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-warning">
-            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
-            <div class="flex justify-between items-center mb-8 z-10 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">02</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center z-10">
-                <div class="mb-4 anim-icon">
-                    <i class="fas fa-triangle-exclamation text-4xl text-yellow-500 mb-4"></i>
-                    <h2 class="eng-font text-4xl font-black uppercase text-gray-100">Context<br>Check</h2>
-                </div>
-                <div class="anim-text">
-                    <p class="text-xl font-bold text-white mb-2">"맥락 없는 기쁨은 위험해"</p>
-                    <p class="eng-sub mb-4">The Bible warns against joy without context.</p>
-                    <p class="text-sm text-gray-300 leading-relaxed">
-                        성경은 우리가 <strong>'무엇 때문에'</strong><br>
-                        기뻐하는지 아주 중요하게 봐.
-                    </p>
-                    <p class="eng-sub">It matters what makes us rejoice.<br>What is the source of your joy?</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        <!-- Slide 3: Raham -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-2 p-6 reveal-section" data-index="2">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[50%] bg-pink-600 blur-[100px] opacity-20 pointer-events-none"></div>
 
-    <!-- Section 4 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-3">
-            <div class="flex justify-between items-center mb-8 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">03</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center text-center">
-                <h2 class="eng-font text-5xl font-black text-white/10 absolute top-20 left-0 w-full anim-text">FAKE<br>JOY</h2>
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-between zoom-card">
+                <!-- Hebrew Background INSIDE Card -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+                    <span class="font-hebrew text-[18rem] font-bold text-pink-500 opacity-20 select-none block leading-none whitespace-nowrap">
+                        רַחַם
+                    </span>
+                </div>
+
                 <div class="relative z-10">
-                    <h3 class="text-2xl font-bold mb-2 text-white anim-text">이스라엘의 실수</h3>
-                    <p class="eng-sub mb-4 anim-text">The Mistake of Israel</p>
+                    <span class="font-eng text-pink-300 font-bold tracking-widest reveal-text text-sm" style="transition-delay: 100ms;">HEBREW : RAHAM</span>
+                    <h2 class="text-4xl font-bold mt-2 mb-2 reveal-text" style="transition-delay: 200ms;">자궁에서<br>시작된 사랑</h2>
+                    <p class="font-eng text-pink-200 text-sm font-bold reveal-text" style="transition-delay: 250ms;">
+                        Love that comes from a mother's womb.
+                    </p>
+                </div>
 
-                    <div class="anim-box glass-box bg-white/5 border-none">
-                        <p class="text-sm leading-7 text-gray-100 mb-2">
-                            그들은 하나님 때문이 아니라,<br>
-                            <span class="text-pink-300 font-bold">우상 숭배</span>와 <span class="text-pink-300 font-bold">혐오</span>로 기뻐했어.<br>
-                            그건 진짜가 아니야.
+                <div class="space-y-6 reveal-text relative z-10" style="transition-delay: 300ms;">
+                    <p class="text-lg leading-relaxed font-medium">
+                        히브리어로 긍휼은 <span class="font-eng font-bold text-pink-300">Raham</span>.<br>
+                        '자궁'이라는 단어에서 왔어.
+                    </p>
+                    <p class="text-gray-200 text-base font-medium">
+                        엄마가 아이를 품을 때 느끼는 본능.<br>
+                        호세아 서에 8번 나오는 긍휼 중<br>
+                        7번이 바로 이 단 거야.
+                    </p>
+                    <p class="font-eng text-sm text-pink-100 font-medium leading-snug">
+                        Just like a mom loves her baby naturally,<br>
+                        God loves us unconditionally.
+                    </p>
+                </div>
+
+                <div class="mt-4 flex justify-end reveal-text relative z-10" style="transition-delay: 400ms;">
+                    <i class="fas fa-baby-carriage text-5xl text-pink-500 opacity-50"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: The Problem -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gray-900 p-6 reveal-section" data-index="3">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center items-center zoom-card relative overflow-hidden"
+                 style="border: 1px solid rgba(255, 255, 255, 0.1);">
+                <!-- Glitch Effect Background -->
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
+                
+                <i class="fas fa-bolt text-yellow-500 text-4xl mb-8 animate-pulse reveal-text" style="transition-delay: 100ms;"></i>
+                
+                <h2 class="text-2xl font-bold text-center mb-2 reveal-text" style="transition-delay: 200ms;">
+                    근데... <span class="text-red-500">배신</span>했잖아.
+                </h2>
+                <p class="font-eng text-gray-300 text-sm font-bold uppercase tracking-wider mb-8 reveal-text" style="transition-delay: 250ms;">
+                    But... We betrayed Him.
+                </p>
+                
+                <p class="text-center text-gray-300 text-base mb-4 reveal-text font-medium" style="transition-delay: 300ms;">
+                    이스라엘은 끝까지 하나님을 떠났어.<br>
+                    아드마와 스보임(소돔과 고모라)처럼<br>
+                    멸망 받아 마땅해.<br>
+                    공의로우신 하나님은 심판하셔야만 해.
+                </p>
+                <p class="font-eng text-sm text-gray-400 text-center font-medium reveal-text" style="transition-delay: 350ms;">
+                    God is fair, so He must punish sin.<br>We deserved to fall.
+                </p>
+
+                <div class="w-full border-t border-gray-600 my-8"></div>
+
+                <p class="font-eng text-xl font-bold text-white reveal-text" style="transition-delay: 400ms;">BUT...</p>
+                <p class="text-center mt-2 reveal-text font-medium" style="transition-delay: 500ms;">
+                    호세아 11장 9절,<br>
+                    딱 한 번 다른 단어가 등장해.
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 5: Naham -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-3 p-6 reveal-section" data-index="4">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center items-center zoom-card text-center">
+                
+                <!-- Hebrew Background INSIDE Card -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+                    <span class="font-hebrew text-[18rem] font-bold text-cyan-500 opacity-20 select-none block leading-none whitespace-nowrap">
+                        נָחַם
+                    </span>
+                </div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <h2 class="text-3xl font-bold mt-4 mb-2 text-cyan-300 reveal-text" style="transition-delay: 100ms;">NAHAM</h2>
+                    <p class="font-eng text-sm font-bold tracking-[0.2em] mb-12 text-cyan-100 reveal-text" style="transition-delay: 200ms;">GOD CHANGED HIS MIND</p>
+
+                    <div class="space-y-4 text-left w-full pl-4 border-l-2 border-cyan-500 reveal-text" style="transition-delay: 300ms;">
+                        <p class="text-lg font-medium">마음을 고쳐먹다.</p>
+                        <p class="text-gray-200 text-base">
+                            이 단어의 이미지는 <span class="text-white font-bold font-eng">TURN</span>.<br>
+                            마음을 바꾸고 행동을 돌이키는 것.
                         </p>
-                        <p class="eng-sub">They rejoiced in idolatry and hatred,<br>not in God. That was not true joy.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-4">
-            <div class="flex justify-between items-center mb-8 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">04</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center">
-                <p class="eng-font text-xs text-gray-400 tracking-widest mb-2 anim-text">DEEP INSIDE</p>
-                <h2 class="text-2xl font-bold mb-6 text-white anim-text">사실은...<br>두려웠던 거야 😨</h2>
-                
-                <div class="glass-box mb-4 border-l-0 border-r-4 border-gray-500 anim-box">
-                    <p class="text-sm text-gray-200 leading-relaxed italic">
-                        "다시는 악을 두려워하지 않을 거야"
-                    </p>
-                    <p class="eng-sub text-gray-400 not-italic mt-1">"You shall not fear evil anymore." (Zeph 3:15)</p>
-                </div>
-                <div class="anim-text">
-                    <p class="text-sm leading-relaxed text-gray-300">
-                        이 말씀은 그들 마음 깊은 곳에<br>
-                        <strong>죄로 인한 두려움</strong>이 있었다는 증거야.
-                    </p>
-                    <p class="eng-sub text-gray-400">Deep down, they were filled with fear caused by sin.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 6 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-5">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400 rounded-full blur-[100px] opacity-20"></div>
-            <div class="flex justify-between items-center mb-8 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">05</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center">
-                <h2 class="eng-font text-5xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 anim-text" style="-webkit-background-clip: text;">
-                    BUT<br>GOD.
-                </h2>
-                <div class="my-6 anim-box">
-                    <p class="text-xl font-bold mb-2 text-white">두려움 삭제 버튼 🔘</p>
-                    <p class="text-sm text-gray-200 leading-relaxed mb-4">
-                        "우리를 혼자 두지 않으시겠다."<br>
-                        이건 단순히 옆에 계신다는 위로가 아냐.<br>
-                        <br>
-                        우리를 외롭게 만들었던 가장 큰 원인,<br>
-                        <strong class="text-cyan-300 border-b border-cyan-300">'죄의 문제'를 뿌리째 해결하셨다</strong>는 뜻이지.
-                    </p>
-                    <p class="eng-sub text-cyan-100">
-                        He didn't just stay with us. He fundamentally solved the problem of sin that separated us from Him.
-                    </p>
-                </div>
-                <div class="glass-box bg-blue-900/40 border-blue-400/30 anim-box">
-                    <p class="eng-font text-lg font-bold text-center text-blue-100">"GOD IS WITH US"</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 7 -->
-    <section class="snap-section">
-        <div class="story-card bg-gray-900">
-            <div class="flex justify-between items-center mb-8 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">06</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center">
-                <i class="fas fa-moon text-4xl text-gray-400 mb-6 anim-icon"></i>
-                <h2 class="text-2xl font-bold mb-2 text-white anim-text">오늘 밤은<br>울어도 괜찮아 🌙</h2>
-                <p class="eng-sub mb-4 anim-text">Weeping may tarry for the night.</p>
-                
-                <div class="anim-box">
-                    <p class="text-sm text-gray-300 leading-relaxed">
-                        억지로 웃으려 하지 마.<br>
-                        여전히 문제들이 우리를 아프게 할 때,<br>
-                        다윗도 우리처럼 밤새 울었어.
-                    </p>
-                    <p class="eng-sub text-gray-400">Don't force a smile. Even David wept when problems overwhelmed him.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 8 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-6">
-            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-800/60 to-transparent pointer-events-none"></div>
-            <div class="flex justify-between items-center mb-8 z-10 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">07</span>
-            </div>
-            <div class="flex-grow flex flex-col justify-center z-10">
-                <p class="text-xs font-bold text-yellow-200 mb-1 anim-text">THE SECRET OF JOY</p>
-                <h2 class="eng-font text-3xl font-black mb-6 leading-tight text-white anim-text">
-                    WAITING FOR<br>
-                    <span class="text-yellow-300 text-4xl">HIM</span>
-                </h2>
-
-                <div class="space-y-4 anim-box">
-                    <div>
-                        <p class="text-sm text-white font-bold leading-relaxed">다윗은 하나님의 성전을 기다렸어.</p>
-                        <p class="eng-sub text-white/80">David waited for God's Temple.</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-white leading-relaxed">
-                            그건 결국 우리와 함께하실<br>
-                            <strong class="text-yellow-300 border-b border-yellow-300">예수님</strong>을 기다린 거야.
+                        <p class="font-eng text-sm text-cyan-200 font-medium">
+                            Turning around. Changing plans.
                         </p>
-                        <p class="eng-sub text-white/80">He was waiting for Jesus to be with us.</p>
+                    </div>
+
+                    <div class="mt-12 reveal-text" style="transition-delay: 400ms;">
+                        <p class="text-base leading-relaxed font-medium">
+                            내가 너무 사랑해서...<br>
+                            그 사람이 받아야 할 벌을 거두어들이는 것.<br>
+                            <br>
+                            <span class="text-cyan-400 font-bold">"그렇다면 하나님은<br>자신의 본성(공의)을 뒤집으신 걸까?"</span>
+                        </p>
+                         <p class="font-eng text-sm text-gray-300 mt-3 font-bold">
+                            Did God break His own rules for love?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Climax -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-5 p-6 reveal-section" data-index="5">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center zoom-card shadow-[0_0_50px_rgba(234,88,12,0.3)]">
+                <h2 class="font-eng text-4xl font-extrabold text-orange-500 mb-2 reveal-text" style="transition-delay: 100ms;">
+                    DIVINE<br>REDIRECT
+                </h2>
+                <p class="font-eng text-orange-200 text-sm font-bold mb-10 reveal-text tracking-wide" style="transition-delay: 150ms;">
+                    NOT CANCELED, JUST MOVED
+                </p>
+                
+                <p class="text-xl font-bold mb-4 reveal-text" style="transition-delay: 200ms;">
+                    심판은 사라지지 않았다.
+                </p>
+                
+                <p class="text-gray-200 leading-relaxed mb-4 reveal-text text-base font-medium" style="transition-delay: 300ms;">
+                    하나님은 뜻을 돌이키셨지만,<br>
+                    심판을 <span class="font-eng text-orange-400">Cancel</span>하신 게 아냐.<br>
+                    심판의 방향을 <span class="font-eng text-white font-bold">Redirect</span>하신 거지.
+                </p>
+                 <p class="font-eng text-sm text-gray-400 font-medium mb-8 reveal-text" style="transition-delay: 350ms;">
+                    The punishment wasn't stopped.<br>It just changed direction.
+                </p>
+
+                <div class="bg-black/40 p-6 rounded-lg text-center reveal-text" style="transition-delay: 400ms;">
+                    <p class="text-sm text-orange-200 mb-2 font-bold">행위가 아닌 방향의 전환.</p>
+                    <i class="fas fa-bullseye text-3xl text-orange-500 animate-pulse"></i>
+                    <p class="text-lg font-bold mt-2 text-white">과녁은 바로 자기 자신.</p>
+                    <p class="font-eng text-sm text-gray-300 mt-2 font-bold">
+                        The target became God Himself.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Jesus/Christmas -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-[#0a0a1a] p-6 reveal-section" data-index="6">
+            
+            <!-- Card with Glow Border -->
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-end zoom-card relative overflow-hidden" 
+                 style="box-shadow: 0 0 30px rgba(253, 224, 71, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2);">
+                 
+                <!-- Bethlehem Star Background (Inside Card) -->
+                <div class="absolute top-16 left-1/2 -translate-x-1/2 w-full h-1/2 flex justify-center pointer-events-none z-0">
+                     <div class="relative">
+                        <i class="fas fa-star text-yellow-100 text-6xl animate-pulse blur-[2px]"></i>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-yellow-200 rounded-full blur-[50px] opacity-40"></div>
+                        <div class="absolute top-8 left-1/2 -translate-x-1/2 w-1 h-32 bg-gradient-to-b from-yellow-100 to-transparent opacity-50 blur-[1px]"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-yellow-100 to-transparent opacity-50 blur-[1px]"></div>
+                     </div>
+                </div>
+                
+                <div class="reveal-text relative z-10" style="transition-delay: 100ms;">
+                    <h2 class="font-eng text-5xl font-black text-white mb-2 text-center drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">JESUS</h2>
+                    <p class="font-eng text-yellow-100 text-xs mb-8 text-center uppercase tracking-widest font-bold">
+                        The Real Hero of Christmas
+                    </p>
+                </div>
+
+                <div class="space-y-6 reveal-text relative z-10" style="transition-delay: 200ms;">
+                    <div>
+                        <p class="text-lg leading-relaxed text-center font-bold">
+                            스스로 과녁이 되어 오신 분.
+                        </p>
+                        <p class="font-eng text-sm text-gray-300 text-center mt-1 font-medium">
+                            He became the target instead of us.
+                        </p>
+                    </div>
+                    
+                    <div>
+                         <p class="text-lg leading-relaxed text-center font-bold">
+                            그분이 바로<br>크리스마스의 주인공이야.
+                        </p>
+                        <p class="font-eng text-sm text-gray-300 text-center mt-1 font-medium">
+                            This is the real story of Christmas.
+                        </p>
                     </div>
                 </div>
 
-                <div class="glass-box bg-white/10 text-center mt-6 anim-box">
-                    <p class="text-sm font-bold text-white">그 '기대'가 내일의 기쁨이 되었지.</p>
-                    <p class="eng-sub text-white/90">That expectation became his joy for tomorrow.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 9 -->
-    <section class="snap-section">
-        <div class="story-card bg-gradient-7">
-            <div class="flex justify-between items-center mb-8 z-10 anim-text">
-                <span class="eng-font font-bold text-2xl text-white/30">FINAL</span>
-            </div>
-
-            <div class="flex-grow flex flex-col justify-center items-center text-center z-10">
-                <h2 class="eng-font text-4xl font-black mb-2 text-white anim-text">
-                    OUR<br>TOMORROW
-                </h2>
-                <p class="text-xs font-bold text-yellow-200 uppercase tracking-widest mb-6 anim-text">Maranatha</p>
-
-                <div class="anim-box">
-                    <p class="text-sm text-white leading-relaxed mb-1">
-                        2천 년 전 우리에게 오신 그분을 기억하며<br>
-                        우리는 <strong>마지막 날</strong>을 바라보며 살아가.
+                <div class="mt-8 pt-6 border-t border-white/10 reveal-text relative z-10" style="transition-delay: 300ms;">
+                    <p class="text-sm text-gray-300 text-center font-medium">
+                        하나님은 본성을 거스르셨지만<br>
+                        아들의 순종으로 거룩함을 지키셨어.
                     </p>
-                    <p class="eng-sub text-white/80 mb-6">
-                        Remembering Him who came 2000 years ago, we live looking forward to the final day.
+                     <p class="font-eng text-xs text-gray-400 text-center mt-2 font-medium">
+                        God kept His promise through His Son.
                     </p>
                 </div>
-
-                <div class="bg-black/30 backdrop-blur-md p-5 rounded-xl border border-white/20 w-full anim-box">
-                    <p class="text-base font-bold text-white mb-1">"아침에는 기쁨이 오리이다"</p>
-                    <p class="eng-sub text-white/90 italic">Joy comes with the morning.<br>Let's expect the joy of hope.</p>
-                </div>
             </div>
+        </section>
 
-            <div class="absolute bottom-6 w-full text-center left-0 anim-icon">
-                <i class="fas fa-sun text-yellow-300 animate-pulse text-2xl"></i>
-            </div>
-        </div>
-    </section>
-
-</div>
-
-<script>
-    /* =========================================
-       1. Animation Observer (Entry Animations)
-       ========================================= */
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const card = entry.target.querySelector('.story-card');
-                if(card) {
-                    card.classList.add('active');
-                    // Reset any drag transforms when card becomes active (centering)
-                    card.style.transform = ''; 
-                }
+        <!-- Slide 8: Sad Glory -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-4 p-6 reveal-section" data-index="7">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center items-center text-center zoom-card border-purple-500/30">
+                <i class="fas fa-cross text-6xl text-purple-500 mb-6 reveal-text" style="transition-delay: 100ms;"></i>
                 
-                // Update active index
-                const allSections = document.querySelectorAll('.snap-section');
-                allSections.forEach((sec, idx) => {
-                    if(sec === entry.target) {
-                        currentIndex = idx;
+                <h2 class="text-2xl font-bold mb-2 reveal-text" style="transition-delay: 200ms;">슬픈 영광 (Sad Glory)</h2>
+                <h3 class="font-eng text-purple-200 text-sm mb-6 reveal-text tracking-widest font-bold" style="transition-delay: 250ms;">
+                    OUR PEACE, HIS SORROW
+                </h3>
+
+                <p class="text-gray-200 mb-2 leading-relaxed text-base reveal-text font-medium" style="transition-delay: 300ms;">
+                    우리에게는 기쁜 평화이지만,<br>
+                    하나님께는 아들에게 심판을 돌려야 했던<br>
+                    가장 슬픈 날이었을 거야.
+                </p>
+                <p class="font-eng text-sm text-purple-300 mb-12 font-medium reveal-text" style="transition-delay: 350ms;">
+                    Happy peace for us, but a sad day for God.
+                </p>
+
+                <div class="bg-purple-900/40 p-4 rounded-xl w-full reveal-text" style="transition-delay: 400ms;">
+                    <p class="text-sm text-purple-100 font-medium">
+                        "그래야만 우리와 함께할 수 있으니까.<br>
+                        하나님이 그날 지으신 미소가...<br>
+                        <span class="text-white font-bold text-base">슬픈 미소는 아니었을까?</span>"
+                    </p>
+                     <p class="font-eng text-sm text-purple-300 mt-2 font-medium">
+                        "Maybe His smile that day...<br>was a sad smile?"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Conclusion -->
+        <section class="h-screen w-full relative flex items-center justify-center bg-gradient-1 p-6 reveal-section" data-index="8">
+            <div class="glass-card w-full max-w-md aspect-[10/16] rounded-3xl flex flex-col justify-center items-center text-center zoom-card">
+                <h1 class="font-eng text-4xl font-black mb-2 reveal-text" style="transition-delay: 100ms;">
+                    2025<br>CHRISTMAS
+                </h1>
+                <p class="font-eng text-sm text-indigo-300 mb-10 reveal-text tracking-widest font-bold" style="transition-delay: 150ms;">
+                    REMEMBER HIS CHOICE
+                </p>
+
+                <p class="text-lg mb-2 reveal-text font-bold" style="transition-delay: 200ms;">
+                    그분의 <span class="text-indigo-400 font-extrabold">'돌이키심(Naham)'</span>이 있었기에<br>
+                    우리의 평화가 있어.
+                </p>
+                
+                <p class="text-base text-gray-300 mb-10 reveal-text font-medium" style="transition-delay: 250ms;">
+                    그 사랑과 슬픈 웃음을 기억하는<br>
+                    크리스마스가 되길.
+                </p>
+                <p class="font-eng text-sm text-gray-400 font-medium mb-12 reveal-text" style="transition-delay: 300ms;">
+                    We have peace because He chose to turn away from anger.
+                </p>
+
+                <div class="reveal-text text-white/50 text-2xl font-black font-eng" style="transition-delay: 400ms;">
+                    AMEN
+                </div>
+                
+                <p class="mt-8 font-eng text-xs text-gray-500 reveal-text" style="transition-delay: 500ms;">
+                    Based on Hosea 11
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Navigation Controls (Visible on Desktop) -->
+    <div class="fixed bottom-8 right-8 hidden md:flex gap-2 z-50">
+        <button id="prevBtn" class="w-12 h-12 rounded-full bg-white/10 backdrop-blur hover:bg-white/20 text-white flex items-center justify-center transition-all">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button id="nextBtn" class="w-12 h-12 rounded-full bg-white/10 backdrop-blur hover:bg-white/20 text-white flex items-center justify-center transition-all">
+            <i class="fas fa-arrow-down"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('snap-container');
+            const sections = document.querySelectorAll('section');
+            let isScrolling = false;
+
+            // 1. Intersection Observer for Animation
+            const observerOptions = {
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-active');
+                    } else {
+                        // Optional: remove class to replay animation when scrolling back
+                        // entry.target.classList.remove('reveal-active');
                     }
                 });
-            } else {
-                 const card = entry.target.querySelector('.story-card');
-                 if(card) {
-                     card.classList.remove('active');
-                     card.classList.remove('fly-out-left', 'fly-out-right'); // Reset fly-out classes
-                 }
-            }
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+
+            // 2. Navigation Logic (Hybrid)
+            
+            const scrollToSection = (index) => {
+                if (index < 0 || index >= sections.length) return;
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+            };
+
+            const getCurrentIndex = () => {
+                let index = 0;
+                let minDiff = Infinity;
+                sections.forEach((section, i) => {
+                    const rect = section.getBoundingClientRect();
+                    const diff = Math.abs(rect.top);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        index = i;
+                    }
+                });
+                return index;
+            };
+
+            // Keyboard Navigation (Arrow Keys)
+            document.addEventListener('keydown', (e) => {
+                const currentIndex = getCurrentIndex();
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    scrollToSection(currentIndex + 1);
+                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    scrollToSection(currentIndex - 1);
+                }
+            });
+
+            // Touch Swipe Logic (Horizontal & Vertical Support)
+            let touchStartX = 0;
+            let touchStartY = 0;
+            
+            container.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, {passive: true});
+
+            container.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].screenX;
+                const touchEndY = e.changedTouches[0].screenY;
+                
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
+
+                // If horizontal swipe is dominant
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > 50) { // Threshold
+                        const currentIndex = getCurrentIndex();
+                        if (diffX > 0) { // Swipe Left -> Next
+                            scrollToSection(currentIndex + 1);
+                        } else { // Swipe Right -> Prev
+                            scrollToSection(currentIndex - 1);
+                        }
+                    }
+                }
+            }, {passive: true});
+
+            // Mouse Wheel (Horizontal mapped to Vertical logic if needed, usually native works well)
+            container.addEventListener('wheel', (e) => {
+                // If detecting horizontal scroll on trackpad
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    if (!isScrolling) {
+                        const currentIndex = getCurrentIndex();
+                        if (e.deltaX > 20) {
+                            scrollToSection(currentIndex + 1);
+                            isScrolling = true;
+                            setTimeout(() => isScrolling = false, 800);
+                        } else if (e.deltaX < -20) {
+                            scrollToSection(currentIndex - 1);
+                            isScrolling = true;
+                            setTimeout(() => isScrolling = false, 800);
+                        }
+                    }
+                }
+            }, {passive: true});
+
+            // Button Controls
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                scrollToSection(getCurrentIndex() - 1);
+            });
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                scrollToSection(getCurrentIndex() + 1);
+            });
         });
-    }, { threshold: 0.5 }); 
-
-    const sections = document.querySelectorAll('.snap-section');
-    sections.forEach(section => observer.observe(section));
-
-    /* =========================================
-       2. Draggable Card Logic
-       ========================================= */
-    const container = document.getElementById('mainContainer');
-    let currentIndex = 0;
-    let isNavigating = false;
-    const totalSections = sections.length;
-
-    // Helper to scroll
-    const scrollToSection = (index) => {
-        if (index < 0 || index >= totalSections || isNavigating) return;
-        isNavigating = true;
-        sections[index].scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => { isNavigating = false; }, 800);
-    };
-
-    // Keyboard support
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-            e.preventDefault();
-            // Simulate fly out left (Next)
-            const currentCard = sections[currentIndex].querySelector('.story-card');
-            if(currentCard) currentCard.classList.add('fly-out-left');
-            setTimeout(() => scrollToSection(currentIndex + 1), 300);
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            // Simulate fly out right (Prev)
-            const currentCard = sections[currentIndex].querySelector('.story-card');
-            if(currentCard) currentCard.classList.add('fly-out-right');
-            setTimeout(() => scrollToSection(currentIndex - 1), 300);
-        }
-    });
-
-    // Touch Drag Variables
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-    let activeCard = null;
-
-    container.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-        activeCard = sections[currentIndex].querySelector('.story-card');
-        if(activeCard) {
-            activeCard.classList.add('is-dragging'); // Disable transition for direct control
-        }
-    }, { passive: true });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDragging || !activeCard) return;
-        
-        currentX = e.touches[0].clientX;
-        const diffX = currentX - startX;
-
-        // Apply visual drag to card
-        // Rotate slightly based on distance for realism
-        const rotation = diffX * 0.05; 
-        activeCard.style.transform = `translateX(${diffX}px) rotate(${rotation}deg)`;
-
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging || !activeCard) return;
-        isDragging = false;
-        activeCard.classList.remove('is-dragging'); // Re-enable transition
-
-        const diffX = currentX - startX;
-        const threshold = window.innerWidth * 0.25; // Drag 25% of screen width to trigger
-
-        if (Math.abs(diffX) > threshold) {
-            // Trigger Navigation
-            if (diffX < 0) {
-                // Dragged Left -> Next
-                activeCard.classList.add('fly-out-left');
-                activeCard.style.transform = `translateX(-150%) rotate(-20deg)`;
-                setTimeout(() => scrollToSection(currentIndex + 1), 300);
-            } else {
-                // Dragged Right -> Prev
-                activeCard.classList.add('fly-out-right');
-                activeCard.style.transform = `translateX(150%) rotate(20deg)`;
-                setTimeout(() => scrollToSection(currentIndex - 1), 300);
-            }
-        } else {
-            // Revert (Snap back)
-            activeCard.style.transform = ''; 
-        }
-        
-        startX = 0;
-        currentX = 0;
-    }, { passive: true });
-
-</script>
-
+    </script>
 </body>
 </html>
