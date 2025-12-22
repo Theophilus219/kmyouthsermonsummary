@@ -88,15 +88,15 @@
         }
 
         /* 10:16 Aspect Ratio Frame Logic 
-           - Updated: Reduced scale factor from 85 to 80 for safe area on mobile
-           - Uses 'min' to calculate the largest possible size that fits within 80vw/80vh 
+           - Updated: Reduced scale factor to 60 for more breathing room
+           - Uses 'min' to calculate the largest possible size that fits within 60vw/60vh 
            - Ensures the ratio is always 10:16
         */
         .content-frame {
-            /* Calculate width: Take the smaller of (80% width) OR (height-based width) */
-            width: min(80vw, calc(80vh * 10 / 16));
-            /* Calculate height: Take the smaller of (80% height) OR (width-based height) */
-            height: min(80vh, calc(80vw * 16 / 10));
+            /* Calculate width: Take the smaller of (60% width) OR (height-based width) */
+            width: min(60vw, calc(60vh * 10 / 16));
+            /* Calculate height: Take the smaller of (60% height) OR (width-based height) */
+            height: min(60vh, calc(60vw * 16 / 10));
             
             aspect-ratio: 10 / 16;
             margin: auto;
@@ -201,7 +201,7 @@
             <div class="content-frame">
                 <div class="reveal mb-8">
                     <!-- Reduced font size for mobile safe area -->
-                    <h2 class="font-montserrat text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-purple-500 mb-3 break-words">
+                    <h2 class="font-montserrat text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-purple-500 mb-3 break-words">
                         COMPASSION
                     </h2>
                     <p class="text-gray-400 font-montserrat text-xs tracking-widest">GOD'S SPECIAL LANGUAGE</p>
