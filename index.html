@@ -88,15 +88,15 @@
         }
 
         /* 10:16 Aspect Ratio Frame Logic 
-           - Updated: Reduced scale factor to 60 for more breathing room
-           - Uses 'min' to calculate the largest possible size that fits within 60vw/60vh 
-           - Ensures the ratio is always 10:16
+           - Updated: Width expanded to 90% (90vw) for mobile optimization.
+           - Height limit adjusted to 80vh to accommodate the wider aspect ratio on mobile screens without clipping.
+           - Uses 'min' to calculate the largest possible size that fits within limits.
         */
         .content-frame {
-            /* Calculate width: Take the smaller of (60% width) OR (height-based width) */
-            width: min(60vw, calc(60vh * 10 / 16));
-            /* Calculate height: Take the smaller of (60% height) OR (width-based height) */
-            height: min(60vh, calc(60vw * 16 / 10));
+            /* Calculate width: Take the smaller of (90% width) OR (height-based width) */
+            width: min(90vw, calc(80vh * 10 / 16));
+            /* Calculate height: Take the smaller of (80% height) OR (width-based height) */
+            height: min(80vh, calc(90vw * 16 / 10));
             
             aspect-ratio: 10 / 16;
             margin: auto;
@@ -410,8 +410,6 @@
 
         <!-- Slide 9: Conclusion -->
         <section class="section bg-black" data-index="8">
-            <div class="bg-orb w-64 h-64 bg-neonBlue top-10 right-10 opacity-20"></div>
-            
             <div class="content-frame !justify-center gap-10">
                 <div class="reveal text-center">
                     <i class="fa-regular fa-paper-plane text-5xl text-neonBlue mb-6 animate-pulse-slow"></i>
