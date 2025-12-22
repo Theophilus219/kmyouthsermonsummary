@@ -88,14 +88,15 @@
         }
 
         /* 10:16 Aspect Ratio Frame Logic 
-           - Uses 'min' to calculate the largest possible size that fits within 90vw/90vh 
+           - Updated: Reduced scale factor from 90 to 85 for better breathing room on mobile
+           - Uses 'min' to calculate the largest possible size that fits within 85vw/85vh 
            - Ensures the ratio is always 10:16
         */
         .content-frame {
-            /* Calculate width: Take the smaller of (90% width) OR (height-based width) */
-            width: min(90vw, calc(90vh * 10 / 16));
-            /* Calculate height: Take the smaller of (90% height) OR (width-based height) */
-            height: min(90vh, calc(90vw * 16 / 10));
+            /* Calculate width: Take the smaller of (85% width) OR (height-based width) */
+            width: min(85vw, calc(85vh * 10 / 16));
+            /* Calculate height: Take the smaller of (85% height) OR (width-based height) */
+            height: min(85vh, calc(85vw * 16 / 10));
             
             aspect-ratio: 10 / 16;
             margin: auto;
@@ -170,29 +171,29 @@
             
             <!-- Content Frame (10:16) -->
             <div class="content-frame !justify-between">
-                <div class="reveal mt-4">
+                <div class="reveal mt-4 mb-2">
                     <span class="font-montserrat text-neonBlue text-sm tracking-widest uppercase mb-4 block">Intro</span>
                     <h1 class="text-4xl font-bold leading-tight mb-2">사랑,<br>어떻게 표현해?</h1>
                     <span class="sub-eng">How do you express your love?</span>
                 </div>
                 
-                <div class="reveal delay-200 flex-1 flex flex-col justify-center items-center w-full">
+                <!-- Added mt-8 for spacing from top, reduced internal gap for grouping -->
+                <div class="reveal delay-200 flex-1 flex flex-col justify-center items-center w-full mt-8">
                     <div class="w-full p-6 rounded-2xl bg-glass border border-glassBorder backdrop-blur-md flex flex-col items-center text-center gap-4">
                         <i class="fa-solid fa-gift text-4xl text-neonPink"></i>
                         <p class="text-lg text-gray-200 font-bold leading-relaxed">선물? 함께하는 시간?<br>아니면 인정하는 말?</p>
                         <span class="sub-eng text-xs border-t border-white/10 pt-2 w-full">Gifts? Quality Time?<br>Or Words of Affirmation?</span>
                     </div>
-                    <p class="text-xs text-gray-500 font-montserrat tracking-widest mt-6">#The5LoveLanguages</p>
+                    <!-- Reduced margin-top to keep hashtag close to card -->
+                    <p class="text-xs text-gray-500 font-montserrat tracking-widest mt-2">#The5LoveLanguages</p>
                 </div>
 
-                <div class="reveal delay-400 mb-8">
+                <div class="reveal delay-400 mb-4">
                     <p class="text-lg font-light leading-relaxed">우린 참 다양한 방법으로<br>사랑을 말하곤 해.</p>
                     <span class="sub-eng">We speak love in so many different ways.</span>
                 </div>
                 
-                <div class="absolute bottom-4 left-0 w-full text-center animate-bounce text-gray-500 text-xs">
-                    <i class="fa-solid fa-chevron-down"></i> SCROLL / SWIPE
-                </div>
+                <!-- Removed Scroll/Swipe indicator -->
             </div>
         </section>
 
