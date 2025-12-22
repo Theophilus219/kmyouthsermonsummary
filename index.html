@@ -88,15 +88,15 @@
         }
 
         /* 10:16 Aspect Ratio Frame Logic 
-           - Updated: Reduced scale factor from 90 to 85 for better breathing room on mobile
-           - Uses 'min' to calculate the largest possible size that fits within 85vw/85vh 
+           - Updated: Reduced scale factor from 85 to 80 for safe area on mobile
+           - Uses 'min' to calculate the largest possible size that fits within 80vw/80vh 
            - Ensures the ratio is always 10:16
         */
         .content-frame {
-            /* Calculate width: Take the smaller of (85% width) OR (height-based width) */
-            width: min(85vw, calc(85vh * 10 / 16));
-            /* Calculate height: Take the smaller of (85% height) OR (width-based height) */
-            height: min(85vh, calc(85vw * 16 / 10));
+            /* Calculate width: Take the smaller of (80% width) OR (height-based width) */
+            width: min(80vw, calc(80vh * 10 / 16));
+            /* Calculate height: Take the smaller of (80% height) OR (width-based height) */
+            height: min(80vh, calc(80vw * 16 / 10));
             
             aspect-ratio: 10 / 16;
             margin: auto;
@@ -147,7 +147,7 @@
         .sub-eng {
             font-family: 'Montserrat', sans-serif;
             font-weight: 400;
-            font-size: 0.85rem; 
+            font-size: 0.8rem; /* Slightly smaller for mobile safety */
             color: rgba(255, 255, 255, 0.5);
             margin-top: 0.5rem; 
             line-height: 1.4;
@@ -170,30 +170,27 @@
             <div class="bg-orb w-64 h-64 bg-neonPurple top-[-50px] left-[-50px]"></div>
             
             <!-- Content Frame (10:16) -->
-            <div class="content-frame !justify-between">
-                <div class="reveal mt-4 mb-2">
+            <!-- Changed !justify-between to justify-center with gap-8 for centering -->
+            <div class="content-frame justify-center gap-8">
+                <div class="reveal text-center">
                     <span class="font-montserrat text-neonBlue text-sm tracking-widest uppercase mb-4 block">Intro</span>
                     <h1 class="text-4xl font-bold leading-tight mb-2">사랑,<br>어떻게 표현해?</h1>
                     <span class="sub-eng">How do you express your love?</span>
                 </div>
                 
-                <!-- Added mt-8 for spacing from top, reduced internal gap for grouping -->
-                <div class="reveal delay-200 flex-1 flex flex-col justify-center items-center w-full mt-8">
+                <div class="reveal delay-200 flex flex-col justify-center items-center w-full">
                     <div class="w-full p-6 rounded-2xl bg-glass border border-glassBorder backdrop-blur-md flex flex-col items-center text-center gap-4">
                         <i class="fa-solid fa-gift text-4xl text-neonPink"></i>
                         <p class="text-lg text-gray-200 font-bold leading-relaxed">선물? 함께하는 시간?<br>아니면 인정하는 말?</p>
                         <span class="sub-eng text-xs border-t border-white/10 pt-2 w-full">Gifts? Quality Time?<br>Or Words of Affirmation?</span>
                     </div>
-                    <!-- Reduced margin-top to keep hashtag close to card -->
                     <p class="text-xs text-gray-500 font-montserrat tracking-widest mt-2">#The5LoveLanguages</p>
                 </div>
 
-                <div class="reveal delay-400 mb-4">
+                <div class="reveal delay-400 text-center">
                     <p class="text-lg font-light leading-relaxed">우린 참 다양한 방법으로<br>사랑을 말하곤 해.</p>
                     <span class="sub-eng">We speak love in so many different ways.</span>
                 </div>
-                
-                <!-- Removed Scroll/Swipe indicator -->
             </div>
         </section>
 
@@ -203,7 +200,8 @@
             
             <div class="content-frame">
                 <div class="reveal mb-8">
-                    <h2 class="font-montserrat text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-purple-500 mb-3">
+                    <!-- Reduced font size for mobile safe area -->
+                    <h2 class="font-montserrat text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-purple-500 mb-3 break-words">
                         COMPASSION
                     </h2>
                     <p class="text-gray-400 font-montserrat text-xs tracking-widest">GOD'S SPECIAL LANGUAGE</p>
@@ -259,8 +257,9 @@
             
             <div class="content-frame">
                 <div class="reveal mb-10 relative">
-                    <span class="font-montserrat text-7xl font-black text-white opacity-5 absolute top-[-30px] left-[-10px] z-0">RAHAM</span>
-                    <div class="relative z-10">
+                    <!-- Adjusted position and font size to prevent overflow -->
+                    <span class="font-montserrat text-5xl md:text-7xl font-black text-white opacity-5 absolute top-[-20px] left-0 z-0">RAHAM</span>
+                    <div class="relative z-10 pt-2">
                         <h2 class="text-4xl font-bold text-red-400 mb-2">라함 (Raham)</h2>
                         <p class="text-xs text-gray-400 font-montserrat tracking-widest pl-1">THE WOMB / MOTHERLY LOVE</p>
                     </div>
@@ -297,7 +296,7 @@
                 
                 <div class="reveal delay-200 bg-white/5 p-6 rounded-xl backdrop-blur-md border border-white/10 flex flex-col gap-4">
                     <div class="flex items-center justify-between">
-                        <span class="font-montserrat font-bold text-3xl">NAHAM</span>
+                        <span class="font-montserrat font-bold text-3xl md:text-3xl">NAHAM</span>
                         <i class="fa-solid fa-arrow-rotate-right text-neonPurple text-3xl"></i>
                     </div>
                     <div>
@@ -383,8 +382,9 @@
         <section class="section bg-gradient-to-b from-slate-900 to-black" data-index="7">
             <div class="content-frame">
                 <div class="reveal text-right mb-10">
-                    <span class="font-montserrat text-5xl font-black block text-gray-800 mb-2">MERRY</span>
-                    <span class="font-montserrat text-6xl font-black block text-white">CHRISTMAS</span>
+                    <!-- Adjusted Font Size for fitting -->
+                    <span class="font-montserrat text-4xl md:text-5xl font-black block text-gray-800 mb-2">MERRY</span>
+                    <span class="font-montserrat text-5xl md:text-6xl font-black block text-white">CHRISTMAS</span>
                 </div>
                 
                 <div class="reveal delay-200 bg-white/5 p-6 rounded-tr-3xl rounded-bl-3xl border-l-4 border-yellow-400 flex flex-col gap-6">
@@ -420,7 +420,8 @@
                 </div>
 
                 <div class="reveal delay-200 text-center">
-                    <p class="text-2xl font-light leading-loose mb-6">
+                    <!-- Reduced font size from 2xl to lg/xl -->
+                    <p class="text-lg md:text-xl font-light leading-loose mb-6">
                         그저 즐겁기만 한 날이 아니라,<br>
                         하나님의 <span class="font-bold text-neonBlue">슬픈 웃음</span>과<br>
                         <span class="font-bold text-neonPurple">깊은 사랑</span>을 기억하는<br>
