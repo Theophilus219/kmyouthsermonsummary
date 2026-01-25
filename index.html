@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Youth Sermon: Real Power</title>
+    <title>Joy In The City - Youth Sermon</title>
     
-    <!-- Fonts: Noto Sans KR (Korean) & Montserrat (English) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Noto Sans KR', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif'],
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        montserrat: ['"Montserrat"', 'sans-serif'],
                     },
                     colors: {
-                        neonPurple: '#b026ff',
-                        neonBlue: '#3b82f6',
-                        darkBg: '#0f0f11',
+                        neon: {
+                            purple: '#b026ff',
+                            blue: '#00d4ff',
+                            pink: '#ff007f',
+                        }
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
@@ -44,37 +48,21 @@
     </script>
 
     <style>
-        /* Hide Scrollbar for clean UI */
-        body {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-            background-color: #000;
-            color: white;
-            overflow: hidden; /* Prevent default scroll to handle via JS/CSS hybrid */
+        /* Custom Scrollbar Hide */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
         }
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Scroll Snap Container */
-        #scroll-container {
-            height: 100vh;
-            width: 100vw;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+        
+        /* Smooth Scrolling */
+        html {
             scroll-behavior: smooth;
         }
 
-        /* Individual Section */
-        section {
-            height: 100vh;
-            width: 100vw;
-            scroll-snap-align: start;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        body {
+            background-color: #050505;
+            color: white;
+            overflow: hidden; /* JS handle scroll */
         }
 
         /* Glassmorphism Card */
@@ -83,416 +71,340 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* Animations triggered by JS */
-        .fade-in-up {
+        /* Text Stroke for English */
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+            color: transparent;
+        }
+
+        /* Animation Classes */
+        .reveal-text {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(30px) scale(0.95);
             transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .active .reveal-text {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
         
-        .scale-in {
-            transform: scale(0.9);
-            opacity: 0.5;
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        section.active .fade-in-up {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        section.active .scale-in {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        /* Transition delays for sequential appearance */
+        /* Stagger Delays */
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
         .delay-500 { transition-delay: 500ms; }
 
-        /* Typography outlines for style */
-        .text-outline {
-            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
-            color: transparent;
-        }
-        
-        /* English Translation Style */
-        .eng-trans {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.4;
-            font-weight: 500;
-            margin-top: 0.5rem;
-            border-left: 2px solid rgba(176, 38, 255, 0.5);
-            padding-left: 0.75rem;
+        /* Background Gradients for each section */
+        .bg-gradient-1 { background: radial-gradient(circle at center, #2e1065 0%, #000000 70%); }
+        .bg-gradient-2 { background: radial-gradient(circle at top right, #831843 0%, #000000 70%); }
+        .bg-gradient-3 { background: radial-gradient(circle at bottom left, #1e3a8a 0%, #000000 70%); }
+        .bg-gradient-4 { background: radial-gradient(circle at center, #0f172a 0%, #000000 80%); }
+
+        /* Navigation Hint */
+        .nav-hint {
+            animation: bounce 2s infinite;
         }
     </style>
 </head>
-<body>
+<body class="h-screen w-full relative">
+
+    <!-- Background Ambient Orbs (Fixed) -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-neon-purple rounded-full blur-[120px] opacity-20 animate-float z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-neon-blue rounded-full blur-[120px] opacity-20 animate-float z-0" style="animation-delay: -2s;"></div>
 
     <!-- Main Scroll Container -->
-    <main id="scroll-container">
+    <!-- Snap scrolling enabled on Y axis -->
+    <main id="scroller" class="h-full w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth relative z-10">
 
-        <!-- Slide 1: Intro -->
-        <section class="bg-gradient-to-b from-purple-900 via-gray-900 to-black" data-index="0">
-            <!-- Background Elements -->
-            <div class="absolute top-10 left-0 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
+        <!-- SLIDE 1: Intro -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-gradient-1" data-index="0">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                <h1 class="font-montserrat font-black text-[20vh] leading-none text-white absolute -top-10 -left-10">JOY</h1>
+            </div>
             
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-10 p-8 relative scale-in safe-area-padding">
-                <div class="absolute -right-4 -top-10 text-[8rem] font-montserrat font-black text-white/5 z-0 leading-none select-none">
-                    MIX<br>ED
+            <div class="glass-card w-full max-w-md p-8 rounded-3xl relative z-10 reveal-text">
+                <div class="flex items-center gap-2 mb-4 text-neon-blue">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span class="font-bold tracking-widest text-xs font-montserrat">ACTS 8:8</span>
                 </div>
-                
-                <div class="z-10 fade-in-up delay-100">
-                    <span class="inline-block px-3 py-1 rounded-full border border-purple-400 text-purple-300 text-xs font-bold mb-4">ACTS 8:6-7</span>
-                    <h1 class="text-4xl font-black font-sans leading-tight mb-2">
-                        원치 않았던 아픔,<br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">섞여버린 마음.</span>
-                    </h1>
-                    <p class="eng-trans">
-                        Pain they didn't ask for,<br>Hearts mixed with confusion.
-                    </p>
-                </div>
-
-                <div class="z-10 fade-in-up delay-200">
-                    <p class="text-gray-300 font-light text-lg leading-relaxed">
-                        사마리아 사람들은 선택권이 없었어.<br>
-                        역사적인 아픔 속에 이방 문화가 스며들었고,<br>
-                        그들의 마음은 복잡하게 섞여버렸지.
-                    </p>
-                    <p class="eng-trans mt-4">
-                        Foreign cultures seeped into their history of pain,<br>leaving their hearts in chaos.
+                <h2 class="text-3xl font-bold mb-6 leading-tight">
+                    그리하여<br>
+                    <span class="text-neon-purple">그 도시 안에</span><br>
+                    큰 기쁨이 생겼습니다.
+                </h2>
+                <p class="text-gray-300 font-light text-sm leading-relaxed">
+                    1월 시리즈의 마지막 이야기.<br>
+                    빌립이 전한 복음이 도시를 뒤흔들다.
+                </p>
+                <div class="mt-6 pt-6 border-t border-white/10">
+                    <p class="font-montserrat text-xs text-white/60 tracking-wider leading-relaxed">
+                        "So there was <span class="text-white font-bold">great joy</span> in that city."
                     </p>
                 </div>
             </div>
+            
+            <h1 class="font-montserrat font-black text-6xl text-outline absolute bottom-20 right-4 opacity-30 reveal-text delay-200 text-right leading-none">
+                UNEXPECTED<br>
+                <span class="text-white opacity-50">GREAT JOY</span>
+            </h1>
         </section>
 
-        <!-- Slide 2: Context (Occult) -->
-        <section class="bg-black" data-index="1">
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
+        <!-- SLIDE 2: Context -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-black" data-index="1">
+            <h1 class="font-montserrat font-black text-[10vh] text-outline absolute top-10 -left-4 opacity-10 pointer-events-none leading-none">
+                SCATTERED<br>BUT SOWN
+            </h1>
             
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-8 p-8 relative scale-in">
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[6rem] font-montserrat font-black text-outline z-0 rotate-90 whitespace-nowrap opacity-20">
-                    OCCULT
+            <div class="glass-card w-full max-w-md p-8 rounded-3xl reveal-text border-l-4 border-neon-pink z-10">
+                <h3 class="font-montserrat font-bold text-4xl mb-2 text-neon-pink">SEEDS</h3>
+                <p class="text-lg font-bold mb-4">우리는 흩어진 게 아니야,<br>심겨진 거야.</p>
+                <p class="text-gray-400 text-sm font-light leading-relaxed">
+                    상처받고 흩어졌다고 생각했니?<br>
+                    아니, 우리는 세상이 감당 못 할<br>
+                    <span class="text-white font-bold">'복음의 씨앗'</span>으로 뿌려진 거야.
+                </p>
+                
+                <div class="mt-6 bg-neon-pink/10 p-4 rounded-xl">
+                    <p class="font-montserrat text-xs text-neon-pink font-bold mb-1">THE DIVINE STRATEGY</p>
+                    <p class="font-montserrat text-[10px] text-gray-300 tracking-wide">
+                        We are not just scattered by pain,<br>
+                        but <span class="text-white underline decoration-neon-pink">planted for a purpose</span>.
+                    </p>
                 </div>
+            </div>
+            <div class="absolute -right-20 top-1/3 w-64 h-64 bg-neon-pink rounded-full blur-[100px] opacity-20"></div>
+        </section>
 
-                <div class="z-10 text-center fade-in-up delay-100">
-                    <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-md">
-                        <i class="fas fa-magic text-2xl text-purple-400"></i>
+        <!-- SLIDE 3: Definition -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-gradient-2" data-index="2">
+            <div class="w-full max-w-md relative">
+                <div class="reveal-text">
+                    <p class="font-montserrat text-xs font-bold text-white/50 mb-2 tracking-[0.2em]">EMOTION VS REALITY</p>
+                    <h2 class="font-montserrat font-black text-5xl text-white mb-2">NOT JUST<br><span class="text-neon-blue">FEELING</span></h2>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl mt-6 reveal-text delay-200">
+                    <p class="text-base font-medium leading-relaxed">
+                        우린 보통 "나 기뻐"라고 말할 때<br>
+                        <span class="font-montserrat text-neon-blue font-bold">"I'm happy"</span>라고 하잖아?
+                    </p>
+                    <hr class="border-white/10 my-4">
+                    <p class="text-base font-medium leading-relaxed">
+                        근데 성경은 좀 다르게 말해.<br>
+                        원래 없던 기쁨이<br>
+                        <span class="text-xl font-bold text-white">"생겨났다"</span>고.
+                    </p>
+                    <div class="mt-4 text-right">
+                        <span class="block font-montserrat text-neon-pink text-2xl font-black leading-none">GENUINE JOY</span>
+                        <span class="block font-montserrat text-white text-lg font-black leading-none">WAS PRODUCED</span>
                     </div>
-                    <h2 class="text-3xl font-bold mb-4">마술, 오컬트...<br>자극적인 것에 빠지다</h2>
-                    <p class="eng-trans text-center border-none p-0 mb-6 text-purple-200/70">
-                        Captivated by magic and the occult.
-                    </p>
-                    
-                    <p class="text-gray-300 text-base font-light leading-relaxed">
-                        이해할 수 없는 힘, 초자연적인 현상.<br>
-                        사마리아 사람들은 그 '화려함'에<br>
-                        완전히 몰입해 있었어.<br>
-                        마치 오늘날의 우리처럼 말이야.
-                    </p>
-                    
-                    <p class="eng-trans text-center border-none p-0 mt-4">
-                        They were obsessed with the spectacular,<br>just like we often are today.
-                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: The Event (Philip) -->
-        <section class="bg-gradient-to-tr from-blue-900 to-slate-900" data-index="2">
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-8 p-8 relative scale-in">
-                <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
-
-                <div class="z-10 fade-in-up delay-100">
-                    <h2 class="text-5xl font-montserrat font-black text-white mb-2">REAL<br>SIGNS</h2>
-                    <div class="h-1 w-20 bg-blue-400 mb-6"></div>
-                    
-                    <h3 class="text-2xl font-bold mb-2">그때, 빌립이 보여준<br>'진짜' 표적</h3>
-                    <p class="eng-trans">
-                        Then, Philip showed them<br>what real power looks like.
-                    </p>
-                </div>
-                
-                <div class="z-10 fade-in-up delay-200">
-                    <p class="text-gray-300 leading-relaxed">
-                        빌립은 화려한 쇼를 하지 않았어.<br>
-                        귀신이 떠나가고, 장애가 치유되는<br>
-                        진짜 회복이 일어났지.<br>
-                        가짜가 판치던 곳에 진짜가 나타난 거야.
-                    </p>
-                    <p class="eng-trans mt-4">
-                        No flashy shows.<br>Just true healing and restoration<br>where fake power used to rule.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Insight (Not Magic) -->
-        <section class="bg-zinc-900" data-index="3">
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center items-center gap-6 p-8 relative scale-in text-center">
-                
-                <div class="fade-in-up delay-100">
-                    <i class="fas fa-exclamation-triangle text-yellow-400 text-4xl mb-4 animate-bounce"></i>
-                    <h2 class="text-2xl font-bold mb-2 text-white">잠깐, 오해하지 마!</h2>
-                    <p class="eng-trans border-none p-0 text-yellow-200/70">Wait, don't get it wrong!</p>
-                </div>
-
-                <div class="fade-in-up delay-200">
-                    <p class="text-gray-400 mb-4 text-sm leading-relaxed">
-                        "우리도 기적을 일으켜야 하나?"<br>
-                        "귀신 들린 사람 찾아다녀야 해?"<br>
-                        <br>
-                        <span class="text-white font-bold text-lg">NOPE.</span><br>
-                        중요한 건 기적 퍼포먼스가 아니야.
-                    </p>
-                    <p class="eng-trans border-none p-0">
-                        It's not about performing miracles<br>or chasing supernatural events.
-                    </p>
-                </div>
-
-                <div class="w-full border-t border-gray-700 my-2"></div>
-
-                <div class="fade-in-up delay-300">
-                    <p class="font-montserrat font-black text-3xl text-gray-200 leading-tight">
-                        IT'S NOT ABOUT<br>
-                        <span class="text-yellow-400">THE MAGIC.</span>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: The Name (Jesus) -->
-        <section class="bg-gradient-to-b from-black to-red-900" data-index="4">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-500/10 via-black to-black"></div>
+        <!-- SLIDE 4: Deep Dive 1 (The Source) -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-black" data-index="3">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center opacity-20"></div>
             
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center items-center gap-8 p-6 relative scale-in border-red-500/20">
-                <div class="fade-in-up delay-100 text-center">
-                    <p class="text-gray-400 text-sm mb-2">빌립이 남긴 단 하나의 임팩트</p>
-                    <h1 class="text-4xl font-black text-white mb-2">
-                        오직<br>
-                        예수 그리스도
-                    </h1>
-                    <p class="eng-trans border-none p-0 text-red-200/60">
-                        The only impact Philip left:<br>Jesus Christ.
-                    </p>
+            <div class="relative z-10 w-full max-w-md text-center reveal-text">
+                <i class="fa-solid fa-bolt text-4xl text-yellow-400 mb-6 animate-pulse-slow"></i>
+                <h2 class="text-2xl font-bold mb-4">진짜 기쁨의<br>출처를 찾아서</h2>
+                <p class="text-gray-300 text-sm leading-relaxed mb-8">
+                    힘든 상황에서도 잠깐 웃을 순 있어.<br>
+                    하지만 사마리아에 임한 기쁨은<br>
+                    그런 일시적인 감정이 아니었어.<br><br>
+                    빌립이 전해준<br>
+                    <span class="text-neon-purple font-bold text-lg">예수님을 만나는 것.</span><br>
+                    그게 진짜 이유였지.
+                </p>
+                
+                <div class="border-y border-white/20 py-4 my-4">
+                    <h1 class="font-montserrat font-black text-3xl text-white mb-1">THE SOURCE</h1>
+                    <p class="font-montserrat text-xs tracking-[0.3em] text-neon-purple font-bold">ENCOUNTERING JESUS</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: Transformation (Neg to Pos) -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-gradient-3" data-index="4">
+            <h1 class="font-montserrat font-black text-[12vh] text-outline absolute bottom-0 right-0 opacity-10 pointer-events-none text-right leading-none">
+                TURN<br>AROUND
+            </h1>
+            
+            <div class="w-full max-w-md flex flex-col gap-4 relative z-10">
+                <div class="glass-card p-6 rounded-2xl reveal-text transform -rotate-2 border-red-500/30">
+                    <div class="flex justify-between items-start">
+                        <span class="font-montserrat font-bold text-red-400 text-xl tracking-wider">NEGATIVE</span>
+                        <i class="fa-solid fa-minus text-red-400"></i>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-2">Fear, Pain, Despair...</p>
+                    <p class="font-montserrat text-[10px] text-red-500/50 mt-1 uppercase tracking-widest">Broken World</p>
+                </div>
+                
+                <div class="flex justify-center text-3xl text-white py-2 reveal-text delay-100">
+                    <i class="fa-solid fa-arrow-down animate-bounce"></i>
                 </div>
 
-                <div class="relative w-full aspect-square flex items-center justify-center fade-in-up delay-200 max-h-[250px]">
-                    <div class="absolute inset-0 border border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
-                    <div class="absolute inset-4 border border-red-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
-                    <p class="font-montserrat font-bold text-xl text-red-100 text-center leading-tight">
-                        ONE NAME<br>
-                        <span class="text-4xl text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">JESUS</span>
-                    </p>
+                <div class="glass-card p-6 rounded-2xl reveal-text delay-200 transform rotate-2 bg-blue-900/20 border-blue-500/30">
+                    <div class="flex justify-between items-start">
+                        <span class="font-montserrat font-bold text-neon-blue text-xl tracking-wider">POSITIVE</span>
+                        <i class="fa-solid fa-plus text-neon-blue"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm mt-2">Hope, Restoration, Joy!</p>
+                    <p class="font-montserrat text-[10px] text-blue-400/50 mt-1 uppercase tracking-widest">Kingdom of God</p>
                 </div>
 
-                <p class="text-center text-gray-300 text-sm fade-in-up delay-300 leading-relaxed">
-                    마술에 쏠렸던 그들의 시선을<br>
-                    능력의 근원인 예수님께로 돌려버렸어.<br>
-                    <span class="block text-xs text-red-300/70 mt-2 font-montserrat">Turning their eyes from magic to the Messiah.</span>
+                <p class="text-center mt-8 text-sm font-light reveal-text delay-300">
+                    예수님은 내 안의 <span class="font-montserrat font-bold text-red-400">MINUS</span>를<br>
+                    <span class="font-montserrat font-bold text-blue-400">PLUS</span>로 바꾸시는 분이야. ✨
                 </p>
             </div>
         </section>
 
-        <!-- Slide 6: Application (Modern Magic) -->
-        <section class="bg-gray-900" data-index="5">
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-8 p-8 relative scale-in">
-                <div class="fade-in-up delay-100">
-                    <h2 class="text-2xl font-bold leading-snug mb-2">
-                        그렇다면 오늘날,<br>
-                        우리의 '마술'은 뭘까?
-                    </h2>
-                    <p class="eng-trans">
-                        So, what is our "magic" today?
-                    </p>
-                </div>
+        <!-- SLIDE 6: Struggle -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-black" data-index="5">
+            <h1 class="font-montserrat font-black text-[10vh] text-outline absolute top-10 left-[-20px] opacity-10 pointer-events-none leading-none rotate-90 origin-top-left">
+                REALITY<br>CHECK
+            </h1>
 
-                <div class="space-y-4 fade-in-up delay-200">
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center">
-                        <i class="fas fa-coins text-yellow-400 text-xl w-10"></i>
+            <div class="glass-card w-full max-w-md p-8 rounded-3xl reveal-text relative z-10">
+                <h3 class="text-xl font-bold mb-4">"근데 전 기적이 없는데요?"</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    공부도, 관계도, 꿈도...<br>
+                    가끔은 실패할 때가 더 많지.<br>
+                    성경 속 이야기가 마치<br>
+                    <span class="text-white font-bold inline-block border-b border-white/30 pb-1">동화(Fairy tales)</span>처럼<br>
+                    느껴질 때도 있을 거야.
+                </p>
+                
+                <div class="bg-black/30 p-4 rounded-lg border border-white/5">
+                    <p class="font-montserrat text-xs text-gray-500 mb-2">SYSTEM STATUS:</p>
+                    <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-red-500 h-full w-1/3 animate-pulse"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 font-montserrat text-[10px] tracking-wider text-red-400">
+                        <span>MIRACLE NOT FOUND</span>
+                        <span>ERROR 404</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Solution -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-gradient-4" data-index="6">
+            <div class="w-full max-w-md relative z-10 text-center reveal-text">
+                <i class="fa-solid fa-cross text-5xl text-neon-purple mb-6 shadow-glow"></i>
+                <h2 class="text-2xl font-bold mb-8">성공보다 중요한 것</h2>
+                
+                <div class="text-left space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-neon-purple/20 p-2 rounded-lg text-neon-purple shrink-0">
+                            <i class="fa-solid fa-1"></i>
+                        </div>
                         <div>
-                            <p class="font-montserrat font-bold text-lg">MONEY</p>
-                            <p class="text-xs text-gray-400">"Money keeps me safe."</p>
+                            <p class="font-montserrat font-black text-neon-purple text-xs mb-1 tracking-wider">CHRIST: THE CATALYST</p>
+                            <p class="text-sm font-light">
+                                부정을 기쁨으로 바꿀 유일한 길은<br>
+                                오직 <strong class="text-white">예수 그리스도</strong>뿐이야.
+                            </p>
                         </div>
                     </div>
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center">
-                        <i class="fas fa-trophy text-blue-400 text-xl w-10"></i>
-                        <div>
-                            <p class="font-montserrat font-bold text-lg">SUCCESS</p>
-                            <p class="text-xs text-gray-400">"Success defines who I am."</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="fade-in-up delay-300 text-right">
-                    <p class="font-montserrat font-black text-4xl text-white/10">
-                        MODERN<br>IDOLS
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Reality Check (Anxiety) -->
-        <section class="bg-gradient-to-br from-gray-800 to-black" data-index="6">
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-8 p-8 relative scale-in">
-                <div class="fade-in-up delay-100">
-                    <h2 class="text-3xl font-bold mb-2 text-gray-200">
-                        성공이 널<br>지켜줄 것 같지?
-                    </h2>
-                    <p class="eng-trans border-gray-600">
-                        Think success will protect you?
-                    </p>
-                </div>
-                
-                <div class="fade-in-up delay-200">
-                    <p class="text-gray-400 mb-6 leading-relaxed">
-                        오히려 그 끝엔 <span class="text-white font-bold border-b border-white">비교</span>와 <span class="text-white font-bold border-b border-white">불안</span>만<br>
-                        기다리고 있을지도 몰라.<br>
-                        <br>
-                        우울증을 감기처럼 앓는 시대,<br>
-                        그게 우리가 쫓는 성공의 민낯이야.
-                    </p>
-                    <p class="eng-trans mt-4">
-                        It often leads to comparison and anxiety.<br>
-                        Depression becomes common cold in this race.
-                    </p>
-                </div>
-                
-                <div class="fade-in-up delay-300">
-                    <p class="font-montserrat font-bold text-2xl text-gray-500 text-right">
-                        ANXIETY,<br>NOT PEACE.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Solution (True Power) -->
-        <section class="bg-gradient-to-t from-indigo-900 via-purple-900 to-black" data-index="7">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
-            
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center gap-10 p-8 relative scale-in">
-                <div class="fade-in-up delay-100">
-                    <span class="text-indigo-300 text-xs font-bold tracking-widest">CONCLUSION</span>
-                    <h1 class="text-3xl font-black mt-2 mb-2">진짜 능력은<br>달라.</h1>
-                    <p class="eng-trans border-indigo-500/50">Real power is different.</p>
-                </div>
-
-                <div class="fade-in-up delay-200 text-center relative">
-                    <div class="absolute top-0 left-0 w-full h-full bg-indigo-500 blur-3xl opacity-20"></div>
-                    <p class="relative text-lg text-gray-200 font-medium leading-loose">
-                        세상은 화려한 '기적'을 묻지만,<br>
-                        우리는 <span class="text-white font-bold text-xl">'구원'</span>을 답한다.<br>
-                        <br>
-                        병이 낫는 것보다 더 큰 기적,<br>
-                        내 영혼이 살아나는 것.
-                    </p>
-                    <p class="eng-trans mt-4 text-center border-none p-0">
-                        The world asks for miracles,<br>but we answer with Salvation.
-                    </p>
-                </div>
-
-                <div class="fade-in-up delay-300 text-right">
-                    <p class="font-montserrat font-black text-3xl text-indigo-400">
-                        TRUE POWER<br>IS SALVATION.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- New Slide: Romans 1:16 -->
-        <section class="bg-black" data-index="8">
-             <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-screen"></div>
-            
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center items-center gap-8 p-8 relative scale-in text-center">
-                 <div class="fade-in-up delay-100">
-                    <span class="inline-block px-3 py-1 rounded-full border border-white/30 text-white/50 text-xs font-bold mb-4">ROMANS 1:16</span>
-                    <i class="fas fa-bible text-3xl text-gray-400 mb-4 block"></i>
-                </div>
-
-                <div class="fade-in-up delay-200">
-                    <p class="text-xl font-bold leading-relaxed text-gray-200">
-                        "내가 복음을<br>
-                        부끄러워하지 아니하노니...
-                    </p>
-                    <div class="my-6">
-                        <p class="text-2xl font-black text-white leading-tight">
-                            이 복음은<br>
-                            모든 믿는 자에게<br>
-                            구원을 주시는
-                        </p>
-                        <p class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 mt-2">
-                            하나님의 능력
-                        </p>
-                    </div>
-                     <p class="text-xl font-bold text-gray-200">
-                        이 됨이라"
-                    </p>
-                </div>
-
-                <div class="fade-in-up delay-300 w-full border-t border-white/10 pt-6 mt-2">
-                     <p class="eng-trans border-none p-0 text-center text-gray-400 text-sm">
-                        "For it is the <span class="text-white font-bold">POWER OF GOD</span><br>
-                        that brings salvation to everyone who believes."
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 9: Call to Action (Updated Index) -->
-        <section class="bg-black" data-index="9">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-blue-900/50"></div>
-            
-            <div class="glass-card w-[85%] h-[80%] rounded-3xl flex flex-col justify-center items-center gap-8 p-8 relative scale-in text-center border-white/20">
-                <div class="fade-in-up delay-100">
-                    <i class="fas fa-crown text-4xl text-yellow-300 mb-4 drop-shadow-lg"></i>
-                    <h2 class="text-2xl font-bold mb-2">우리의 추구미,</h2>
-                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-                        GOD'S SUCCESS
-                    </h1>
-                </div>
-
-                <div class="fade-in-up delay-200">
-                    <p class="text-gray-300 mb-2 leading-relaxed">
-                        "너 왜 그렇게 살아?"<br>
-                        세상이 물어볼 때 당당하게 답하자.
-                    </p>
-                    <p class="eng-trans border-none p-0 mb-6 text-gray-500">
-                        When the world asks "Why do you live like that?"
-                    </p>
                     
-                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
-                        <span class="text-white font-bold text-lg">"예수 그리스도가<br>나의 진짜 성공이니까."</span>
-                        <p class="text-xs text-blue-200 font-montserrat mt-2">"Because Jesus Christ is my true success."</p>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-neon-blue/20 p-2 rounded-lg text-neon-blue shrink-0">
+                            <i class="fa-solid fa-2"></i>
+                        </div>
+                        <div>
+                            <p class="font-montserrat font-black text-neon-blue text-xs mb-1 tracking-wider">LIVE WITH GOD'S HEART</p>
+                            <p class="text-sm font-light">
+                                결과가 어떻든,<br>
+                                예수님의 마음으로<br>
+                                <strong class="text-white">지금 내 자리에서 최선</strong>을 다하는 것.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="absolute w-full h-full top-0 left-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/40 via-black to-black z-0"></div>
+        </section>
+
+        <!-- SLIDE 8: Promise -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-black" data-index="7">
+            <div class="glass-card w-full max-w-md p-10 rounded-full aspect-square flex flex-col justify-center items-center text-center reveal-text border-2 border-white/20 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-tr from-neon-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <h3 class="font-montserrat font-black text-3xl mb-1 text-white">YOU ARE<br>THE CHANNEL</h3>
+                <p class="font-montserrat text-[10px] text-neon-pink tracking-[0.2em] mb-4">BEYOND SUCCESS OR FAILURE</p>
+                
+                <div class="w-10 h-0.5 bg-white/30 my-2"></div>
+                
+                <p class="text-sm text-gray-300 font-light leading-relaxed">
+                    네가 성공했든 실패했든<br>
+                    상관없어.<br><br>
+                    하나님은 <span class="text-white font-bold">바로 너를 통해</span><br>
+                    이 삭막한 도시에<br>
+                    기쁨을 만들어 가실 거야.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: Call to Action -->
+        <section class="h-full w-full snap-start flex flex-col justify-center items-center px-6 py-20 relative overflow-hidden bg-gradient-1" data-index="8">
+            <div class="absolute inset-0 bg-black/50 z-0"></div>
             
-            <!-- Footer/Brand -->
-            <div class="absolute bottom-6 w-full text-center text-white/20 font-montserrat text-xs tracking-widest">
-                KM YOUTH MINISTRY
+            <div class="relative z-10 w-full max-w-md text-center reveal-text">
+                <div class="inline-block border border-neon-blue rounded-full px-4 py-1 mb-6">
+                    <p class="text-neon-blue font-bold tracking-widest text-[10px] font-montserrat">OUR MISSION 2026</p>
+                </div>
+                
+                <h1 class="font-montserrat font-black text-5xl leading-tight mb-4">
+                    PROCLAIM<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">CHRIST,</span><br>
+                    JOY IN THE<br>
+                    CITY!
+                </h1>
+                
+                <p class="font-montserrat text-xs text-white/40 tracking-[0.4em] mb-8 uppercase">
+                    Be a Channel of Blessing
+                </p>
+                
+                <p class="text-gray-300 text-sm mb-10 leading-relaxed">
+                    너의 친구, 가족, 학교...<br>
+                    모든 Negative가 너로 인해<br>
+                    Positive로 바뀌는 한 해가 되길!
+                </p>
+
+                <div class="text-white/30 text-xs font-light tracking-widest mt-8 border-t border-white/10 pt-4 w-1/2 mx-auto">
+                    <span class="font-montserrat font-bold">SUNDAY SERVICE</span>
+                </div>
+            </div>
+            
+            <!-- Confetti Effect (CSS only simple representation) -->
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+                <div class="absolute top-10 left-[20%] w-2 h-2 bg-yellow-400 rounded-full animate-float"></div>
+                <div class="absolute top-20 right-[30%] w-3 h-3 bg-neon-pink rounded-full animate-float delay-100"></div>
+                <div class="absolute bottom-40 left-[10%] w-2 h-2 bg-neon-blue rounded-full animate-float delay-200"></div>
             </div>
         </section>
 
     </main>
 
-    <!-- JS Logic for Hybrid Navigation -->
+    <!-- Navigation JS Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('scroll-container');
+            const scroller = document.getElementById('scroller');
             const sections = document.querySelectorAll('section');
             let isScrolling = false;
-            
+
             // 1. Intersection Observer for Animations
             const observerOptions = {
-                root: container,
-                threshold: 0.5
+                root: scroller,
+                threshold: 0.4
             };
 
             const observer = new IntersectionObserver((entries) => {
@@ -500,7 +412,6 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
                     } else {
-                        // Optional: remove active to re-trigger animation when scrolling back
                         entry.target.classList.remove('active');
                     }
                 });
@@ -508,83 +419,86 @@
 
             sections.forEach(section => observer.observe(section));
 
-            // 2. Hybrid Navigation Logic (Touch Swipe & Keyboard)
-            let startY = 0;
-            let startX = 0;
 
-            // Helper to scroll to section index
-            const scrollToSection = (index) => {
-                if (index >= 0 && index < sections.length) {
-                    sections[index].scrollIntoView({ behavior: 'smooth' });
-                }
+            // 2. Hybrid Navigation Logic (Touch Swipe & Keyboard & Horizontal Wheel)
+            
+            // Helper to scroll to index
+            const scrollToIndex = (index) => {
+                if (index < 0 || index >= sections.length) return;
+                isScrolling = true;
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => { isScrolling = false; }, 600); // Debounce
             };
 
+            // Get current active index based on scroll position
             const getCurrentIndex = () => {
-                let index = 0;
+                let currentIndex = 0;
                 let minDiff = Infinity;
-                sections.forEach((sec, i) => {
-                    const rect = sec.getBoundingClientRect();
-                    const diff = Math.abs(rect.top); // Distance from top of viewport
+                sections.forEach((section, index) => {
+                    const rect = section.getBoundingClientRect();
+                    const diff = Math.abs(rect.top); // Distance from top
                     if (diff < minDiff) {
                         minDiff = diff;
-                        index = i;
+                        currentIndex = index;
                     }
                 });
-                return index;
+                return currentIndex;
             };
 
-            // Keyboard Navigation (Arrow Keys)
-            window.addEventListener('keydown', (e) => {
+            // A. Keyboard Navigation (Left/Right Arrow support)
+            document.addEventListener('keydown', (e) => {
+                if (isScrolling) return;
                 const currentIndex = getCurrentIndex();
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                     e.preventDefault();
-                    scrollToSection(currentIndex + 1);
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    scrollToIndex(currentIndex + 1);
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                     e.preventDefault();
-                    scrollToSection(currentIndex - 1);
+                    scrollToIndex(currentIndex - 1);
                 }
             });
 
-            // Touch Swipe Logic (Left/Right swipe acts like Down/Up)
-            window.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].clientY;
-                startX = e.touches[0].clientX;
-            }, { passive: false });
+            // B. Touch Swipe Detection
+            let touchStartX = 0;
+            let touchStartY = 0;
 
-            window.addEventListener('touchend', (e) => {
-                const endY = e.changedTouches[0].clientY;
-                const endX = e.changedTouches[0].clientX;
+            scroller.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            scroller.addEventListener('touchend', (e) => {
+                if (isScrolling) return;
+                const touchEndX = e.changedTouches[0].screenX;
+                const touchEndY = e.changedTouches[0].screenY;
                 
-                const diffX = startX - endX;
-                const diffY = startY - endY;
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
 
-                // Detect Horizontal Swipe (Intentionally mapped to Next/Prev Slide)
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    // Horizontal Swipe
-                    if (Math.abs(diffX) > 50) { // Threshold
-                        const currentIndex = getCurrentIndex();
-                        if (diffX > 0) { // Swipe Left -> Next
-                            scrollToSection(currentIndex + 1);
-                        } else { // Swipe Right -> Prev
-                            scrollToSection(currentIndex - 1);
-                        }
+                // If swipe is predominantly horizontal
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                    const currentIndex = getCurrentIndex();
+                    if (deltaX < 0) { // Swipe Left -> Next
+                        scrollToIndex(currentIndex + 1);
+                    } else { // Swipe Right -> Prev
+                        scrollToIndex(currentIndex - 1);
                     }
                 }
-            }, { passive: false });
+            }, { passive: true });
 
-            // Wheel Logic for Horizontal scrolling mice
-            container.addEventListener('wheel', (e) => {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            // C. Mouse Wheel (Horizontal Wheel Support)
+            scroller.addEventListener('wheel', (e) => {
+                if (isScrolling) return;
+                
+                // If horizontal scroll is detected
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 20) {
                     e.preventDefault();
-                    if (!isScrolling) {
-                        isScrolling = true;
-                        const currentIndex = getCurrentIndex();
-                        if (e.deltaX > 0) {
-                            scrollToSection(currentIndex + 1);
-                        } else {
-                            scrollToSection(currentIndex - 1);
-                        }
-                        setTimeout(() => { isScrolling = false; }, 500);
+                    const currentIndex = getCurrentIndex();
+                    if (e.deltaX > 0) {
+                        scrollToIndex(currentIndex + 1);
+                    } else {
+                        scrollToIndex(currentIndex - 1);
                     }
                 }
             }, { passive: false });
