@@ -3,42 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.O.Y - 예수를 따라간 사람들</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Others Second: The Andrew Story</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Noto Sans KR', 'sans-serif'],
-                        montserrat: ['Montserrat', 'sans-serif'],
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        montserrat: ['"Montserrat"', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            neon: '#B9FF00',
-                            purple: '#7B2CBF',
-                            dark: '#0a0a0a',
-                            glass: 'rgba(255, 255, 255, 0.08)'
-                        }
+                        glass: 'rgba(255, 255, 255, 0.1)',
+                        glassBorder: 'rgba(255, 255, 255, 0.2)',
+                        neonBlue: '#00f2ff',
+                        neonPurple: '#bc13fe',
+                        neonGreen: '#0aff60',
                     },
                     animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
             }
         }
     </script>
+
     <style>
         /* Custom Scrollbar Hide */
         ::-webkit-scrollbar {
@@ -46,376 +54,382 @@
             background: transparent;
         }
         
-        body {
-            background-color: #050505;
+        /* Scroll Snap Setup */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevent default scrolling to handle via JS for hybrid feel */
+            background-color: #000;
             color: white;
-            overflow: hidden; /* JS handle scrolling specifically for snapping feel */
         }
 
-        /* Scroll Snap Container */
-        #snap-container {
-            height: 100vh;
-            width: 100vw;
+        #scroll-container {
+            height: 100%;
+            width: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
-            position: relative;
         }
 
         section {
-            height: 100vh;
-            width: 100%;
             scroll-snap-align: start;
-            scroll-snap-stop: always;
+            height: 100vh;
+            width: 100vw;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
             overflow: hidden;
         }
 
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 420px; /* Mobile width constraint */
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        /* Animation Classes */
+        .reveal-text {
             opacity: 0;
-            transform: scale(0.9) translateY(30px);
+            transform: translateY(30px);
             transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .active .glass-card {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        .text-reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
-            transition-delay: 0.3s;
-        }
-
-        .active .text-reveal {
+        section.active .reveal-text {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .active .text-reveal:nth-child(2) { transition-delay: 0.4s; }
-        .active .text-reveal:nth-child(3) { transition-delay: 0.5s; }
-        .active .text-reveal:nth-child(4) { transition-delay: 0.6s; }
-        .active .text-reveal:nth-child(5) { transition-delay: 0.7s; }
+        /* Staggered Delays */
+        section.active .delay-100 { transition-delay: 100ms; }
+        section.active .delay-200 { transition-delay: 200ms; }
+        section.active .delay-300 { transition-delay: 300ms; }
+        section.active .delay-400 { transition-delay: 400ms; }
+        section.active .delay-500 { transition-delay: 500ms; }
 
-        /* Background Blobs */
-        .blob {
-            position: absolute;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.6;
+        /* Card Scale Animation */
+        .glass-card {
+            transition: transform 0.8s ease-out;
+            transform: scale(0.9);
+        }
+        section.active .glass-card {
+            transform: scale(1);
         }
         
-        /* Navigation Indicator */
-        .nav-dots {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 50;
-        }
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-        .dot.active {
-            background: #B9FF00;
-            height: 18px;
-            border-radius: 10px;
-        }
+        /* Background Gradients */
+        .bg-gradient-1 { background: radial-gradient(circle at top right, #4c1d95, #000000); }
+        .bg-gradient-2 { background: radial-gradient(circle at bottom left, #0f766e, #000000); }
+        .bg-gradient-3 { background: radial-gradient(circle at center, #be185d, #000000); }
+        .bg-gradient-4 { background: radial-gradient(circle at top left, #1d4ed8, #000000); }
 
-        /* English Text Style */
-        .eng-text {
+        /* Typography Helper for English Translations */
+        .eng-sub {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.8rem;
-            line-height: 1.4;
-            margin-top: 0.5rem;
+            font-size: 0.75rem; /* text-xs */
+            color: #9ca3af; /* text-gray-400 */
+            font-weight: 400;
+            margin-top: 0.25rem;
+            letter-spacing: 0.025em;
             display: block;
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Elements -->
-    <div class="fixed inset-0 pointer-events-none">
-        <div class="blob bg-brand-purple w-96 h-96 top-[-10%] left-[-10%] animate-pulse-slow"></div>
-        <div class="blob bg-blue-600 w-80 h-80 bottom-[-10%] right-[-10%] animate-float"></div>
-    </div>
+    <!-- Main Scroll Container -->
+    <main id="scroll-container">
 
-    <!-- Navigation Dots -->
-    <div class="nav-dots" id="navDots">
-        <!-- Generated by JS -->
-    </div>
-
-    <!-- Main Container -->
-    <main id="snap-container">
-
-        <!-- Slide 1: Intro Title -->
-        <section data-index="0">
-            <div class="glass-card text-center border-t-4 border-brand-neon">
-                <p class="font-montserrat text-brand-neon font-bold tracking-widest text-sm mb-4">JOHN 1:40</p>
-                <h1 class="text-5xl font-black font-sans text-white mb-2 leading-tight">예수를<br>따라간</h1>
-                <h2 class="text-3xl font-montserrat font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">FOLLOWED<br>JESUS</h2>
-                <div class="mt-8">
-                    <p class="text-gray-400 text-sm font-light">베드로와 안드레,<br>그 시작에 관한 이야기</p>
-                    <span class="eng-text">The story of Peter and Andrew,<br>and their new beginning.</span>
-                </div>
-                <div class="mt-12 animate-bounce">
-                    <i class="fas fa-chevron-down text-white/50"></i>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 2: Context -->
-        <section data-index="1">
-            <div class="glass-card">
-                <p class="text-reveal font-montserrat text-xs text-gray-400 tracking-[0.2em] mb-2">FEBRUARY 2026</p>
-                <h3 class="text-reveal text-2xl font-bold mb-1">진짜 기쁨,<br>찾고 있니?</h3>
-                <span class="text-reveal eng-text mb-6">Are you looking for true Joy?</span>
+        <!-- Slide 1: Intro -->
+        <section class="bg-gradient-1" data-index="0">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center text-center shadow-2xl relative overflow-hidden">
+                <!-- Decorative Elements -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-neonPurple blur-[60px] opacity-40"></div>
                 
-                <div class="text-reveal space-y-4 text-gray-200 font-light leading-relaxed">
-                    <div>
-                        <p>1월 한 달 동안 우리는 외쳤어.<br><span class="font-montserrat font-bold text-white">"Proclaim Christ, Joy in the city"</span></p>
-                        <span class="eng-text">Last month, we proclaimed Christ to the city.</span>
-                    </div>
-                    <div>
-                        <p>이제 2월이야.<br>그냥 구호로만 외치는 거 말고,<br>진짜 <span class="text-brand-neon font-bold">'JOY'</span>가 뭔지 깊게 파볼까 해.</p>
-                        <span class="eng-text">Now, let's dig deeper into what<br>'JOY' really means.</span>
-                    </div>
+                <div class="mb-12">
+                    <span class="inline-block px-3 py-1 rounded-full border border-neonBlue text-neonBlue text-xs font-bold tracking-widest mb-4 reveal-text delay-100">KM YOUTH SERMON</span>
+                    <h1 class="text-6xl font-montserrat font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-2 reveal-text delay-200">JOY</h1>
+                    <div class="h-1 w-20 bg-neonBlue mx-auto rounded-full reveal-text delay-300"></div>
                 </div>
-                <div class="text-reveal mt-8 flex justify-end">
-                    <span class="text-4xl font-montserrat font-black text-white/10">JOY?</span>
+
+                <div class="reveal-text delay-400 space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-1">Others Second</h2>
+                        <p class="eng-sub text-neonBlue font-bold">Putting Others Before Yourself</p>
+                    </div>
+                    
+                    <div class="text-gray-300 font-light leading-relaxed text-sm">
+                        <p>J: Jesus First</p>
+                        <p class="text-neonBlue font-bold my-1">O: Others Second</p>
+                        <p>Y: You Third</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: Definition of JOY -->
-        <section data-index="2">
-            <div class="glass-card border-brand-purple/30">
-                <div class="text-reveal flex flex-col items-center justify-center space-y-6">
-                    <h2 class="text-lg text-gray-400">J.O.Y의 진짜 의미</h2>
-                    
-                    <div class="w-full space-y-4">
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <span class="block text-3xl font-montserrat font-black text-brand-neon">J <span class="text-sm font-medium text-white ml-2">Jesus First</span></span>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <span class="block text-3xl font-montserrat font-black text-brand-purple">O <span class="text-sm font-medium text-white ml-2">Others Second</span></span>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <span class="block text-3xl font-montserrat font-black text-gray-400">Y <span class="text-sm font-medium text-white ml-2">You Third</span></span>
-                        </div>
-                    </div>
+        <!-- Slide 2: Character Intro -->
+        <section class="bg-gradient-2" data-index="1">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center relative shadow-2xl">
+                <div class="absolute top-10 left-[-20px] text-9xl font-montserrat font-black text-white opacity-5 select-none pointer-events-none">NEWS</div>
+                
+                <div class="reveal-text delay-100 mb-8">
+                    <i class="fa-solid fa-person-running text-5xl text-neonGreen mb-4 animate-float"></i>
+                    <h2 class="text-3xl font-bold leading-tight">형!<br>대박 사건!</h2>
+                    <p class="eng-sub">Bro! Big News!</p>
+                </div>
 
-                    <div class="text-reveal text-center mt-4">
-                        <p class="text-sm text-gray-300 leading-relaxed">
-                            내가 1등이 되고 싶은 세상에서<br>
-                            <span class="font-bold text-white">"내가 3등"</span>이라니.<br>
-                            대체 이게 무슨 말도 안 되는 소리일까?
+                <div class="space-y-6 reveal-text delay-200">
+                    <div>
+                        <p class="text-lg text-gray-200 leading-relaxed">
+                            안드레는 예수님을 만나자마자<br>
+                            가장 먼저 형 시몬에게 달려갔어.
                         </p>
-                        <span class="eng-text">In a world where "I" comes first,<br>being third sounds crazy. But listen.</span>
+                        <p class="eng-sub">As soon as Andrew met Jesus,<br>he ran straight to his brother Simon.</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border-l-4 border-neonGreen">
+                        <p class="text-xl font-bold italic">"우리가<br>메시아를 만났다!"</p>
+                        <p class="text-xs text-neonGreen font-montserrat font-bold mt-2">"We have found the Messiah!"</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 4: Character - John the Baptist -->
-        <section data-index="3">
-            <div class="glass-card relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 text-[10rem] font-montserrat font-black text-white/5 rotate-12">REL</div>
+        <!-- Slide 3: Keyword 1 (Eureka) -->
+        <section class="bg-black" data-index="2">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-md border border-glassBorder rounded-3xl p-8 flex flex-col justify-center relative shadow-2xl">
                 
-                <h3 class="text-reveal text-xl font-bold mb-1">끊을 수 없는 사이</h3>
-                <span class="text-reveal eng-text mb-2">Inseparable Bond</span>
-                <p class="text-reveal font-montserrat text-sm text-brand-purple font-bold mb-6">TEACHER & DISCIPLES</p>
-                
-                <div class="text-reveal text-gray-200 leading-relaxed space-y-4">
-                    <div>
-                        <p>오늘 이야기의 숨은 주인공, <span class="font-bold text-white">세례 요한</span>.</p>
-                        <span class="eng-text">Meet John the Baptist, the hidden protagonist.</span>
-                    </div>
-                    <div>
-                        <p>당시 스승과 제자는<br>그냥 학교 선생님 정도가 아니었어.<br>아버지와 아들처럼<br>서로의 인생을 책임지는,<br>절대 끊어질 수 없는 관계였지.</p>
-                        <span class="eng-text">It was more than a teacher-student relationship.<br>It was a lifelong commitment, like father and son.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+                <h1 class="text-5xl font-montserrat font-black text-white mb-2 tracking-tighter reveal-text delay-100">EUREKA</h1>
+                <p class="text-neonBlue text-sm font-bold tracking-widest mb-8 reveal-text delay-200">GREEK : HEURĒKAMEN</p>
 
-        <!-- Slide 5: The Act - Letting Go -->
-        <section data-index="4">
-            <div class="glass-card">
-                <div class="text-reveal text-center mb-6">
-                    <i class="fas fa-hand-holding-heart text-4xl text-brand-neon mb-4"></i>
-                    <h3 class="text-2xl font-bold">쿨한 이별? 아니,<br>생명을 위한 결단</h3>
-                    <span class="eng-text">Not a cool breakup,<br>but a decision for Life.</span>
+                <div class="reveal-text delay-300 space-y-6">
+                    <div>
+                        <p class="text-lg">
+                            여기서 '만났다'는 말,<br>
+                            그리스어로 <span class="text-neonBlue font-bold">'유레카'</span>야.
+                        </p>
+                        <p class="eng-sub">The word 'found' here is 'Eureka' in Greek.</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-300 font-light text-sm">
+                            단순히 과거에 만났다는 게 아냐.<br>
+                            <span class="text-white font-bold border-b border-neonBlue">"지금 내 옆에 그분이 계셔!"</span><br>
+                            라는 현재 완료형의 고백이지.
+                        </p>
+                        <p class="eng-sub">It implies "He is here with me right now!"<br>A present perfect confession.</p>
+                    </div>
                 </div>
                 
-                <div class="text-reveal text-gray-200 leading-relaxed text-center">
-                    <p class="mb-2">그런데 요한은 자신의 제자들을<br>예수님께로 떠나보내.</p>
-                    <span class="eng-text mb-4">Yet, John sent his disciples to Jesus.</span>
-                    
-                    <div class="bg-gradient-to-r from-brand-purple to-blue-600 p-4 rounded-xl my-4">
-                        <p class="font-montserrat font-bold text-sm">"Behold the Lamb of God!"</p>
-                        <p class="text-xs mt-1 text-white/80">보라 하나님의 어린 양이로다</p>
-                    </div>
-                    
-                    <div>
-                        <p class="text-sm text-gray-400">단순한 희생이 아니야.<br>저분이 너희에게 <span class="text-white font-bold">진짜 생명(Life)</span>을 줄 수 있는<br>유일한 분이란 걸 알았기 때문이야.</p>
-                        <span class="eng-text">Because he knew only Jesus<br>could give them true Life.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: J - Jesus First -->
-        <section data-index="5">
-            <div class="glass-card border-l-4 border-brand-neon pl-6">
-                <span class="text-reveal text-6xl font-montserrat font-black text-white/10 absolute top-4 right-4">1st</span>
-                <h2 class="text-reveal text-4xl font-montserrat font-black text-brand-neon mb-2">JESUS<br>FIRST</h2>
-                <h3 class="text-reveal text-xl font-bold text-white mb-1">진짜를 알아보는 눈</h3>
-                <span class="text-reveal eng-text mb-6">Eyes to see the Real One</span>
-                
-                <div class="text-reveal text-gray-300 space-y-3 leading-relaxed">
-                    <div>
-                        <p>단순히 예수님을 먼저 생각하자?<br>그런 도덕적인 얘기가 아냐.</p>
-                        <span class="eng-text">It's not just about morals.</span>
-                    </div>
-                    <div>
-                        <p><span class="text-white font-bold">"이분이 찐이다."</span></p>
-                        <span class="eng-text">"He is the Real Deal."</span>
-                    </div>
-                    <div>
-                        <p>나에게 생명을 줄 수 있는 분은<br>오직 예수님뿐임을 인정하는 것.<br>그게 바로 <span class="text-brand-neon">J</span>의 시작이야.</p>
-                        <span class="eng-text">Admitting He is the only source of Life.<br>That starts 'J'.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: O - Others Second -->
-        <section data-index="6">
-            <div class="glass-card border-r-4 border-brand-purple pr-6 text-right">
-                <span class="text-reveal text-6xl font-montserrat font-black text-white/10 absolute bottom-4 left-4">2nd</span>
-                <h2 class="text-reveal text-4xl font-montserrat font-black text-brand-purple mb-2">OTHERS<br>SECOND</h2>
-                <h3 class="text-reveal text-xl font-bold text-white mb-1">너를 위해 보내줄게</h3>
-                <span class="text-reveal eng-text mb-6">Letting go for your sake</span>
-                
-                <div class="text-reveal text-gray-300 space-y-3 leading-relaxed">
-                    <div>
-                        <p>내 사람, 내 친구를<br>내 옆에만 묶어두는 게 사랑일까?</p>
-                        <span class="eng-text">Is keeping friends close truly love?</span>
-                    </div>
-                    <div>
-                        <p>아니, 그들에게 진짜 필요한<br>생명의 근원(Source)으로<br>안내해 주는 것.</p>
-                        <span class="eng-text">No, it's guiding them to the Source.</span>
-                    </div>
-                    <div>
-                        <p>나보다 그들의 영혼이<br>더 소중하기에 가능한 <span class="text-brand-purple">O</span>.</p>
-                        <span class="eng-text">That is 'O' - valuing their souls above mine.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Y - You Third -->
-        <section data-index="7">
-            <div class="glass-card">
-                <div class="text-reveal flex items-center justify-between mb-6">
-                    <h2 class="text-4xl font-montserrat font-black text-gray-400">YOU<br>THIRD</h2>
-                    <i class="fas fa-shoe-prints text-3xl text-gray-500 transform -rotate-45"></i>
-                </div>
-                
-                <div class="text-reveal bg-gray-800/50 p-6 rounded-2xl border border-white/5">
-                    <p class="text-gray-200 leading-relaxed font-light">
-                        내가 3등이라고 해서<br>나를 막대하라는 게 아냐.<br><br>
-                        예수님이 앞서가시고,<br>친구들이 그 뒤를 따를 때,<br>
-                        <span class="font-bold text-white block mt-2 text-lg">나는 묵묵히 그 뒤를 받치며<br>예수님의 발자국을<br>함께 밟아가는 거야.</span>
+                <div class="mt-8 bg-black/50 p-4 rounded-lg reveal-text delay-400">
+                    <i class="fa-solid fa-quote-left text-gray-500 mb-2"></i>
+                    <p class="text-sm text-gray-300">
+                        안드레는 아마 혼자 가지 않았을걸?<br>
+                        예수님 손을 잡고 시몬에게 갔을 거야.
                     </p>
-                    <span class="eng-text mt-4 pt-4 border-t border-white/10">
-                        Being third doesn't mean I'm worthless.<br>
-                        It means supporting from behind,<br>
-                        following Jesus' footsteps together.
-                    </span>
+                    <p class="eng-sub mt-2">He likely went with Jesus by his side.</p>
                 </div>
-                <p class="text-reveal text-xs text-center text-gray-500 mt-4 font-montserrat">FOLLOW THE FOOTSTEPS</p>
             </div>
         </section>
 
-        <!-- Slide 9: Conclusion -->
-        <section data-index="8">
-            <div class="glass-card text-center relative">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-0"></div>
-                <div class="relative z-10">
-                    <h2 class="text-reveal text-3xl font-bold mb-1">도시의 기쁨 vs<br>우리의 기쁨</h2>
-                    <span class="text-reveal eng-text mb-4">City's Joy vs Our Joy</span>
-                    <p class="text-reveal font-montserrat text-brand-neon font-bold text-sm mb-8 tracking-widest">TRUE IDENTITY</p>
-                    
-                    <div class="text-reveal space-y-4 text-gray-200 text-sm leading-relaxed mb-8">
-                        <div>
-                            <p>세상은 더 많이 쌓고(Stack)<br>더 높아져야 기쁘다고 해.</p>
-                            <span class="eng-text">The world says "Stack more to be happy."</span>
-                        </div>
-                        <div>
-                            <p>하지만 우리의 정체성은 달라.</p>
-                            <span class="eng-text">But our identity is different.</span>
-                        </div>
-                        <div class="mt-4">
-                            <p class="text-lg font-medium text-white">나의 것을 예수님께 드리고<br>그분을 기다리며 준비하는 사람.</p>
-                            <span class="eng-text">Giving ours to Jesus,<br>and preparing for His coming.</span>
-                        </div>
-                    </div>
+        <!-- Slide 4: Keyword 2 (WE) -->
+        <section class="bg-gradient-3" data-index="3">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center shadow-2xl relative">
+                <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-pink-600 blur-[80px] opacity-40"></div>
 
-                    <!-- Button Removed as requested -->
+                <div class="text-center mb-10 reveal-text delay-100">
+                    <span class="text-6xl font-montserrat font-black text-white opacity-20 line-through">I</span>
+                    <span class="text-8xl font-montserrat font-black text-pink-500 ml-4 animate-pulse">WE</span>
+                </div>
+
+                <div class="reveal-text delay-200 space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-bold">왜 '내가'가 아니라<br>'우리가'일까?</h3>
+                        <p class="eng-sub">Why 'WE' instead of 'I'?</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-gray-200 leading-relaxed">
+                            안드레는 알고 있었어.<br>
+                            형 시몬이 얼마나 간절하게<br>
+                            메시아를 기다리고 있었는지.
+                        </p>
+                        <p class="eng-sub">Andrew knew how desperately<br>Simon was waiting for the Messiah.</p>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <p class="text-pink-300 font-bold">
+                            "형, 우리가 그렇게 기다리던<br>그분이야!"
+                        </p>
+                        <p class="eng-sub text-pink-500/70">"Bro, WE found Him! The One we waited for!"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Application (Lottery) -->
+        <section class="bg-gradient-4" data-index="4">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center shadow-2xl">
+                
+                <div class="flex justify-center mb-6 reveal-text delay-100">
+                    <div class="bg-white text-blue-900 rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold shadow-lg mx-1">7</div>
+                    <div class="bg-white text-blue-900 rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold shadow-lg mx-1">7</div>
+                    <div class="bg-white text-blue-900 rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold shadow-lg mx-1">7</div>
+                </div>
+
+                <div class="reveal-text delay-200 text-center mb-8">
+                    <h3 class="text-xl font-bold mb-1">솔직히 상상해봐 🤔</h3>
+                    <p class="eng-sub mb-2">Just imagine honestly.</p>
+                    <p class="text-sm text-gray-300">
+                        로또 1등 당첨되거나,<br>
+                        최애 아이돌이랑 맞팔 성공했다면?
+                    </p>
+                    <p class="eng-sub">Winning the lottery or meeting your IDOL?</p>
+                </div>
+
+                <div class="reveal-text delay-300 bg-blue-900/50 p-6 rounded-2xl border border-blue-500/30">
+                    <div class="mb-4">
+                        <p class="leading-relaxed font-bold">
+                            제일 먼저 누구 생각나?<br>
+                            나? 아니면 우리?
+                        </p>
+                        <p class="eng-sub">Who comes to mind first? Me or Us?</p>
+                    </div>
+                    <div>
+                        <p class="text-blue-300 font-bold text-sm">
+                            좋은 걸 가졌을 때<br>타인을 먼저 떠올리는 건<br>쉬운 일이 아니야.
+                        </p>
+                        <p class="eng-sub text-blue-400/60">It's hard to think of others first<br>when you hit the jackpot.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Core Message (Interest) -->
+        <section class="bg-gradient-1" data-index="5">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden shadow-2xl">
+                
+                <div class="absolute top-0 right-0 p-6 opacity-20">
+                    <i class="fa-solid fa-key text-8xl text-white"></i>
+                </div>
+
+                <div class="reveal-text delay-100 mb-8">
+                    <h2 class="text-4xl font-montserrat font-black text-neonPurple">INTEREST</h2>
+                    <p class="text-sm text-gray-400 tracking-wider">OTHERS SECOND KEY</p>
+                </div>
+
+                <div class="reveal-text delay-200 space-y-6">
+                    <div>
+                        <p class="text-xl font-bold text-white">
+                            핵심은 바로 '관심'이야.
+                        </p>
+                        <p class="eng-sub">The key is 'Interest'.</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-gray-300 leading-relaxed">
+                            안드레는 항상 시몬의 기다림을<br>
+                            마음에 두고 있었어.
+                        </p>
+                        <p class="eng-sub">Andrew always cared about what Simon was waiting for.</p>
+                        <p class="text-neonPurple italic mt-2 text-sm">"형이 이걸 좋아할 텐데..."</p>
+                        <p class="eng-sub">"Simon would love this..."</p>
+                    </div>
+                    
+                    <div class="h-px w-full bg-white/20"></div>
+                    
+                    <div>
+                        <p class="text-lg">
+                            너의 관심이 나의 관심이 되는 것.
+                        </p>
+                        <p class="eng-sub">Making your interest my interest.</p>
+                        <p class="font-montserrat font-bold mt-2">That is <span class="text-neonBlue">Others Second</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Jesus Perspective (Plan) -->
+        <section class="bg-black" data-index="6">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900 to-blue-900"></div>
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-md border border-glassBorder rounded-3xl p-8 flex flex-col justify-center shadow-2xl">
+                
+                <div class="text-center mb-8 reveal-text delay-100">
+                    <div class="inline-block p-4 rounded-full bg-white/10 mb-4">
+                        <i class="fa-solid fa-eye text-3xl text-blue-300"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold">예수님의 시선</h2>
+                    <p class="eng-sub">Jesus' Perspective</p>
+                </div>
+
+                <div class="reveal-text delay-200 space-y-4 text-center">
+                    <div>
+                        <p class="text-gray-400 text-sm">시몬을 보자마자 하신 말씀</p>
+                        <p class="eng-sub">What He said upon seeing Simon:</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">
+                            "너는 요한의 아들 시몬이구나.<br>
+                            이제 <span class="text-blue-400 text-2xl">게바(베드로)</span>라 하리라."
+                        </h3>
+                        <p class="eng-sub mt-2">"You are Simon son of John.<br>You will be called Cephas (Peter)."</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-blue-500/10 p-5 rounded-xl border border-blue-500/30 reveal-text delay-300">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        우리의 관심은 <span class="font-bold text-white">필요(Need)</span>를 보지만,<br>
+                        예수님의 관심은 <span class="font-bold text-white">계획(Plan)</span>을 보셔.<br>
+                        이미 다 알고 계셨던 거야.
+                    </p>
+                    <p class="eng-sub mt-2 text-blue-200">Our interest sees Needs,<br>but Jesus sees the Plan.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Call to Action -->
+        <section class="bg-gradient-3" data-index="7">
+            <div class="glass-card w-[90%] max-w-md h-[85%] bg-glass backdrop-blur-xl border border-glassBorder rounded-3xl p-8 flex flex-col justify-center shadow-2xl">
+                
+                <div class="reveal-text delay-100 mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Find & Connect</h2>
+                    <div class="w-12 h-1 bg-white rounded-full"></div>
+                </div>
+
+                <div class="reveal-text delay-200 space-y-8">
+                    <div>
+                        <p class="text-lg">
+                            지금 네 주변에도 있어.<br>
+                            간절히 무언가를 찾고 있는<br>
+                            가족, 친구, 이웃들.
+                        </p>
+                        <p class="eng-sub">Look around you right now.<br>Family, friends, neighbors seeking something.</p>
+                    </div>
+                    
+                    <div class="bg-black/40 p-5 rounded-xl">
+                        <p class="text-pink-300 font-bold mb-1 text-lg">Mission</p>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            그들의 필요(Need)가<br>
+                            예수님의 계획(Plan)과 만나도록<br>
+                            <span class="text-white font-bold">연결고리</span>가 되어줘.
+                        </p>
+                        <p class="eng-sub mt-2">Be the link between<br>their Needs and Jesus' Plan.</p>
+                    </div>
+                </div>
+                
+                <!-- Let's Go Button Removed -->
+                
+                <div class="mt-8 text-center reveal-text delay-300">
+                     <p class="font-montserrat font-black text-3xl text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-neonPurple">
+                        AMEN
+                    </p>
                 </div>
             </div>
         </section>
 
     </main>
 
+    <!-- Navigation & Logic Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('snap-container');
+            const container = document.getElementById('scroll-container');
             const sections = document.querySelectorAll('section');
-            const navDotsContainer = document.getElementById('navDots');
-            const totalSections = sections.length;
-            let currentSectionIndex = 0;
             let isScrolling = false;
+            let currentSectionIndex = 0;
 
-            // 1. Create Navigation Dots
-            sections.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => scrollToSection(index));
-                navDotsContainer.appendChild(dot);
-            });
-
-            const dots = document.querySelectorAll('.dot');
-
-            // 2. Intersection Observer for Animations & Active State
+            // 1. Intersection Observer for Animations
             const observerOptions = {
                 root: container,
                 threshold: 0.5
@@ -423,35 +437,26 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    const index = parseInt(entry.target.getAttribute('data-index'));
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        currentSectionIndex = index;
-                        updateDots(index);
+                        // Update current index based on visible section
+                        currentSectionIndex = parseInt(entry.target.getAttribute('data-index'));
                     } else {
-                        // Optional: remove active to replay animation
-                        // entry.target.classList.remove('active'); 
+                        entry.target.classList.remove('active');
                     }
                 });
             }, observerOptions);
 
             sections.forEach(section => observer.observe(section));
 
-            function updateDots(index) {
-                dots.forEach(dot => dot.classList.remove('active'));
-                if(dots[index]) dots[index].classList.add('active');
-            }
-
-            // 3. Smooth Scroll Function
-            function scrollToSection(index) {
-                if (index < 0 || index >= totalSections) return;
+            // 2. Hybrid Navigation Helper
+            const scrollToSection = (index) => {
+                if (index < 0 || index >= sections.length) return;
                 sections[index].scrollIntoView({ behavior: 'smooth' });
-            }
+            };
 
-            // 4. Keyboard Navigation (Arrow Keys)
+            // 3. Keyboard Navigation
             document.addEventListener('keydown', (e) => {
-                if (isScrolling) return;
-                
                 if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
                     e.preventDefault();
                     scrollToSection(currentSectionIndex + 1);
@@ -461,10 +466,7 @@
                 }
             });
 
-            // 5. Touch / Swipe Navigation Logic (Hybrid)
-            // Note: CSS Scroll Snap handles vertical swipes naturally.
-            // We need to handle Horizontal Swipes to trigger vertical movement.
-            
+            // 4. Touch/Swipe Navigation (Horizontal Swipe -> Vertical Scroll)
             let touchStartX = 0;
             let touchStartY = 0;
             let touchEndX = 0;
@@ -485,24 +487,17 @@
                 const xDiff = touchEndX - touchStartX;
                 const yDiff = touchEndY - touchStartY;
 
-                // Detect Horizontal Swipe (if X movement is significantly larger than Y)
-                if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                    if (Math.abs(xDiff) > 50) { // Threshold
-                        if (xDiff > 0) {
-                            // Swiped Right -> Go Previous
-                            scrollToSection(currentSectionIndex - 1);
-                        } else {
-                            // Swiped Left -> Go Next
-                            scrollToSection(currentSectionIndex + 1);
-                        }
+                // Detect if horizontal swipe is dominant and strong enough
+                if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
+                    if (xDiff < 0) {
+                        // Swipe Left -> Next
+                        scrollToSection(currentSectionIndex + 1);
+                    } else {
+                        // Swipe Right -> Prev
+                        scrollToSection(currentSectionIndex - 1);
                     }
                 }
             }
-
-            // Prevent bounce on iOS
-            document.body.addEventListener('touchmove', function(e) {
-                if(e.target === document.body) e.preventDefault();
-            }, { passive: false });
         });
     </script>
 </body>
