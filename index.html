@@ -3,545 +3,543 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Y: You Third - Youth Sermon</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <title>JOY: Jesus First, Others Second, You Third</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Montserrat (English) & Noto Sans KR (Korean) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                        'noto': ['Noto Sans KR', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* 기본 설정 */
-        :root {
-            --neon-blue: #00f3ff;
-            --neon-pink: #bc13fe;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         body {
-            font-family: 'Noto Sans KR', sans-serif;
             background-color: #050505;
-            color: white;
-            overflow: hidden; /* JS로 스크롤 제어 */
+            color: #ffffff;
+            overflow: hidden; /* Prevent body scroll, handled by container */
         }
 
-        /* 몬세라트 폰트 (영문 타이틀용) */
-        .font-eng {
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        /* 스크롤 스냅 컨테이너 */
+        /* Snap Scrolling Container */
         #scroll-container {
-            height: 100dvh; /* 모바일 주소창 대응 */
+            height: 100vh;
+            width: 100vw;
             overflow-y: scroll;
+            overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
-        /* 개별 섹션 (슬라이드) */
-        section {
-            height: 100dvh;
+        .snap-section {
             scroll-snap-align: start;
-            scroll-snap-stop: always;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
-            overflow: hidden;
+        }
+
+        /* Glassmorphism Card Base */
+        .glass-card {
+            width: 100%;
+            max-width: 420px; /* Mobile optimal width */
+            height: 100%;
+            max-height: 90vh; /* Leave room for IG top/bottom UI */
+            aspect-ratio: 9/16;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 80px 32px 100px 32px; /* IG Safe Zone */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            /* 인스타그램 UI 안전구역 확보 */
-            padding-top: 6rem; 
-            padding-bottom: 6rem;
-        }
-
-        /* 글래스모피즘 카드 */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* 텍스트 글로우 효과 */
-        .text-glow {
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-        .neon-blue {
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
-            color: var(--neon-blue);
-        }
-        .neon-pink {
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
-            color: var(--neon-pink);
-        }
-
-        /* 애니메이션 초기 상태 */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* 애니메이션 활성 상태 */
-        section.active .reveal {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* 딜레이 유틸리티 */
-        .delay-100 { transition-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; }
-        .delay-500 { transition-delay: 0.5s; }
-
-        /* 배경 그라데이션 오브젝트 */
-        .blob {
-            position: absolute;
-            filter: blur(80px);
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            
+            /* Initial Animation State */
+            transform: scale(0.9);
             opacity: 0.4;
-            z-index: -1;
-            animation: float 10s infinite alternate;
-        }
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(20px, -20px); }
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* 스크롤 유도 애니메이션 */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            opacity: 0.7;
+        /* Active State (Triggered by IntersectionObserver) */
+        .glass-card[data-active="true"] {
+            transform: scale(1);
+            opacity: 1;
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
+
+        /* Inner Content Animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card[data-active="true"] .fade-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delay utilities for sequential loading */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+        .delay-500 { transition-delay: 500ms; }
+
+        /* Typography Highlights */
+        .text-gradient-primary {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #00f2fe, #4facfe);
         }
         
-        /* 영문 서브 텍스트 스타일 */
-        .sub-eng {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 400;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 0.5rem;
-            line-height: 1.4;
-            letter-spacing: 0.02em;
+        .text-gradient-secondary {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #fa709a, #fee140);
+        }
+
+        .text-gradient-purple {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #c471ed, #f64f59);
+        }
+
+        /* Progress Bar (IG Story style) */
+        .progress-container {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            gap: 4px;
+            z-index: 50;
+        }
+        .progress-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            flex-grow: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+        .progress-bar.completed .progress-fill {
+            width: 100%;
         }
     </style>
 </head>
-<body>
+<body class="font-noto antialiased selection:bg-purple-500 selection:text-white">
 
-    <!-- 메인 스크롤 컨테이너 -->
-    <main id="scroll-container">
+    <!-- Ambient Background Orbs -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob" style="animation-delay: 2s"></div>
+        <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob" style="animation-delay: 4s"></div>
+    </div>
 
-        <!-- Slide 1: Title -->
-        <section id="slide-1" class="relative">
-            <div class="blob w-64 h-64 bg-blue-600 rounded-full top-10 left-[-50px]"></div>
-            <div class="blob w-64 h-64 bg-purple-600 rounded-full bottom-10 right-[-50px]"></div>
-
-            <div class="reveal text-center z-10">
-                <p class="font-eng text-sm tracking-[0.5em] text-gray-400 mb-4">JOHN 3:29-30</p>
-                <h1 class="font-eng text-8xl font-black mb-2 leading-none neon-blue">Y:</h1>
-                <h2 class="font-eng text-5xl font-bold mb-6 text-white">You, Third</h2>
-                <div class="glass-card p-6 mx-4">
-                    <p class="text-gray-200 text-lg font-light leading-relaxed">
-                        세상은 네가 1등이 되라고 하지만,<br>
-                        진짜 주인공은 따로 있대.
-                    </p>
-                    <p class="sub-eng">
-                        The world tells you to be first,<br>
-                        but the real protagonist is someone else.
-                    </p>
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                <i class="fas fa-chevron-down text-2xl"></i>
-            </div>
-        </section>
-
-        <!-- Slide 2: Recap -->
-        <section id="slide-2">
-            <div class="reveal w-full max-w-md">
-                <div class="text-left mb-8 px-4">
-                    <h3 class="font-eng text-4xl font-bold text-gray-500 opacity-30">Last Week</h3>
-                    <h2 class="font-eng text-5xl font-bold neon-pink mt-[-1rem] ml-2">O: Others</h2>
-                </div>
+    <!-- Main Scroll Container -->
+    <div id="scroll-container" class="no-scrollbar relative z-10">
+        
+        <!-- Slide 1: Intro -->
+        <section class="snap-section" id="slide-0">
+            <div class="glass-card" data-active="false">
+                <div class="progress-container" id="prog-0"></div>
                 
-                <div class="glass-card p-6 mx-4 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-10">
-                        <i class="fas fa-heart text-6xl"></i>
-                    </div>
-                    <p class="text-xl font-bold mb-1">"관심 좀 갖자, 우리!"</p>
-                    <p class="sub-eng mb-4 text-pink-300">Let's pay attention to others!</p>
+                <div class="flex flex-col h-full justify-center">
+                    <p class="font-montserrat font-extrabold text-white/30 text-sm tracking-[0.3em] mb-4 fade-up delay-100">THE FINALE</p>
+                    <h1 class="font-montserrat font-black text-7xl mb-2 fade-up delay-200 text-gradient-primary tracking-tighter">JOY</h1>
+                    <p class="font-montserrat font-bold text-sm text-cyan-200 mb-10 fade-up delay-300">Jesus 1st, Others 2nd, You 3rd</p>
                     
-                    <p class="text-gray-300 font-light leading-relaxed mb-4">
-                        지난주 키워드는 <b>'Others Second'</b> 였어.<br>
-                        옆 친구 표정, 이번 주에 한 번이라도 제대로 본 적 있어?
-                    </p>
-                    <p class="text-sm text-gray-400 border-l-2 border-pink-500 pl-3">
-                        조금만 더 서로를 챙겨주는 우리가 되면 좋겠다. 
-                        진짜 힙한 건 나만 챙기는 게 아니라 
-                        함께 가는 거니까.
-                    </p>
-                    <p class="sub-eng pl-3">
-                        True 'hip' is walking together,<br>not just caring for yourself.
-                    </p>
+                    <div class="font-noto text-xl font-medium leading-relaxed text-gray-100 fade-up delay-400">
+                        <p class="mb-1">우리 지난 3주 동안 <span class="text-white font-bold bg-white/10 px-2 py-1 rounded">JOY</span>에 대해 나눴지?</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">We've been talking about JOY for the past 3 weeks, right?</p>
+                        <p class="text-gray-300 text-lg mb-1">예수님이 가장 먼저, 친구들이 두 번째, 그리고 나는 세 번째 자리에 있는 삶.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Jesus first, friends second, and you third.</p>
+                        <p class="text-gray-300 text-lg mb-1">오늘은 이 멋진 여정의 마지막 시간이야! 😎</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic">Today is the final chapter of this amazing journey! 😎</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: Problem/Conflict -->
-        <section id="slide-3">
-            <div class="blob w-80 h-80 bg-red-900 rounded-full top-20 opacity-20"></div>
-            
-            <div class="reveal w-full max-w-md px-4">
-                <p class="font-eng text-right text-xs tracking-widest text-red-400 mb-2">THE CONFLICT</p>
-                
-                <!-- Chat Bubble UI -->
-                <div class="flex flex-col gap-4">
-                    <div class="glass-card p-4 rounded-tl-none self-start max-w-[80%] bg-white/5 border-l-4 border-red-500">
-                        <p class="text-sm font-bold text-red-300 mb-1">세례요한의 제자들 <span class="text-xs font-normal text-gray-500">| Disciples</span></p>
-                        <p class="text-base">"스승님!! 사람들이 다 저 예수란 사람한테 몰려가요! 😡"</p>
-                        <p class="sub-eng">"Rabbi! Everyone is going to that man Jesus!"</p>
+        <!-- Slide 2: Context -->
+        <section class="snap-section" id="slide-1">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(196,113,237,0.4)]">
+                        <i class="fa-solid fa-hands-praying text-2xl text-white"></i>
                     </div>
+                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-purple tracking-tight leading-none">THE LAST<br>PRAYER</h2>
                     
-                    <div class="self-end text-right mt-2">
-                        <p class="text-2xl font-bold">질투 폭발 🔥</p>
-                        <p class="text-gray-400 text-sm font-eng">Jealousy Explosion</p>
+                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                        <p class="mb-1">우리가 왜 JOY의 삶을 살아야 할까?</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Why should we live the JOY lifestyle?</p>
+                        <p class="mb-1">오늘 읽은 요한복음 17장은 예수님이 십자가에 달리시기 전, 제자들을 위해 남기신 <strong class="text-white border-b-2 border-pink-500">유언 같은 기도</strong>야.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">John 17 is Jesus's last prayer for His disciples before going to the cross.</p>
+                        <p class="text-gray-400 text-base mb-1">그 클라이막스가 바로 23절에 담겨있지.</p>
+                        <p class="text-sm text-gray-500 font-montserrat italic">And the climax is right here in verse 23.</p>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="glass-card p-4 rounded-tr-none self-end max-w-[90%] mt-4 bg-blue-900/20 text-right">
-                        <p class="text-base text-gray-200">
-                            내 팔로워가 떨어지고,<br>
-                            다른 사람 인기가 올라갈 때 그 기분.<br>
-                            솔직히 우리도 알잖아?
+        <!-- Slide 3: Problem / Question -->
+        <section class="snap-section" id="slide-2">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <p class="font-montserrat font-extrabold text-white/20 text-6xl absolute top-32 -left-4 z-0 fade-up delay-100">ONE?</p>
+                    
+                    <div class="relative z-10">
+                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-white tracking-tight">BECOMING ONE?</h2>
+                        
+                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                            <p class="mb-1">이 기도의 핵심 포인트는 바로 <strong>'완전히 하나가 되는 것'</strong>이야.</p>
+                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">The main point of this prayer is 'becoming completely one'.</p>
+                            <p class="mb-1 opacity-80">근데 솔직히 말해서... 이게 가능할까?</p>
+                            <p class="text-sm text-gray-500 font-montserrat italic mb-5">But honestly... is this even possible?</p>
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-xl text-gray-300 text-base">
+                                <i class="fa-solid fa-quote-left text-cyan-400 mb-2 block"></i>
+                                <p class="mb-1">베프나 쌍둥이라고 해도 서로의 속마음을 100% 알 순 없잖아. 완전 불가능해 보이지? 🤷‍♂️</p>
+                                <p class="text-sm text-gray-400 font-montserrat italic">Even best friends or twins can't read each other's minds 100%. Seems totally impossible, right? 🤷‍♂️</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Empathy / Insight -->
+        <section class="snap-section" id="slide-3">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(79,172,254,0.4)]">
+                        <i class="fa-solid fa-link text-2xl text-white"></i>
+                    </div>
+                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-primary tracking-tight leading-none">ALREADY<br>IN US</h2>
+                    
+                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                        <p class="mb-1">맞아, 우리끼리 노력해서 하나가 되는 건 이상향일 뿐이야.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">You're right, trying to become one on our own is just an ideal.</p>
+                        <p class="mb-1">하지만 놀라운 비밀이 있어! <span class="text-cyan-300 font-bold">이미 완성된 '완전한 하나됨'</span>이 내 안에 있다는 사실.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">But here's the amazing secret! The 'perfect oneness' is already completed inside us.</p>
+                        <div class="text-gray-400 text-base border-l-2 border-cyan-500 pl-4">
+                            <p class="mb-1">내 안에 계신 예수님이, 바로 네 안에도 계시기 때문에 우린 다름에도 불구하고 하나가 될 수 있는 거야. ✨</p>
+                            <p class="text-sm text-gray-500 font-montserrat italic">Because the Jesus in me is the same Jesus in you, we can be one despite our differences. ✨</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Problem 2 - YOJ -->
+        <section class="snap-section" id="slide-4">
+            <div class="glass-card border-red-500/20" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <p class="font-montserrat font-extrabold text-red-500/10 text-8xl absolute top-1/4 right-0 z-0 fade-up delay-100">YOJ</p>
+                    
+                    <div class="relative z-10">
+                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-white tracking-tight flex items-center gap-3">
+                            <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
+                            YOJ HABIT
+                        </h2>
+                        
+                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                            <p class="mb-1">근데 우리는 왜 여전히 서로에게 관심이 없을까?</p>
+                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">Then why do we still not care about each other?</p>
+                            <p class="mb-1">아마 우리 안에 여전히 남아있는 <strong class="text-red-400">YOJ의 습관</strong> 때문일 거야.</p>
+                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">It's probably because of the 'YOJ' habit still left in us.</p>
+                            <div class="bg-red-950/30 p-4 rounded-xl text-gray-300 text-base">
+                                <p class="mb-2">나(You)는 언제나 1순위,<br>남(Others)은 나한테 도움 될 때만 2순위,<br>예수님(Jesus)에겐 관심 밖... 🥲</p>
+                                <p class="text-sm text-gray-400 font-montserrat italic">Me first, others second (only when they help me), and zero interest in Jesus... 🥲</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Core Message / Warning -->
+        <section class="snap-section" id="slide-5">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(250,176,5,0.4)]">
+                        <i class="fa-solid fa-earth-asia text-2xl text-white"></i>
+                    </div>
+                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-secondary tracking-tight leading-none">SHOW THE<br>WORLD</h2>
+                    
+                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                        <p class="mb-1">진짜 심각한 문제는 이거야.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Here's the real serious problem.</p>
+                        <p class="mb-1">우리가 서로 관심이 없고 이 '하나됨'을 세상에 보여주지 못하면?</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">If we don't care about each other and fail to show this 'oneness' to the world?</p>
+                        <p class="text-white font-bold text-xl mb-1">세상은 결코 예수님을 알 수 없어. 🌍</p>
+                        <p class="text-sm text-gray-300 font-montserrat italic mb-4">The world will never know Jesus. 🌍</p>
+                        <p class="text-gray-400 text-base mb-1">하나님이 우릴 얼마나 사랑하시는지, 우리가 아무리 혼자 발버둥 쳐도 전해지지 않는 거지.</p>
+                        <p class="text-sm text-gray-500 font-montserrat italic">No matter how hard we try alone, God's love won't be delivered.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Solution / JOY Attitude -->
+        <section class="snap-section" id="slide-6">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <p class="font-montserrat font-extrabold text-white/5 text-8xl absolute top-1/3 left-0 z-0 fade-up delay-100 overflow-hidden">ATTITUDE</p>
+                    
+                    <div class="relative z-10">
+                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-gradient-primary tracking-tight">THE JOY ATTITUDE</h2>
+                        
+                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300 space-y-4">
+                            <div>
+                                <p class="mb-1">그래서 우리에겐 <strong class="text-cyan-300">JOY Attitude</strong>가 필요해!</p>
+                                <p class="text-sm text-gray-400 font-montserrat italic">That's why we need the JOY Attitude!</p>
+                            </div>
+                            
+                            <ul class="space-y-3 mt-4 text-base">
+                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
+                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">1</span>
+                                    <div>
+                                        <p class="mb-1">내 안, 그리고 네 안의 예수님을 먼저 보기 (Jesus 1st)</p>
+                                        <p class="text-xs text-gray-400 font-montserrat italic">Look at Jesus in me and you first.</p>
+                                    </div>
+                                </li>
+                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
+                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">2</span>
+                                    <div>
+                                        <p class="mb-1">그 사랑으로 친구의 가치를 인정하고 세워주기 (Others 2nd)</p>
+                                        <p class="text-xs text-gray-400 font-montserrat italic">Value and build up friends with that love.</p>
+                                    </div>
+                                </li>
+                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
+                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">3</span>
+                                    <div>
+                                        <p class="mb-1">기꺼이 나를 양보하고 희생하기 (You 3rd)</p>
+                                        <p class="text-xs text-gray-400 font-montserrat italic">Willingly yield and sacrifice myself.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Encouragement -->
+        <section class="snap-section" id="slide-7">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(244,63,94,0.4)]">
+                        <i class="fa-solid fa-hand-holding-heart text-2xl text-white"></i>
+                    </div>
+                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-white tracking-tight leading-none">HE NEVER<br>GIVES UP</h2>
+                    
+                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
+                        <p class="mb-1">솔직히, 한 달 동안 외쳤지만 이거 진짜 쉽지 않지? 여전히 남보다 내가 먼저고. 🥲</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Honestly, it's really not easy, right? I still put myself before others. 🥲</p>
+                        <p class="mb-1">당장 실천하지 못한다고 너무 실망하거나 포기하지 마.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Don't be too disappointed or give up if you can't do it right away.</p>
+                        <p class="text-pink-300 font-bold text-xl border-b border-pink-500/30 inline-block pb-1 mb-1">
+                            주님은 절대 우리를 포기하지 않으셔.
                         </p>
-                        <p class="sub-eng">
-                            When my followers drop and others rise.<br>
-                            Honestly, we know that feeling, right?
-                        </p>
+                        <p class="text-sm text-pink-300/70 font-montserrat italic">The Lord never gives up on us.</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Key Message (Verse) -->
-        <section id="slide-4" class="bg-black">
-            <div class="reveal text-center w-full px-2">
-                <i class="fas fa-quote-left text-4xl text-gray-700 mb-6 block"></i>
-                
-                <h2 class="font-eng text-3xl font-bold text-gray-400 mb-2">He must become</h2>
-                <h1 class="font-eng text-6xl font-black neon-blue mb-8">GREATER</h1>
-                
-                <h2 class="font-eng text-3xl font-bold text-gray-400 mb-2">I must become</h2>
-                <h1 class="font-eng text-5xl font-black text-gray-600 mb-8 blur-[1px]">LESS</h1>
-
-                <div class="glass-card p-4 mt-8 mx-6 border-t-2 border-blue-500">
-                    <p class="text-lg font-medium">
-                        "그분은 흥해야 하고,<br>나는 쇠해야 한다."
-                    </p>
-                </div>
-                <p class="mt-4 text-xs text-gray-500">John 3:30</p>
-            </div>
-        </section>
-
-        <!-- Slide 5: Metaphor (Wedding) -->
-        <section id="slide-5">
-            <div class="reveal w-full max-w-md px-6">
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-5xl">🤵</span>
-                    <i class="fas fa-arrow-right text-gray-600"></i>
-                    <span class="text-5xl">👰</span>
-                </div>
-
-                <h2 class="font-eng text-3xl font-bold mb-2">THE WEDDING</h2>
-                <h3 class="text-xl font-bold text-blue-300 mb-1">들러리의 역할</h3>
-                <p class="sub-eng mb-6">The Role of the Best Man</p>
-
-                <p class="text-lg leading-relaxed mb-4 text-gray-200">
-                    요한은 자기를 <b>'신랑의 친구'</b>라고 했어.<br>
-                    결혼식의 주인공은 누구지?<br>
-                    당연히 <span class="text-blue-400 font-bold">신랑</span>과 <span class="text-pink-400 font-bold">신부</span>야.
-                </p>
-                <p class="sub-eng">
-                    John called himself the 'Friend of the Groom'.<br>
-                    Who are the main stars? The Groom and the Bride.
-                </p>
-
-                <p class="text-sm text-gray-400 mt-4 border-t border-gray-700 pt-4">
-                    <span class="font-eng font-bold text-white">KEY POINT:</span><br>
-                    Best Man's Joy = Seeing the Groom Happy.
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 6: The Villain -->
-        <section id="slide-6">
-            <div class="reveal w-full max-w-md px-6 relative">
-                <div class="absolute inset-0 bg-red-500/10 blur-3xl -z-10"></div>
-                
-                <div class="border-2 border-red-500 p-1 inline-block mb-4 rounded">
-                    <span class="font-eng text-red-500 font-bold px-2">WARNING</span>
-                </div>
-                
-                <h2 class="text-3xl font-bold mb-1">결혼식 민폐 하객<br><span class="text-red-500">끝판왕</span>은?</h2>
-                <p class="sub-eng mb-6 text-red-300">The Worst Wedding Guest Ever?</p>
-
-                <div class="glass-card p-6 mb-4 bg-red-900/10">
-                    <p class="text-lg font-bold mb-1">👗 흰색 드레스 입고 온 친구</p>
-                    <p class="sub-eng mb-2 text-gray-400">The friend wearing a white dress</p>
-                    <p class="text-gray-300 text-sm">
-                        "오늘 나 좀 예쁘지 않아?" 하면서<br>
-                        신부보다 더 튀려고 하는 사람.<br>
-                        진짜... 왜 저러나 싶지?
-                    </p>
-                    <p class="sub-eng mt-2">
-                        Trying to outshine the bride.<br>Seriously... why be like that?
-                    </p>
-                </div>
-
-                <p class="text-gray-400 text-sm text-center">
-                    주인공인 척하는 조연만큼<br>꼴불견은 없어.
-                </p>
-                <p class="sub-eng text-center text-xs">
-                    Nothing is uglier than a supporting role<br>acting like the main character.
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 7: Interpretation -->
-        <section id="slide-7">
-            <div class="blob w-full h-full bg-blue-900/20 top-0 left-0 absolute"></div>
-            
-            <div class="reveal w-full max-w-md px-6 text-center">
-                <h2 class="font-eng text-4xl font-black mb-6">TRUE ROLE</h2>
-                
-                <div class="space-y-4">
-                    <div class="glass-card p-4 flex items-center gap-4 delay-100 reveal">
-                        <div class="bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center font-bold">1</div>
-                        <div class="text-left">
-                            <p class="font-eng font-bold text-sm text-blue-300">GROOM</p>
-                            <p class="font-bold">예수님 <span class="font-normal text-xs text-gray-400">(The King)</span></p>
-                        </div>
-                    </div>
-
-                    <div class="glass-card p-4 flex items-center gap-4 delay-200 reveal">
-                        <div class="bg-pink-500 w-10 h-10 rounded-full flex items-center justify-center font-bold">2</div>
-                        <div class="text-left">
-                            <p class="font-eng font-bold text-sm text-pink-300">BRIDE</p>
-                            <p class="font-bold">이웃/친구들 <span class="font-normal text-xs text-gray-400">(People)</span></p>
-                        </div>
-                    </div>
-
-                    <div class="glass-card p-4 flex items-center gap-4 delay-300 reveal border-2 border-white/30">
-                        <div class="bg-transparent border border-white w-10 h-10 rounded-full flex items-center justify-center font-bold">3</div>
-                        <div class="text-left">
-                            <p class="font-eng font-bold text-sm text-gray-300">BEST MAN</p>
-                            <p class="font-bold">나 <span class="font-normal text-xs text-gray-400">(You Third)</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="mt-8 text-gray-300 font-light">
-                    내가 3등이라고 슬픈 게 아냐.<br>
-                    내가 사랑하는 두 주인공을 이어주는<br>
-                    <span class="text-white font-bold">가장 멋진 역할</span>인 거지.
-                </p>
-                <p class="sub-eng">
-                    Being third isn't sad.<br>
-                    It's the coolest role, connecting the two I love.
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 8: Application Checklist -->
-        <section id="slide-8">
-            <div class="reveal w-full max-w-md px-6">
-                <h2 class="text-2xl font-bold mb-6 text-center">
-                    <span class="font-eng text-neon-blue">CHECK</span> YOUR HEART
-                </h2>
-
-                <div class="space-y-6">
-                    <div class="text-center">
-                        <p class="text-gray-400 text-sm mb-1 font-eng">Q1. Who is Jesus?</p>
-                        <h3 class="text-xl font-bold">나의 신랑, 나의 주인</h3>
-                        <p class="sub-eng text-blue-300">My Groom, My Lord</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-gray-400 text-sm mb-1 font-eng">Q2. Who are my friends?</p>
-                        <h3 class="text-xl font-bold">경쟁자가 아닌, 사랑할 대상</h3>
-                        <p class="sub-eng text-pink-300">Not competitors, but ones to love</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-gray-400 text-sm mb-1 font-eng">Q3. Who am I?</p>
-                        <h3 class="text-xl font-bold text-neon-pink">기쁨 넘치는 친구</h3>
-                        <p class="sub-eng text-white/70">A joy-filled friend (Best Man)</p>
-                    </div>
-                </div>
-
-                <div class="mt-10 glass-card p-4 bg-red-500/20 text-center">
-                    <p class="text-sm font-medium">
-                        "내가 제일 잘 나가야 해!" 라고 생각하면<br>
-                        세 번째 자리는 지옥 같을 거야.<br>
-                        하지만 사랑하면, 그 자리가 <span class="text-white font-bold underline">천국</span>이 돼.
-                    </p>
-                    <p class="sub-eng">
-                        If you think "I must be the best", 3rd place is hell.<br>
-                        But with love, it becomes heaven.
-                    </p>
                 </div>
             </div>
         </section>
 
         <!-- Slide 9: Conclusion -->
-        <section id="slide-9">
-            <div class="blob w-96 h-96 bg-gradient-to-tr from-pink-600 to-blue-600 rounded-full blur-[100px] opacity-30"></div>
-            
-            <div class="reveal text-center px-6">
-                <h1 class="font-eng text-6xl font-black mb-4">JOY</h1>
-                <p class="text-xl font-light mb-2 text-gray-200">
-                    주인공이 빛날 때<br>함께 박수 칠 수 있는 <span class="font-bold text-white">진짜 멋짐.</span>
-                </p>
-                <p class="sub-eng mb-8 italic text-gray-400">
-                    True coolness is celebrating<br>when the main character shines.
-                </p>
-
-                <div class="glass-card p-8 mb-8">
-                    <p class="font-eng text-sm text-gray-400 mb-2">PRAYER</p>
-                    <p class="font-medium text-lg leading-relaxed mb-4">
-                        하나님, 오늘 내 마음속 순서를 바꿉니다.<br>
-                        예수님 1번, 친구들 2번, 그리고 나.<br>
-                        이 사랑의 순서 안에서<br>
-                        진짜 기쁨을 누리는 내가 되게 해주세요.
-                    </p>
-                    <p class="sub-eng border-t border-white/10 pt-4 text-gray-400">
-                        God, I change the order in my heart today.<br>
-                        Jesus first, others second, then me.<br>
-                        Let me find true joy within this order of love.
-                    </p>
+        <section class="snap-section" id="slide-8">
+            <div class="glass-card" data-active="false">
+                <div class="flex flex-col h-full justify-center text-center items-center">
+                    <i class="fa-solid fa-shoe-prints text-4xl text-white/50 mb-6 fade-up delay-100 transform -rotate-90"></i>
+                    <h2 class="font-montserrat font-black text-5xl mb-6 fade-up delay-200 text-gradient-purple tracking-tighter">WALK<br>WITH HIM</h2>
+                    
+                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300 mb-8">
+                        <p class="mb-1">주님께 딱! 붙어있자.</p>
+                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Let's stick close to the Lord!</p>
+                        <p class="text-gray-400 text-base mb-1">예배의 자리를 사모하고, 공동체와 함께 하다 보면 주님이 그 사랑을 우리 안에서 계속 자라나게 하실 거야.</p>
+                        <p class="text-sm text-gray-500 font-montserrat italic mb-4">As we love worship and stay with our community, He will keep growing that love in us.</p>
+                        <p class="text-white font-bold text-xl mb-1">
+                            평생 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">JOY의 삶</span>을 살아가는<br>우리가 되길 축복해! 🙏✨
+                        </p>
+                        <p class="text-sm text-gray-300 font-montserrat italic">Blessings to us all as we live a lifelong JOY lifestyle! 🙏✨</p>
+                    </div>
                 </div>
-
-                <footer class="mt-12 text-xs text-gray-600 font-eng">
-                    YOUTH SERVICE | YOU THIRD
-                </footer>
             </div>
         </section>
 
-    </main>
+    </div>
 
+    <!-- JavaScript for Interactions -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('scroll-container');
-            const sections = document.querySelectorAll('section');
-            let isScrolling = false;
+            const sections = document.querySelectorAll('.snap-section');
+            const totalSlides = sections.length;
+            let currentIndex = 0;
+            let isAnimating = false;
 
-            // 1. Intersection Observer for Animations
+            // 1. Build IG-style Progress Bars for each slide dynamically
+            sections.forEach((sec, index) => {
+                const progContainer = sec.querySelector('.progress-container');
+                if(progContainer) {
+                    for(let i=0; i<totalSlides; i++) {
+                        const bar = document.createElement('div');
+                        bar.className = 'progress-bar' + (i < index ? ' completed' : '');
+                        const fill = document.createElement('div');
+                        fill.className = 'progress-fill';
+                        // Active slide progress fill
+                        if(i === index) fill.style.width = '100%'; 
+                        
+                        bar.appendChild(fill);
+                        progContainer.appendChild(bar);
+                    }
+                }
+            });
+
+            // 2. Intersection Observer to trigger animations
             const observerOptions = {
                 root: container,
-                threshold: 0.5 // 50% 보일 때 트리거
+                threshold: 0.6 // 60% visible to trigger
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
+                    const card = entry.target.querySelector('.glass-card');
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
+                        card.setAttribute('data-active', 'true');
+                        // Update current index based on visible section
+                        currentIndex = Array.from(sections).indexOf(entry.target);
                     } else {
-                        // 선택사항: 지나가면 애니메이션 리셋 (다시 볼 때 또 움직이게 하려면 주석 해제)
-                        // entry.target.classList.remove('active'); 
+                        card.setAttribute('data-active', 'false');
                     }
                 });
             }, observerOptions);
 
-            sections.forEach(section => {
-                observer.observe(section);
-            });
+            sections.forEach(sec => observer.observe(sec));
 
-            // 2. Hybrid Navigation Logic (Wheel, Arrow Keys, Swipe for Non-Touch Devices or Mixed Input)
-            
-            const scrollToSection = (index) => {
-                if (index < 0 || index >= sections.length) return;
-                sections[index].scrollIntoView({ behavior: 'smooth' });
-            };
+            // 3. Navigation Function
+            function navigate(direction) {
+                if (isAnimating) return;
+                let newIndex = currentIndex + direction;
+                
+                if (newIndex >= 0 && newIndex < totalSlides) {
+                    isAnimating = true;
+                    sections[newIndex].scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Prevent spamming navigation
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 600); 
+                }
+            }
 
-            const getCurrentIndex = () => {
-                let index = 0;
-                let minDiff = Infinity;
-                sections.forEach((sec, i) => {
-                    const rect = sec.getBoundingClientRect();
-                    const diff = Math.abs(rect.top); // 화면 상단과의 거리 절대값
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        index = i;
-                    }
-                });
-                return index;
-            };
-
-            // Keyboard Navigation (Arrow Keys)
+            // 4. Keyboard Navigation (Arrows)
             window.addEventListener('keydown', (e) => {
-                const currentIndex = getCurrentIndex();
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
                     e.preventDefault();
-                    scrollToSection(currentIndex + 1);
+                    navigate(1);
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    scrollToSection(currentIndex - 1);
+                    navigate(-1);
                 }
             });
 
-            // Horizontal Wheel Translation (Mouse Wheel 가로 스크롤 대응)
+            // 5. Horizontal Mouse Wheel Navigation
+            // Note: Vertical wheel is handled natively by CSS scroll-snap
             container.addEventListener('wheel', (e) => {
-                // 세로 스크롤은 기본 snap이 처리하므로 가로 휠이나 특정 상황만 개입
+                // Check if user is scrolling horizontally more than vertically
                 if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault();
-                    if (!isScrolling) {
-                        isScrolling = true;
-                        const direction = e.deltaX > 0 ? 1 : -1;
-                        scrollToSection(getCurrentIndex() + direction);
-                        setTimeout(() => { isScrolling = false; }, 800); // Debounce
+                    e.preventDefault(); // Stop default horizontal scroll
+                    if (e.deltaX > 40) {
+                        navigate(1); // Scroll Right -> Next Slide
+                    } else if (e.deltaX < -40) {
+                        navigate(-1); // Scroll Left -> Prev Slide
                     }
                 }
             }, { passive: false });
 
-            // Touch Swipe Logic (Fallback for browsers with poor snap support or just custom feel)
-            let touchStartY = 0;
+            // 6. Touch Swipe Navigation (Left/Right)
             let touchStartX = 0;
+            let touchEndX = 0;
+            let touchStartY = 0;
+            let touchEndY = 0;
 
-            container.addEventListener('touchstart', (e) => {
-                touchStartY = e.changedTouches[0].screenY;
+            container.addEventListener('touchstart', e => {
                 touchStartX = e.changedTouches[0].screenX;
-            });
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
 
-            container.addEventListener('touchend', (e) => {
-                const touchEndY = e.changedTouches[0].screenY;
-                const touchEndX = e.changedTouches[0].screenX;
-                
-                const xDiff = touchStartX - touchEndX;
-                const yDiff = touchStartY - touchEndY;
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                handleSwipe();
+            }, { passive: true });
 
-                // 좌우 스와이프로도 상하 이동 (인스타그램 스토리 넘기는 느낌)
-                if (Math.abs(xDiff) > Math.abs(yDiff)) { // 가로 움직임이 더 클 때
-                    if (Math.abs(xDiff) > 50) { // 최소 스와이프 거리
-                        const direction = xDiff > 0 ? 1 : -1; // 오른쪽으로 넘기면(Next)
-                        scrollToSection(getCurrentIndex() + direction);
+            function handleSwipe() {
+                const swipeThresholdX = 50;
+                const swipeThresholdY = 50;
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
+
+                // Only trigger if horizontal swipe is greater than vertical swipe
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThresholdX) {
+                    if (diffX > 0) {
+                        // Swiped Left -> Next
+                        navigate(1);
+                    } else {
+                        // Swiped Right -> Prev
+                        navigate(-1);
                     }
                 }
-            });
+            }
         });
     </script>
 </body>
