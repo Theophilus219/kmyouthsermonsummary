@@ -3,543 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JOY: Jesus First, Others Second, You Third</title>
+    <title>내가 택한 그릇 | Youth Sermon</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts: Montserrat (English) & Noto Sans KR (Korean) -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'montserrat': ['Montserrat', 'sans-serif'],
-                        'noto': ['Noto Sans KR', 'sans-serif'],
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'float': 'float 3s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
-        /* Hide Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
+        /* Custom Utilities & Resets */
         body {
+            font-family: 'Noto Sans KR', sans-serif;
             background-color: #050505;
             color: #ffffff;
-            overflow: hidden; /* Prevent body scroll, handled by container */
+            overflow: hidden;
+            touch-action: none;
         }
 
-        /* Snap Scrolling Container */
+        .font-eng {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Scroll Container Setup */
         #scroll-container {
-            height: 100vh;
+            height: 100dvh;
             width: 100vw;
             overflow-y: scroll;
             overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        #scroll-container::-webkit-scrollbar {
+            display: none;
         }
 
-        .snap-section {
-            scroll-snap-align: start;
-            height: 100vh;
+        /* Section & Snap */
+        .story-section {
+            height: 100dvh;
             width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
             position: relative;
-        }
-
-        /* Glassmorphism Card Base */
-        .glass-card {
-            width: 100%;
-            max-width: 420px; /* Mobile optimal width */
-            height: 100%;
-            max-height: 90vh; /* Leave room for IG top/bottom UI */
-            aspect-ratio: 9/16;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            padding: 80px 32px 100px 32px; /* IG Safe Zone */
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            padding: 80px 20px 100px 20px; 
+            overflow: hidden;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
             position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            
-            /* Initial Animation State */
-            transform: scale(0.9);
-            opacity: 0.4;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 10;
         }
 
-        /* Active State (Triggered by IntersectionObserver) */
-        .glass-card[data-active="true"] {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        /* Inner Content Animation */
-        .fade-up {
+        /* Animations */
+        .reveal-item {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .glass-card[data-active="true"] .fade-up {
+        .story-section.is-active .reveal-item {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
-        /* Delay utilities for sequential loading */
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
         .delay-400 { transition-delay: 400ms; }
-        .delay-500 { transition-delay: 500ms; }
 
-        /* Typography Highlights */
-        .text-gradient-primary {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #00f2fe, #4facfe);
-        }
-        
-        .text-gradient-secondary {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #fa709a, #fee140);
-        }
-
-        .text-gradient-purple {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #c471ed, #f64f59);
-        }
-
-        /* Progress Bar (IG Story style) */
-        .progress-container {
+        /* Giant Background Text */
+        .bg-text {
             position: absolute;
-            top: 24px;
-            left: 24px;
-            right: 24px;
+            font-size: 15vw;
+            white-space: nowrap;
+            opacity: 0.03;
+            z-index: 0;
+            font-weight: 900;
+            text-transform: uppercase;
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+        }
+
+        @media (min-width: 768px) {
+            .bg-text { font-size: 8rem; }
+        }
+
+        /* Gradient Orbs */
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* Progress Bar */
+        #progress-container {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
             display: flex;
             gap: 4px;
             z-index: 50;
         }
-        .progress-bar {
+        .progress-segment {
+            flex-grow: 1;
             height: 3px;
             background: rgba(255, 255, 255, 0.2);
-            flex-grow: 1;
-            border-radius: 4px;
+            border-radius: 2px;
             overflow: hidden;
         }
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: #fff;
+            background: white;
             transition: width 0.3s ease;
         }
-        .progress-bar.completed .progress-fill {
-            width: 100%;
-        }
+        .progress-segment.completed .progress-fill { width: 100%; }
     </style>
 </head>
-<body class="font-noto antialiased selection:bg-purple-500 selection:text-white">
+<body>
 
-    <!-- Ambient Background Orbs -->
-    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
-        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob" style="animation-delay: 2s"></div>
-        <div class="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob" style="animation-delay: 4s"></div>
+    <!-- UI Overlays -->
+    <div id="progress-container">
+        <!-- Segments will be injected by JS -->
     </div>
 
     <!-- Main Scroll Container -->
-    <div id="scroll-container" class="no-scrollbar relative z-10">
-        
+    <main id="scroll-container">
+
         <!-- Slide 1: Intro -->
-        <section class="snap-section" id="slide-0">
-            <div class="glass-card" data-active="false">
-                <div class="progress-container" id="prog-0"></div>
-                
-                <div class="flex flex-col h-full justify-center">
-                    <p class="font-montserrat font-extrabold text-white/30 text-sm tracking-[0.3em] mb-4 fade-up delay-100">THE FINALE</p>
-                    <h1 class="font-montserrat font-black text-7xl mb-2 fade-up delay-200 text-gradient-primary tracking-tighter">JOY</h1>
-                    <p class="font-montserrat font-bold text-sm text-cyan-200 mb-10 fade-up delay-300">Jesus 1st, Others 2nd, You 3rd</p>
-                    
-                    <div class="font-noto text-xl font-medium leading-relaxed text-gray-100 fade-up delay-400">
-                        <p class="mb-1">우리 지난 3주 동안 <span class="text-white font-bold bg-white/10 px-2 py-1 rounded">JOY</span>에 대해 나눴지?</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">We've been talking about JOY for the past 3 weeks, right?</p>
-                        <p class="text-gray-300 text-lg mb-1">예수님이 가장 먼저, 친구들이 두 번째, 그리고 나는 세 번째 자리에 있는 삶.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Jesus first, friends second, and you third.</p>
-                        <p class="text-gray-300 text-lg mb-1">오늘은 이 멋진 여정의 마지막 시간이야! 😎</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic">Today is the final chapter of this amazing journey! 😎</p>
-                    </div>
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-64 h-64 bg-purple-600/40 top-0 left-0"></div>
+            <div class="gradient-orb w-80 h-80 bg-pink-600/30 bottom-0 right-0" style="animation-delay: -5s;"></div>
+            <div class="font-eng bg-text">THE CHOSEN</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-pink-400 font-bold tracking-widest text-xs mb-2 block">SERIES PART. 1</span>
+                    <h1 class="text-4xl font-black mb-6 leading-tight">
+                        내가 택한<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">그릇 🥣</span>
+                        <span class="block text-lg text-purple-300/80 font-eng mt-2 font-bold tracking-wide">The Chosen Instrument</span>
+                    </h1>
+                </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-lg text-gray-300 leading-relaxed font-light">
+                        안녕! 오늘부터 4주 동안<br>
+                        '그릇'에 대해 얘기해 볼까 해.<br><br>
+                        하나님이 우리를 '그릇'이라고 부르셨다는데,<br>
+                        도대체 무슨 의미일까?
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-3 opacity-80 leading-relaxed">
+                        Hi! For the next 4 weeks, we're going to talk about 'instruments'.<br>
+                        God called us His 'instruments', but what exactly does that mean?
+                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 2: Context -->
-        <section class="snap-section" id="slide-1">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(196,113,237,0.4)]">
-                        <i class="fa-solid fa-hands-praying text-2xl text-white"></i>
-                    </div>
-                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-purple tracking-tight leading-none">THE LAST<br>PRAYER</h2>
-                    
-                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                        <p class="mb-1">우리가 왜 JOY의 삶을 살아야 할까?</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Why should we live the JOY lifestyle?</p>
-                        <p class="mb-1">오늘 읽은 요한복음 17장은 예수님이 십자가에 달리시기 전, 제자들을 위해 남기신 <strong class="text-white border-b-2 border-pink-500">유언 같은 기도</strong>야.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">John 17 is Jesus's last prayer for His disciples before going to the cross.</p>
-                        <p class="text-gray-400 text-base mb-1">그 클라이막스가 바로 23절에 담겨있지.</p>
-                        <p class="text-sm text-gray-500 font-montserrat italic">And the climax is right here in verse 23.</p>
-                    </div>
+        <!-- Slide 2: Value Neutrality -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-72 h-72 bg-blue-600/30 top-1/4 -right-10"></div>
+            <div class="gradient-orb w-64 h-64 bg-cyan-500/20 bottom-10 -left-10" style="animation-delay: -3s;"></div>
+            <div class="font-eng bg-text">NEUTRALITY</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-cyan-400 font-bold tracking-widest text-xs mb-2 block">GOOD OR BAD?</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        도구는 죄가<br>없어 🔪
+                        <span class="block text-base text-cyan-300/80 font-eng mt-2">Tools Are Innocent</span>
+                    </h2>
                 </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: Problem / Question -->
-        <section class="snap-section" id="slide-2">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <p class="font-montserrat font-extrabold text-white/20 text-6xl absolute top-32 -left-4 z-0 fade-up delay-100">ONE?</p>
-                    
-                    <div class="relative z-10">
-                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-white tracking-tight">BECOMING ONE?</h2>
-                        
-                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                            <p class="mb-1">이 기도의 핵심 포인트는 바로 <strong>'완전히 하나가 되는 것'</strong>이야.</p>
-                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">The main point of this prayer is 'becoming completely one'.</p>
-                            <p class="mb-1 opacity-80">근데 솔직히 말해서... 이게 가능할까?</p>
-                            <p class="text-sm text-gray-500 font-montserrat italic mb-5">But honestly... is this even possible?</p>
-                            <div class="bg-white/5 border border-white/10 p-4 rounded-xl text-gray-300 text-base">
-                                <i class="fa-solid fa-quote-left text-cyan-400 mb-2 block"></i>
-                                <p class="mb-1">베프나 쌍둥이라고 해도 서로의 속마음을 100% 알 순 없잖아. 완전 불가능해 보이지? 🤷‍♂️</p>
-                                <p class="text-sm text-gray-400 font-montserrat italic">Even best friends or twins can't read each other's minds 100%. Seems totally impossible, right? 🤷‍♂️</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        <strong class="text-white font-medium">'가치 중립성'</strong>이라고 들어봤어?<br>
+                        칼을 한 번 생각해 봐. 칼 자체가 착하거나 나쁜 건 아니잖아?
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
+                        Have you ever heard of 'value neutrality'? Think about a knife. The knife itself isn't good or bad, right?
+                    </p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Empathy / Insight -->
-        <section class="snap-section" id="slide-3">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(79,172,254,0.4)]">
-                        <i class="fa-solid fa-link text-2xl text-white"></i>
-                    </div>
-                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-primary tracking-tight leading-none">ALREADY<br>IN US</h2>
-                    
-                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                        <p class="mb-1">맞아, 우리끼리 노력해서 하나가 되는 건 이상향일 뿐이야.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">You're right, trying to become one on our own is just an ideal.</p>
-                        <p class="mb-1">하지만 놀라운 비밀이 있어! <span class="text-cyan-300 font-bold">이미 완성된 '완전한 하나됨'</span>이 내 안에 있다는 사실.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">But here's the amazing secret! The 'perfect oneness' is already completed inside us.</p>
-                        <div class="text-gray-400 text-base border-l-2 border-cyan-500 pl-4">
-                            <p class="mb-1">내 안에 계신 예수님이, 바로 네 안에도 계시기 때문에 우린 다름에도 불구하고 하나가 될 수 있는 거야. ✨</p>
-                            <p class="text-sm text-gray-500 font-montserrat italic">Because the Jesus in me is the same Jesus in you, we can be one despite our differences. ✨</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: Problem 2 - YOJ -->
-        <section class="snap-section" id="slide-4">
-            <div class="glass-card border-red-500/20" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <p class="font-montserrat font-extrabold text-red-500/10 text-8xl absolute top-1/4 right-0 z-0 fade-up delay-100">YOJ</p>
-                    
-                    <div class="relative z-10">
-                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-white tracking-tight flex items-center gap-3">
-                            <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
-                            YOJ HABIT
-                        </h2>
-                        
-                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                            <p class="mb-1">근데 우리는 왜 여전히 서로에게 관심이 없을까?</p>
-                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">Then why do we still not care about each other?</p>
-                            <p class="mb-1">아마 우리 안에 여전히 남아있는 <strong class="text-red-400">YOJ의 습관</strong> 때문일 거야.</p>
-                            <p class="text-sm text-gray-400 font-montserrat italic mb-5">It's probably because of the 'YOJ' habit still left in us.</p>
-                            <div class="bg-red-950/30 p-4 rounded-xl text-gray-300 text-base">
-                                <p class="mb-2">나(You)는 언제나 1순위,<br>남(Others)은 나한테 도움 될 때만 2순위,<br>예수님(Jesus)에겐 관심 밖... 🥲</p>
-                                <p class="text-sm text-gray-400 font-montserrat italic">Me first, others second (only when they help me), and zero interest in Jesus... 🥲</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: Core Message / Warning -->
-        <section class="snap-section" id="slide-5">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(250,176,5,0.4)]">
-                        <i class="fa-solid fa-earth-asia text-2xl text-white"></i>
-                    </div>
-                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-gradient-secondary tracking-tight leading-none">SHOW THE<br>WORLD</h2>
-                    
-                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                        <p class="mb-1">진짜 심각한 문제는 이거야.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Here's the real serious problem.</p>
-                        <p class="mb-1">우리가 서로 관심이 없고 이 '하나됨'을 세상에 보여주지 못하면?</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">If we don't care about each other and fail to show this 'oneness' to the world?</p>
-                        <p class="text-white font-bold text-xl mb-1">세상은 결코 예수님을 알 수 없어. 🌍</p>
-                        <p class="text-sm text-gray-300 font-montserrat italic mb-4">The world will never know Jesus. 🌍</p>
-                        <p class="text-gray-400 text-base mb-1">하나님이 우릴 얼마나 사랑하시는지, 우리가 아무리 혼자 발버둥 쳐도 전해지지 않는 거지.</p>
-                        <p class="text-sm text-gray-500 font-montserrat italic">No matter how hard we try alone, God's love won't be delivered.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Solution / JOY Attitude -->
-        <section class="snap-section" id="slide-6">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <p class="font-montserrat font-extrabold text-white/5 text-8xl absolute top-1/3 left-0 z-0 fade-up delay-100 overflow-hidden">ATTITUDE</p>
-                    
-                    <div class="relative z-10">
-                        <h2 class="font-montserrat font-black text-3xl mb-8 fade-up delay-200 text-gradient-primary tracking-tight">THE JOY ATTITUDE</h2>
-                        
-                        <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300 space-y-4">
-                            <div>
-                                <p class="mb-1">그래서 우리에겐 <strong class="text-cyan-300">JOY Attitude</strong>가 필요해!</p>
-                                <p class="text-sm text-gray-400 font-montserrat italic">That's why we need the JOY Attitude!</p>
-                            </div>
-                            
-                            <ul class="space-y-3 mt-4 text-base">
-                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
-                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">1</span>
-                                    <div>
-                                        <p class="mb-1">내 안, 그리고 네 안의 예수님을 먼저 보기 (Jesus 1st)</p>
-                                        <p class="text-xs text-gray-400 font-montserrat italic">Look at Jesus in me and you first.</p>
-                                    </div>
-                                </li>
-                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
-                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">2</span>
-                                    <div>
-                                        <p class="mb-1">그 사랑으로 친구의 가치를 인정하고 세워주기 (Others 2nd)</p>
-                                        <p class="text-xs text-gray-400 font-montserrat italic">Value and build up friends with that love.</p>
-                                    </div>
-                                </li>
-                                <li class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-start gap-3">
-                                    <span class="font-montserrat font-bold text-cyan-400 mt-1">3</span>
-                                    <div>
-                                        <p class="mb-1">기꺼이 나를 양보하고 희생하기 (You 3rd)</p>
-                                        <p class="text-xs text-gray-400 font-montserrat italic">Willingly yield and sacrifice myself.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Encouragement -->
-        <section class="snap-section" id="slide-7">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6 fade-up delay-100 shadow-[0_0_30px_rgba(244,63,94,0.4)]">
-                        <i class="fa-solid fa-hand-holding-heart text-2xl text-white"></i>
-                    </div>
-                    <h2 class="font-montserrat font-black text-4xl mb-6 fade-up delay-200 text-white tracking-tight leading-none">HE NEVER<br>GIVES UP</h2>
-                    
-                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300">
-                        <p class="mb-1">솔직히, 한 달 동안 외쳤지만 이거 진짜 쉽지 않지? 여전히 남보다 내가 먼저고. 🥲</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Honestly, it's really not easy, right? I still put myself before others. 🥲</p>
-                        <p class="mb-1">당장 실천하지 못한다고 너무 실망하거나 포기하지 마.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-5">Don't be too disappointed or give up if you can't do it right away.</p>
-                        <p class="text-pink-300 font-bold text-xl border-b border-pink-500/30 inline-block pb-1 mb-1">
-                            주님은 절대 우리를 포기하지 않으셔.
+                <div class="reveal-item delay-200">
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                        <p class="text-gray-300 leading-relaxed font-light">
+                            요리할 때 쓰면 <span class="text-blue-300">좋은 도구</span>지만,<br>
+                            남을 공격하면 <span class="text-red-400">나쁜 흉기</span>가 되지.<br>
+                            결국 도구는 그 자체로 딱 '중간'이야.
                         </p>
-                        <p class="text-sm text-pink-300/70 font-montserrat italic">The Lord never gives up on us.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 9: Conclusion -->
-        <section class="snap-section" id="slide-8">
-            <div class="glass-card" data-active="false">
-                <div class="flex flex-col h-full justify-center text-center items-center">
-                    <i class="fa-solid fa-shoe-prints text-4xl text-white/50 mb-6 fade-up delay-100 transform -rotate-90"></i>
-                    <h2 class="font-montserrat font-black text-5xl mb-6 fade-up delay-200 text-gradient-purple tracking-tighter">WALK<br>WITH HIM</h2>
-                    
-                    <div class="font-noto text-lg font-medium leading-relaxed text-gray-200 fade-up delay-300 mb-8">
-                        <p class="mb-1">주님께 딱! 붙어있자.</p>
-                        <p class="text-sm text-gray-400 font-montserrat italic mb-4">Let's stick close to the Lord!</p>
-                        <p class="text-gray-400 text-base mb-1">예배의 자리를 사모하고, 공동체와 함께 하다 보면 주님이 그 사랑을 우리 안에서 계속 자라나게 하실 거야.</p>
-                        <p class="text-sm text-gray-500 font-montserrat italic mb-4">As we love worship and stay with our community, He will keep growing that love in us.</p>
-                        <p class="text-white font-bold text-xl mb-1">
-                            평생 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">JOY의 삶</span>을 살아가는<br>우리가 되길 축복해! 🙏✨
+                        <p class="text-xs text-gray-400 font-eng mt-3 border-t border-white/10 pt-3 opacity-80">
+                            It's a useful tool when cooking, but a dangerous weapon when attacking someone. Ultimately, a tool is just 'neutral' on its own.
                         </p>
-                        <p class="text-sm text-gray-300 font-montserrat italic">Blessings to us all as we live a lifelong JOY lifestyle! 🙏✨</p>
                     </div>
                 </div>
             </div>
         </section>
 
-    </div>
+        <!-- Slide 3: The Story -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-80 h-80 bg-orange-600/30 -top-10 left-10"></div>
+            <div class="gradient-orb w-64 h-64 bg-red-600/20 bottom-1/4 right-0" style="animation-delay: -7s;"></div>
+            <div class="font-eng bg-text">THE MISSION</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-orange-400 font-bold tracking-widest text-xs mb-2 block">ACTS 9:10-15</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        두 사람의<br>엇갈린 만남 👥
+                        <span class="block text-base text-orange-300/80 font-eng mt-2">An Unexpected Encounter</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100 mb-6 flex flex-col gap-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-user-ninja text-red-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-300 text-sm font-light mt-1">
+                                예수님 믿는 사람들을 괴롭히러 가다가<br>갑자기 눈이 멀어버린 <strong class="text-white">사울</strong>
+                            </p>
+                            <p class="text-[11px] text-gray-400 font-eng mt-1 opacity-80">
+                                Saul, who suddenly went blind while on his way to persecute believers of Jesus.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-hands-praying text-orange-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-300 text-sm font-light mt-1">
+                                하나님께 사울을 찾아가 안수해주라는<br>엄청난 미션을 받은 <strong class="text-white">아나니아</strong>
+                            </p>
+                            <p class="text-[11px] text-gray-400 font-eng mt-1 opacity-80">
+                                Ananias, who received a huge mission from God to go and lay hands on Saul.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- JavaScript for Interactions -->
+        <!-- Slide 4: Human Bias -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-96 h-96 bg-yellow-600/20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="font-eng bg-text text-yellow-500/5">HUMAN BIAS</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-yellow-400 font-bold tracking-widest text-xs mb-2 block">DON'T JUDGE</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        "걔 완전<br>빌런 아니에요?" 😨
+                        <span class="block text-base text-yellow-300/80 font-eng mt-2">"Isn't he a total villain?"</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        명령을 받은 아나니아는 완전 쫄았어.<br>
+                        사울이 어떤 짓을 하고 다녔는지 소문을 다 들었거든.
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
+                        Ananias was terrified upon receiving the command. He had heard all the rumors about what Saul had been doing.
+                    </p>
+                </div>
+                <div class="reveal-item delay-200">
+                    <div class="border-l-2 border-yellow-500/50 pl-4 py-1 my-4">
+                        <p class="text-gray-400 text-sm italic">
+                            우리가 흔히 하는 실수지.<br>
+                            내 경험, 내가 들은 얘기로 내 기준대로<br>
+                            남을 <strong class="text-white">'평가하고 판단'</strong>해버리는 거.
+                        </p>
+                        <p class="text-xs text-gray-500 font-eng mt-2 opacity-80 italic">
+                            It's a mistake we often make. 'Judging and evaluating' others based on our own experiences and rumors.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: God's Perspective -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-72 h-72 bg-emerald-500/20 top-0 right-0"></div>
+            <div class="gradient-orb w-80 h-80 bg-teal-600/30 bottom-0 left-0" style="animation-delay: -2s;"></div>
+            <div class="font-eng bg-text">CHOSEN</div>
+            
+            <div class="glass-card border-emerald-500/30">
+                <div class="reveal-item">
+                    <span class="font-eng text-emerald-400 font-bold tracking-widest text-xs mb-2 block">GOD'S PERSPECTIVE</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        내가 택한<br>나의 도구다 ✨
+                        <span class="block text-base text-emerald-300/80 font-eng mt-2">He Is My Chosen Instrument</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        하지만 하나님은 단호하셨어.<br>
+                        사울의 과거가 아니라, 그가 하나님의 손에 들려<br>
+                        <strong class="text-white">어떻게 '사용'될지</strong>에 집중하셨거든.
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
+                        But God was firm. He focused not on Saul's past, but on how he would be 'used' once placed in God's hands.
+                    </p>
+                </div>
+                <div class="reveal-item delay-200 mt-6 text-center border-t border-emerald-500/20 pt-6">
+                    <p class="font-eng font-bold text-lg text-emerald-300 tracking-wide uppercase">
+                        "This man is my<br>chosen instrument."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Self Reflection -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-full h-96 bg-indigo-900/40 top-0 left-0"></div>
+            <div class="font-eng bg-text">REFLECTION</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-indigo-400 font-bold tracking-widest text-xs mb-2 block">HOW ABOUT YOU?</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        그럼, 나는<br>어떨까? 🥺
+                        <span class="block text-base text-indigo-300/80 font-eng mt-2">Then, What About Me?</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        남을 판단하기 전에 나 자신을 한 번 돌아보자.<br>
+                        혹시 스스로를 보며 이렇게 생각하지 않아?
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-2 mb-6 opacity-80">
+                        Before judging others, let's look back at ourselves. Do you ever think like this about yourself?
+                    </p>
+                </div>
+                <div class="reveal-item delay-200 flex flex-col gap-3">
+                    <div class="bg-black/40 rounded-lg p-3">
+                        <p class="text-sm text-gray-300">💬 "난 너무 부족해."</p>
+                        <p class="text-[11px] text-gray-500 font-eng mt-1">"I'm not good enough."</p>
+                    </div>
+                    <div class="bg-black/40 rounded-lg p-3">
+                        <p class="text-sm text-gray-300">💬 "난 착하지 않은데..."</p>
+                        <p class="text-[11px] text-gray-500 font-eng mt-1">"I'm not a good person..."</p>
+                    </div>
+                    <div class="bg-black/40 rounded-lg p-3">
+                        <p class="text-sm text-gray-300">💬 "나 같은 게 무슨 쓰임새가 있겠어?"</p>
+                        <p class="text-[11px] text-gray-500 font-eng mt-1">"What use could someone like me possibly be?"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: In His Hands -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-80 h-80 bg-fuchsia-600/30 top-20 right-10"></div>
+            <div class="gradient-orb w-64 h-64 bg-violet-600/20 bottom-10 left-10" style="animation-delay: -6s;"></div>
+            <div class="font-eng bg-text">IN HIS HANDS</div>
+            
+            <div class="glass-card">
+                <div class="reveal-item">
+                    <span class="font-eng text-fuchsia-400 font-bold tracking-widest text-xs mb-2 block">BROKEN BUT CHOSEN</span>
+                    <h2 class="text-3xl font-bold mb-6">
+                        선해서<br>쓰시는 게 아냐 🛠️
+                        <span class="block text-base text-fuchsia-300/80 font-eng mt-2">Not Chosen Because We Are Good</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100">
+                    <p class="text-gray-300 leading-relaxed font-light">
+                        팩폭 하나 할게. 우리는 원래 선하지 않아.<br>
+                        우리 안에는 선한 게 없거든.
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
+                        Let me drop a truth bomb. We are not naturally good. There is nothing good inside us.
+                    </p>
+                </div>
+                <div class="reveal-item delay-200">
+                    <div class="bg-gradient-to-r from-fuchsia-500/20 to-violet-500/20 p-5 rounded-xl">
+                        <p class="text-white font-medium leading-relaxed">
+                            하지만 괜찮아!<br>
+                            우리가 하나님 손에 딱 들려서 <span class="text-fuchsia-300">사용</span>될 때,<br>
+                            그때 비로소 우리는 진짜 선한 그릇,<br>
+                            멋진 도구가 되는 거니까.
+                        </p>
+                        <p class="text-xs text-gray-300 font-eng mt-3 border-t border-fuchsia-500/30 pt-3 opacity-80">
+                            But that's okay! Because when we are held in God's hands and used by Him, that is when we truly become good instruments, amazing tools.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Conclusion -->
+        <section class="story-section bg-zinc-950">
+            <div class="gradient-orb w-full h-full bg-gradient-to-tr from-purple-900/40 via-blue-900/30 to-teal-900/40 top-0 left-0" style="animation: none;"></div>
+            <div class="font-eng bg-text text-white/5">NEW EYES</div>
+            
+            <div class="glass-card border-white/20 backdrop-blur-2xl">
+                <div class="reveal-item text-center">
+                    <i class="fa-solid fa-eye text-4xl text-white mb-4"></i>
+                    <h2 class="text-3xl font-black mb-6">
+                        새로운 시선 장착 🚀
+                        <span class="block text-base text-teal-300/80 font-eng mt-2">Equipped With New Eyes</span>
+                    </h2>
+                </div>
+                <div class="reveal-item delay-100 text-center">
+                    <p class="text-gray-300 leading-relaxed font-light mb-4">
+                        나를 깎아내리는 내 시선을 버리고,<br>
+                        나를 <b>"택한 그릇"</b>이라 부르시는<br>
+                        하나님의 시선으로 나를 바라보자.<br><br>
+                        그렇게 변화된 사울처럼,<br>용기 낸 아나니아처럼 힙하게 살아보자고!
+                    </p>
+                    <p class="text-xs text-gray-400 font-eng mb-4 opacity-80">
+                        Let's abandon the gaze that brings us down, and view ourselves through God's eyes, who calls us His "chosen instrument". Let's live boldly like the transformed Saul, and the courageous Ananias!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('scroll-container');
-            const sections = document.querySelectorAll('.snap-section');
-            const totalSlides = sections.length;
-            let currentIndex = 0;
+            const sections = document.querySelectorAll('.story-section');
+            const progressContainer = document.getElementById('progress-container');
+            let currentSectionIndex = 0;
             let isAnimating = false;
 
-            // 1. Build IG-style Progress Bars for each slide dynamically
-            sections.forEach((sec, index) => {
-                const progContainer = sec.querySelector('.progress-container');
-                if(progContainer) {
-                    for(let i=0; i<totalSlides; i++) {
-                        const bar = document.createElement('div');
-                        bar.className = 'progress-bar' + (i < index ? ' completed' : '');
-                        const fill = document.createElement('div');
-                        fill.className = 'progress-fill';
-                        // Active slide progress fill
-                        if(i === index) fill.style.width = '100%'; 
-                        
-                        bar.appendChild(fill);
-                        progContainer.appendChild(bar);
-                    }
-                }
+            // 1. Initialize Progress Bar
+            sections.forEach((_, index) => {
+                const segment = document.createElement('div');
+                segment.className = 'progress-segment';
+                const fill = document.createElement('div');
+                fill.className = 'progress-fill';
+                segment.appendChild(fill);
+                progressContainer.appendChild(segment);
             });
+            
+            const updateProgress = (index) => {
+                const segments = document.querySelectorAll('.progress-segment');
+                segments.forEach((seg, i) => {
+                    if (i < index) {
+                        seg.classList.add('completed');
+                        seg.querySelector('.progress-fill').style.width = '100%';
+                    } else if (i === index) {
+                        seg.classList.remove('completed');
+                        seg.querySelector('.progress-fill').style.width = '100%'; // Full width for current
+                    } else {
+                        seg.classList.remove('completed');
+                        seg.querySelector('.progress-fill').style.width = '0%';
+                    }
+                });
+            };
 
-            // 2. Intersection Observer to trigger animations
+            // 2. Intersection Observer for Animations & State
             const observerOptions = {
                 root: container,
-                threshold: 0.6 // 60% visible to trigger
+                threshold: 0.6 // Trigger when 60% is visible
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    const card = entry.target.querySelector('.glass-card');
                     if (entry.isIntersecting) {
-                        card.setAttribute('data-active', 'true');
-                        // Update current index based on visible section
-                        currentIndex = Array.from(sections).indexOf(entry.target);
-                    } else {
-                        card.setAttribute('data-active', 'false');
+                        entry.target.classList.add('is-active');
+                        currentSectionIndex = Array.from(sections).indexOf(entry.target);
+                        updateProgress(currentSectionIndex);
+                        isAnimating = false; // Release lock when snap completes
                     }
                 });
             }, observerOptions);
 
             sections.forEach(sec => observer.observe(sec));
 
-            // 3. Navigation Function
-            function navigate(direction) {
+            // 3. Navigation Logic
+            const goToSection = (index) => {
                 if (isAnimating) return;
-                let newIndex = currentIndex + direction;
-                
-                if (newIndex >= 0 && newIndex < totalSlides) {
+                if (index >= 0 && index < sections.length) {
                     isAnimating = true;
-                    sections[newIndex].scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Prevent spamming navigation
-                    setTimeout(() => {
-                        isAnimating = false;
-                    }, 600); 
+                    sections[index].scrollIntoView({ behavior: 'smooth' });
                 }
-            }
+            };
 
-            // 4. Keyboard Navigation (Arrows)
-            window.addEventListener('keydown', (e) => {
+            window.scrollToTop = () => {
+                goToSection(0);
+            };
+
+            // 4. Keyboard Support (Arrows)
+            document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    navigate(1);
+                    goToSection(currentSectionIndex + 1);
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    navigate(-1);
+                    goToSection(currentSectionIndex - 1);
                 }
             });
 
-            // 5. Horizontal Mouse Wheel Navigation
-            // Note: Vertical wheel is handled natively by CSS scroll-snap
-            container.addEventListener('wheel', (e) => {
-                // Check if user is scrolling horizontally more than vertically
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault(); // Stop default horizontal scroll
-                    if (e.deltaX > 40) {
-                        navigate(1); // Scroll Right -> Next Slide
-                    } else if (e.deltaX < -40) {
-                        navigate(-1); // Scroll Left -> Prev Slide
-                    }
-                }
-            }, { passive: false });
-
-            // 6. Touch Swipe Navigation (Left/Right)
+            // 5. Swipe Support (Horizontal specifically)
             let touchStartX = 0;
-            let touchEndX = 0;
             let touchStartY = 0;
-            let touchEndY = 0;
+            const swipeThreshold = 50;
 
-            container.addEventListener('touchstart', e => {
+            container.addEventListener('touchstart', (e) => {
                 touchStartX = e.changedTouches[0].screenX;
                 touchStartY = e.changedTouches[0].screenY;
             }, { passive: true });
 
-            container.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX;
-                touchEndY = e.changedTouches[0].screenY;
-                handleSwipe();
-            }, { passive: true });
+            container.addEventListener('touchend', (e) => {
+                let touchEndX = e.changedTouches[0].screenX;
+                let touchEndY = e.changedTouches[0].screenY;
+                
+                let deltaX = touchEndX - touchStartX;
+                let deltaY = touchEndY - touchStartY;
 
-            function handleSwipe() {
-                const swipeThresholdX = 50;
-                const swipeThresholdY = 50;
-                const diffX = touchStartX - touchEndX;
-                const diffY = touchStartY - touchEndY;
-
-                // Only trigger if horizontal swipe is greater than vertical swipe
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThresholdX) {
-                    if (diffX > 0) {
-                        // Swiped Left -> Next
-                        navigate(1);
+                // Check if the swipe is mostly horizontal
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+                    if (deltaX < 0) {
+                        // Swipe Left -> Next
+                        goToSection(currentSectionIndex + 1);
                     } else {
-                        // Swiped Right -> Prev
-                        navigate(-1);
+                        // Swipe Right -> Prev
+                        goToSection(currentSectionIndex - 1);
                     }
                 }
-            }
+            }, { passive: true });
+
+            // 6. Wheel / Trackpad (Horizontal to Vertical mapping)
+            let wheelTimeout;
+            container.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    e.preventDefault(); 
+                    
+                    if (isAnimating) return;
+
+                    clearTimeout(wheelTimeout);
+                    wheelTimeout = setTimeout(() => {
+                        if (e.deltaX > 20) {
+                            goToSection(currentSectionIndex + 1);
+                        } else if (e.deltaX < -20) {
+                            goToSection(currentSectionIndex - 1);
+                        }
+                    }, 50); 
+                }
+            }, { passive: false });
+            
+            // Initial call
+            updateProgress(0);
         });
     </script>
 </body>
