@@ -2,587 +2,370 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>내가 택한 그릇 | Youth Sermon</title>
-    
-    <!-- Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>토기장이 | The Potter & The Vessel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom Utilities & Resets */
+        :root {
+            --glass: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+        }
         body {
-            font-family: 'Noto Sans KR', sans-serif;
             background-color: #050505;
-            color: #ffffff;
-            overflow: hidden;
-            touch-action: none;
+            color: white;
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden; 
         }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
 
-        .font-eng {
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        /* Scroll Container Setup */
-        #scroll-container {
-            height: 100dvh;
-            width: 100vw;
+        /* Scroll Container */
+        #snap-container {
+            height: 100vh;
             overflow-y: scroll;
-            overflow-x: hidden;
             scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;
             scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        #scroll-container::-webkit-scrollbar {
-            display: none;
-        }
+        #snap-container::-webkit-scrollbar { display: none; }
 
-        /* Section & Snap */
-        .story-section {
-            height: 100dvh;
-            width: 100vw;
+        /* Card Section */
+        section {
+            height: 100vh;
             scroll-snap-align: start;
-            scroll-snap-stop: always;
-            position: relative;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 80px 20px 100px 20px; 
-            overflow: hidden;
+            padding: 1.5rem;
+            position: relative;
+            perspective: 1000px;
         }
 
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 2rem;
+        .card {
             width: 100%;
             max-width: 400px;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
+            height: 85vh;
+            border-radius: 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 2rem;
-            z-index: 10;
-        }
-
-        /* Animations */
-        .reveal-item {
-            opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .story-section.is-active .reveal-item {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-        .delay-300 { transition-delay: 300ms; }
-        .delay-400 { transition-delay: 400ms; }
-
-        /* Giant Background Text */
-        .bg-text {
-            position: absolute;
-            font-size: 15vw;
-            white-space: nowrap;
-            opacity: 0.03;
-            z-index: 0;
-            font-weight: 900;
-            text-transform: uppercase;
-            pointer-events: none;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-        }
-
-        @media (min-width: 768px) {
-            .bg-text { font-size: 8rem; }
-        }
-
-        /* Gradient Orbs */
-        .gradient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 1;
-            opacity: 0.6;
-            animation: float 10s infinite ease-in-out alternate;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 50px) scale(1.1); }
-        }
-
-        /* Progress Bar */
-        #progress-container {
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            display: flex;
-            gap: 4px;
-            z-index: 50;
-        }
-        .progress-segment {
-            flex-grow: 1;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
+            align-items: center; /* 가로 중앙 정렬 추가 */
+            text-align: center; /* 텍스트 중앙 정렬 추가 */
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: scale(0.9);
+            opacity: 0.5;
+            position: relative;
             overflow: hidden;
         }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: white;
-            transition: width 0.3s ease;
+
+        section.active .card {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .progress-segment.completed .progress-fill { width: 100%; }
+
+        /* Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        section.active .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        section.active .reveal-delay-1 { transition-delay: 0.2s; }
+        section.active .reveal-delay-2 { transition-delay: 0.4s; }
+        section.active .reveal-delay-3 { transition-delay: 0.6s; }
+
+        /* Background Gradients */
+        .bg-gradient-1 { background: radial-gradient(circle at top right, #1e1b4b, #000); }
+        .bg-gradient-2 { background: radial-gradient(circle at bottom left, #312e81, #000); }
+        .bg-gradient-3 { background: radial-gradient(circle at center, #4c1d95, #000); }
+        .bg-gradient-4 { background: radial-gradient(circle at top left, #1e293b, #000); }
+        .bg-gradient-5 { background: radial-gradient(circle at bottom right, #581c87, #000); }
+        .bg-gradient-6 { background: radial-gradient(circle at top, #0f172a, #000); }
+
+        .english-tag {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--neon-blue);
+            font-size: 0.7rem;
+            font-weight: 900;
+            margin-bottom: 0.25rem;
+        }
+
+        .eng-sub {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .eng-body {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-    <!-- UI Overlays -->
-    <div id="progress-container">
-        <!-- Segments will be injected by JS -->
+    <div id="snap-container">
+        <!-- 01 Intro -->
+        <section class="bg-gradient-1 active">
+            <div class="card">
+                <div class="english-tag reveal">ROMANS 9:21-24</div>
+                <h1 class="text-4xl font-black font-montserrat reveal reveal-delay-1">THE<br><span class="text-cyan-400">POTTER</span></h1>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-xl font-bold">너는 어떤 그릇이니?</p>
+                    <p class="eng-sub italic">What kind of vessel are you?</p>
+                </div>
+                <div class="h-1 w-12 bg-cyan-400 my-8 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        지난주엔 '누가 우리를 선택했나'에 대해 나눴지. 오늘은 더 깊이 들어가보자. 우리를 만드신 분, '토기장이'의 이야기야.
+                    </p>
+                    <p class="eng-body">
+                        Last week we talked about who chose us. Today, let's go deeper into the story of the Potter who created us.
+                    </p>
+                </div>
+                <div class="mt-8 opacity-40 text-[10px] text-gray-400 font-montserrat reveal-delay-3">KM YOUTH MINISTRY</div>
+            </div>
+        </section>
+
+        <!-- 02 Problem -->
+        <section class="bg-gradient-2">
+            <div class="card">
+                <div class="english-tag reveal">THE CONFLICT</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 uppercase text-indigo-300">WHO'S<br>BETTER?</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">로마 교회는 지금 '전쟁 중'</p>
+                    <p class="eng-sub italic">The Church of Rome is at war</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        유대인과 이방인 크리스천들이 섞여 있던 로마 교회. 서로 "내가 더 잘났어"라며 갈등하고 있었어. 바울은 이 문제를 해결하고 싶었지.
+                    </p>
+                    <p class="eng-body">
+                        Jewish and Gentile Christians were clashing, each claiming to be superior. Paul wanted to address this conflict head-on.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 Metaphor -->
+        <section class="bg-gradient-3">
+            <div class="card">
+                <div class="english-tag reveal">THE ANALOGY</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-purple-300">CLAY &<br>HANDS</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">같은 흙, 다른 목적</p>
+                    <p class="eng-sub italic">Same clay, different purposes</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        토기장이는 한 덩이의 진흙으로 '귀한 그릇'도, '평범한 그릇'도 만들 권리가 있어. 중요한 건 그릇의 질이 아니라 '주인의 목적'이야.
+                    </p>
+                    <p class="eng-body">
+                        The potter has the right to make both special and common vessels from the same clay. What matters is the Master's purpose.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 Wrath & Patience -->
+        <section class="bg-gradient-4">
+            <div class="card">
+                <div class="english-tag reveal">DIVINE PATIENCE</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-orange-300">ENDLESS<br>WAITING</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">진노의 그릇? 그건 '기다림'이야</p>
+                    <p class="eng-sub italic">Vessels of wrath? It's about waiting</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        심판받을 그릇조차 하나님은 오래 참으셔. 왜? 하나님의 자비와 능력을 보여주기 위해서지. 우리를 향한 끝없는 기다림, 그게 바로 하나님의 마음이야.
+                    </p>
+                    <p class="eng-body">
+                        God endures even the vessels of wrath with great patience to show His mercy. His heart is defined by this endless waiting.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 Mercy & Riches -->
+        <section class="bg-gradient-5">
+            <div class="card">
+                <div class="english-tag reveal">ABUNDANCE</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-pink-300">RICHES OF<br>GLORY</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">긍휼의 그릇은 '넘치는 것'</p>
+                    <p class="eng-sub italic">Vessels of mercy mean overflowing</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        단순히 나만 구원받고 끝나는 게 아냐. 하나님의 영광이 내 안에 가득 채워져서 밖으로 '흘러넘치는 것', 그게 바로 하나님의 풍성함이야.
+                    </p>
+                    <p class="eng-body">
+                        It’s not just about personal salvation. It’s about God’s glory filling us so much that it overflows—that is the "Riches of His Glory."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 Interpretation -->
+        <section class="bg-gradient-6">
+            <div class="card">
+                <div class="english-tag reveal">THE MESSAGE</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-red-400">STOP<br>JUDGING</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">손가락질은 이제 그만</p>
+                    <p class="eng-sub italic">No more pointing fingers at others</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        "너는 진노의 그릇이야"라고 비난하지 마. 어떤 그릇이든 토기장이의 손에 있으면 결국 하나님의 성품과 사랑을 드러내게 되어 있어.
+                    </p>
+                    <p class="eng-body">
+                        Don't judge others as "vessels of wrath." In the Potter's hands, every vessel ultimately reveals God's beautiful character and love.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 Call -->
+        <section class="bg-gradient-1">
+            <div class="card">
+                <div class="english-tag reveal">THE CALLING</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-emerald-400">CHOSEN<br>TO SHOW</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">하나님을 보여주는 그릇</p>
+                    <p class="eng-sub italic">Vessels designed to reveal God</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        하나님은 우리를 '바로 이 그릇'으로 부르셨어. 유대인이든 이방인이든 상관없이, 우리를 통해 하나님의 아름다우심이 드러나길 원하셔.
+                    </p>
+                    <p class="eng-body">
+                        God called us to be these very vessels. Regardless of our background, He wants His beauty to be reflected through our lives.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 Application 1 -->
+        <section class="bg-gradient-2">
+            <div class="card">
+                <div class="english-tag reveal">UNITY</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-sky-300">ONE LUMP<br>OF CLAY</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">우리는 다 같은 흙에서 왔어</p>
+                    <p class="eng-sub italic">We all come from the same source</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        서로 다를 게 하나도 없어. 친구를 비난하는 건 결국 나 자신을 비난하는 거야. 우리는 서로를 보듬어야 하는 하나의 운명 공동체야.
+                    </p>
+                    <p class="eng-body">
+                        There is no difference between us. Criticizing a friend is ultimately criticizing yourself. We are one community meant to embrace each other.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 Conclusion -->
+        <section class="bg-gradient-3">
+            <div class="card">
+                <div class="english-tag reveal">THE MISSION</div>
+                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-yellow-300">CITY'S<br>JOY</h2>
+                <div class="mt-2 reveal reveal-delay-1">
+                    <p class="text-lg font-bold">이 도시의 기쁨이 되자</p>
+                    <p class="eng-sub italic">Let's become the joy of this city</p>
+                </div>
+                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
+                <div class="reveal reveal-delay-3">
+                    <p class="text-sm leading-relaxed text-gray-200">
+                        우리의 모양이 아니라 하나님이 어떻게 쓰시는지 기대해봐. 부름받은 그릇으로서, 세상을 밝게 만드는 '기쁨의 존재'가 되길 축복해!
+                    </p>
+                    <p class="eng-body">
+                        Don't focus on your shape, but on how God uses you. As chosen vessels, I bless you to be the "presence of joy" that lights up the world!
+                    </p>
+                </div>
+                <div class="mt-8 opacity-20 text-[12px] font-montserrat tracking-widest reveal reveal-delay-3">THE END</div>
+            </div>
+        </section>
     </div>
 
-    <!-- Main Scroll Container -->
-    <main id="scroll-container">
-
-        <!-- Slide 1: Intro -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-64 h-64 bg-purple-600/40 top-0 left-0"></div>
-            <div class="gradient-orb w-80 h-80 bg-pink-600/30 bottom-0 right-0" style="animation-delay: -5s;"></div>
-            <div class="font-eng bg-text">THE CHOSEN</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-pink-400 font-bold tracking-widest text-xs mb-2 block">SERIES PART. 1</span>
-                    <h1 class="text-4xl font-black mb-6 leading-tight">
-                        내가 택한<br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">그릇 🥣</span>
-                        <span class="block text-lg text-purple-300/80 font-eng mt-2 font-bold tracking-wide">The Chosen Instrument</span>
-                    </h1>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-lg text-gray-300 leading-relaxed font-light">
-                        안녕! 오늘부터 4주 동안<br>
-                        '그릇'에 대해 얘기해 볼까 해.<br><br>
-                        하나님이 우리를 '그릇'이라고 부르셨다는데,<br>
-                        도대체 무슨 의미일까?
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-3 opacity-80 leading-relaxed">
-                        Hi! For the next 4 weeks, we're going to talk about 'instruments'.<br>
-                        God called us His 'instruments', but what exactly does that mean?
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 2: Value Neutrality -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-72 h-72 bg-blue-600/30 top-1/4 -right-10"></div>
-            <div class="gradient-orb w-64 h-64 bg-cyan-500/20 bottom-10 -left-10" style="animation-delay: -3s;"></div>
-            <div class="font-eng bg-text">NEUTRALITY</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-cyan-400 font-bold tracking-widest text-xs mb-2 block">GOOD OR BAD?</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        도구는 죄가<br>없어 🔪
-                        <span class="block text-base text-cyan-300/80 font-eng mt-2">Tools Are Innocent</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-gray-300 leading-relaxed font-light">
-                        <strong class="text-white font-medium">'가치 중립성'</strong>이라고 들어봤어?<br>
-                        칼을 한 번 생각해 봐. 칼 자체가 착하거나 나쁜 건 아니잖아?
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
-                        Have you ever heard of 'value neutrality'? Think about a knife. The knife itself isn't good or bad, right?
-                    </p>
-                </div>
-                <div class="reveal-item delay-200">
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                        <p class="text-gray-300 leading-relaxed font-light">
-                            요리할 때 쓰면 <span class="text-blue-300">좋은 도구</span>지만,<br>
-                            남을 공격하면 <span class="text-red-400">나쁜 흉기</span>가 되지.<br>
-                            결국 도구는 그 자체로 딱 '중간'이야.
-                        </p>
-                        <p class="text-xs text-gray-400 font-eng mt-3 border-t border-white/10 pt-3 opacity-80">
-                            It's a useful tool when cooking, but a dangerous weapon when attacking someone. Ultimately, a tool is just 'neutral' on its own.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: The Story -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-80 h-80 bg-orange-600/30 -top-10 left-10"></div>
-            <div class="gradient-orb w-64 h-64 bg-red-600/20 bottom-1/4 right-0" style="animation-delay: -7s;"></div>
-            <div class="font-eng bg-text">THE MISSION</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-orange-400 font-bold tracking-widest text-xs mb-2 block">ACTS 9:10-15</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        두 사람의<br>엇갈린 만남 👥
-                        <span class="block text-base text-orange-300/80 font-eng mt-2">An Unexpected Encounter</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100 mb-6 flex flex-col gap-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-user-ninja text-red-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-300 text-sm font-light mt-1">
-                                예수님 믿는 사람들을 괴롭히러 가다가<br>갑자기 눈이 멀어버린 <strong class="text-white">사울</strong>
-                            </p>
-                            <p class="text-[11px] text-gray-400 font-eng mt-1 opacity-80">
-                                Saul, who suddenly went blind while on his way to persecute believers of Jesus.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-hands-praying text-orange-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-300 text-sm font-light mt-1">
-                                하나님께 사울을 찾아가 안수해주라는<br>엄청난 미션을 받은 <strong class="text-white">아나니아</strong>
-                            </p>
-                            <p class="text-[11px] text-gray-400 font-eng mt-1 opacity-80">
-                                Ananias, who received a huge mission from God to go and lay hands on Saul.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Human Bias -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-96 h-96 bg-yellow-600/20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="font-eng bg-text text-yellow-500/5">HUMAN BIAS</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-yellow-400 font-bold tracking-widest text-xs mb-2 block">DON'T JUDGE</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        "걔 완전<br>빌런 아니에요?" 😨
-                        <span class="block text-base text-yellow-300/80 font-eng mt-2">"Isn't he a total villain?"</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-gray-300 leading-relaxed font-light">
-                        명령을 받은 아나니아는 완전 쫄았어.<br>
-                        사울이 어떤 짓을 하고 다녔는지 소문을 다 들었거든.
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
-                        Ananias was terrified upon receiving the command. He had heard all the rumors about what Saul had been doing.
-                    </p>
-                </div>
-                <div class="reveal-item delay-200">
-                    <div class="border-l-2 border-yellow-500/50 pl-4 py-1 my-4">
-                        <p class="text-gray-400 text-sm italic">
-                            우리가 흔히 하는 실수지.<br>
-                            내 경험, 내가 들은 얘기로 내 기준대로<br>
-                            남을 <strong class="text-white">'평가하고 판단'</strong>해버리는 거.
-                        </p>
-                        <p class="text-xs text-gray-500 font-eng mt-2 opacity-80 italic">
-                            It's a mistake we often make. 'Judging and evaluating' others based on our own experiences and rumors.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: God's Perspective -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-72 h-72 bg-emerald-500/20 top-0 right-0"></div>
-            <div class="gradient-orb w-80 h-80 bg-teal-600/30 bottom-0 left-0" style="animation-delay: -2s;"></div>
-            <div class="font-eng bg-text">CHOSEN</div>
-            
-            <div class="glass-card border-emerald-500/30">
-                <div class="reveal-item">
-                    <span class="font-eng text-emerald-400 font-bold tracking-widest text-xs mb-2 block">GOD'S PERSPECTIVE</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        내가 택한<br>나의 도구다 ✨
-                        <span class="block text-base text-emerald-300/80 font-eng mt-2">He Is My Chosen Instrument</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-gray-300 leading-relaxed font-light">
-                        하지만 하나님은 단호하셨어.<br>
-                        사울의 과거가 아니라, 그가 하나님의 손에 들려<br>
-                        <strong class="text-white">어떻게 '사용'될지</strong>에 집중하셨거든.
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
-                        But God was firm. He focused not on Saul's past, but on how he would be 'used' once placed in God's hands.
-                    </p>
-                </div>
-                <div class="reveal-item delay-200 mt-6 text-center border-t border-emerald-500/20 pt-6">
-                    <p class="font-eng font-bold text-lg text-emerald-300 tracking-wide uppercase">
-                        "This man is my<br>chosen instrument."
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: Self Reflection -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-full h-96 bg-indigo-900/40 top-0 left-0"></div>
-            <div class="font-eng bg-text">REFLECTION</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-indigo-400 font-bold tracking-widest text-xs mb-2 block">HOW ABOUT YOU?</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        그럼, 나는<br>어떨까? 🥺
-                        <span class="block text-base text-indigo-300/80 font-eng mt-2">Then, What About Me?</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-gray-300 leading-relaxed font-light">
-                        남을 판단하기 전에 나 자신을 한 번 돌아보자.<br>
-                        혹시 스스로를 보며 이렇게 생각하지 않아?
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-2 mb-6 opacity-80">
-                        Before judging others, let's look back at ourselves. Do you ever think like this about yourself?
-                    </p>
-                </div>
-                <div class="reveal-item delay-200 flex flex-col gap-3">
-                    <div class="bg-black/40 rounded-lg p-3">
-                        <p class="text-sm text-gray-300">💬 "난 너무 부족해."</p>
-                        <p class="text-[11px] text-gray-500 font-eng mt-1">"I'm not good enough."</p>
-                    </div>
-                    <div class="bg-black/40 rounded-lg p-3">
-                        <p class="text-sm text-gray-300">💬 "난 착하지 않은데..."</p>
-                        <p class="text-[11px] text-gray-500 font-eng mt-1">"I'm not a good person..."</p>
-                    </div>
-                    <div class="bg-black/40 rounded-lg p-3">
-                        <p class="text-sm text-gray-300">💬 "나 같은 게 무슨 쓰임새가 있겠어?"</p>
-                        <p class="text-[11px] text-gray-500 font-eng mt-1">"What use could someone like me possibly be?"</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: In His Hands -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-80 h-80 bg-fuchsia-600/30 top-20 right-10"></div>
-            <div class="gradient-orb w-64 h-64 bg-violet-600/20 bottom-10 left-10" style="animation-delay: -6s;"></div>
-            <div class="font-eng bg-text">IN HIS HANDS</div>
-            
-            <div class="glass-card">
-                <div class="reveal-item">
-                    <span class="font-eng text-fuchsia-400 font-bold tracking-widest text-xs mb-2 block">BROKEN BUT CHOSEN</span>
-                    <h2 class="text-3xl font-bold mb-6">
-                        선해서<br>쓰시는 게 아냐 🛠️
-                        <span class="block text-base text-fuchsia-300/80 font-eng mt-2">Not Chosen Because We Are Good</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100">
-                    <p class="text-gray-300 leading-relaxed font-light">
-                        팩폭 하나 할게. 우리는 원래 선하지 않아.<br>
-                        우리 안에는 선한 게 없거든.
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mt-2 mb-4 opacity-80">
-                        Let me drop a truth bomb. We are not naturally good. There is nothing good inside us.
-                    </p>
-                </div>
-                <div class="reveal-item delay-200">
-                    <div class="bg-gradient-to-r from-fuchsia-500/20 to-violet-500/20 p-5 rounded-xl">
-                        <p class="text-white font-medium leading-relaxed">
-                            하지만 괜찮아!<br>
-                            우리가 하나님 손에 딱 들려서 <span class="text-fuchsia-300">사용</span>될 때,<br>
-                            그때 비로소 우리는 진짜 선한 그릇,<br>
-                            멋진 도구가 되는 거니까.
-                        </p>
-                        <p class="text-xs text-gray-300 font-eng mt-3 border-t border-fuchsia-500/30 pt-3 opacity-80">
-                            But that's okay! Because when we are held in God's hands and used by Him, that is when we truly become good instruments, amazing tools.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Conclusion -->
-        <section class="story-section bg-zinc-950">
-            <div class="gradient-orb w-full h-full bg-gradient-to-tr from-purple-900/40 via-blue-900/30 to-teal-900/40 top-0 left-0" style="animation: none;"></div>
-            <div class="font-eng bg-text text-white/5">NEW EYES</div>
-            
-            <div class="glass-card border-white/20 backdrop-blur-2xl">
-                <div class="reveal-item text-center">
-                    <i class="fa-solid fa-eye text-4xl text-white mb-4"></i>
-                    <h2 class="text-3xl font-black mb-6">
-                        새로운 시선 장착 🚀
-                        <span class="block text-base text-teal-300/80 font-eng mt-2">Equipped With New Eyes</span>
-                    </h2>
-                </div>
-                <div class="reveal-item delay-100 text-center">
-                    <p class="text-gray-300 leading-relaxed font-light mb-4">
-                        나를 깎아내리는 내 시선을 버리고,<br>
-                        나를 <b>"택한 그릇"</b>이라 부르시는<br>
-                        하나님의 시선으로 나를 바라보자.<br><br>
-                        그렇게 변화된 사울처럼,<br>용기 낸 아나니아처럼 힙하게 살아보자고!
-                    </p>
-                    <p class="text-xs text-gray-400 font-eng mb-4 opacity-80">
-                        Let's abandon the gaze that brings us down, and view ourselves through God's eyes, who calls us His "chosen instrument". Let's live boldly like the transformed Saul, and the courageous Ananias!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('scroll-container');
-            const sections = document.querySelectorAll('.story-section');
-            const progressContainer = document.getElementById('progress-container');
-            let currentSectionIndex = 0;
-            let isAnimating = false;
+        const container = document.getElementById('snap-container');
+        const sections = document.querySelectorAll('section');
+        let isScrolling = false;
+        let currentIndex = 0;
 
-            // 1. Initialize Progress Bar
-            sections.forEach((_, index) => {
-                const segment = document.createElement('div');
-                segment.className = 'progress-segment';
-                const fill = document.createElement('div');
-                fill.className = 'progress-fill';
-                segment.appendChild(fill);
-                progressContainer.appendChild(segment);
-            });
-            
-            const updateProgress = (index) => {
-                const segments = document.querySelectorAll('.progress-segment');
-                segments.forEach((seg, i) => {
-                    if (i < index) {
-                        seg.classList.add('completed');
-                        seg.querySelector('.progress-fill').style.width = '100%';
-                    } else if (i === index) {
-                        seg.classList.remove('completed');
-                        seg.querySelector('.progress-fill').style.width = '100%'; // Full width for current
-                    } else {
-                        seg.classList.remove('completed');
-                        seg.querySelector('.progress-fill').style.width = '0%';
-                    }
-                });
-            };
+        const observerOptions = { threshold: 0.6 };
 
-            // 2. Intersection Observer for Animations & State
-            const observerOptions = {
-                root: container,
-                threshold: 0.6 // Trigger when 60% is visible
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-active');
-                        currentSectionIndex = Array.from(sections).indexOf(entry.target);
-                        updateProgress(currentSectionIndex);
-                        isAnimating = false; // Release lock when snap completes
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(sec => observer.observe(sec));
-
-            // 3. Navigation Logic
-            const goToSection = (index) => {
-                if (isAnimating) return;
-                if (index >= 0 && index < sections.length) {
-                    isAnimating = true;
-                    sections[index].scrollIntoView({ behavior: 'smooth' });
-                }
-            };
-
-            window.scrollToTop = () => {
-                goToSection(0);
-            };
-
-            // 4. Keyboard Support (Arrows)
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                    goToSection(currentSectionIndex + 1);
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                    goToSection(currentSectionIndex - 1);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    currentIndex = Array.from(sections).indexOf(entry.target);
+                } else {
+                    entry.target.classList.remove('active');
                 }
             });
+        }, observerOptions);
 
-            // 5. Swipe Support (Horizontal specifically)
-            let touchStartX = 0;
-            let touchStartY = 0;
-            const swipeThreshold = 50;
+        sections.forEach(section => observer.observe(section));
 
-            container.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
+        function moveToSection(index) {
+            if (index < 0 || index >= sections.length || isScrolling) return;
+            isScrolling = true;
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => { isScrolling = false; }, 800);
+        }
 
-            container.addEventListener('touchend', (e) => {
-                let touchEndX = e.changedTouches[0].screenX;
-                let touchEndY = e.changedTouches[0].screenY;
-                
-                let deltaX = touchEndX - touchStartX;
-                let deltaY = touchEndY - touchStartY;
+        window.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 20) {
+                e.preventDefault();
+                if (e.deltaX > 0) moveToSection(currentIndex + 1);
+                else moveToSection(currentIndex - 1);
+            }
+        }, { passive: false });
 
-                // Check if the swipe is mostly horizontal
-                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-                    if (deltaX < 0) {
-                        // Swipe Left -> Next
-                        goToSection(currentSectionIndex + 1);
-                    } else {
-                        // Swipe Right -> Prev
-                        goToSection(currentSectionIndex - 1);
-                    }
-                }
-            }, { passive: true });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') moveToSection(currentIndex + 1);
+            else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') moveToSection(currentIndex - 1);
+        });
 
-            // 6. Wheel / Trackpad (Horizontal to Vertical mapping)
-            let wheelTimeout;
-            container.addEventListener('wheel', (e) => {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault(); 
-                    
-                    if (isAnimating) return;
+        let touchStartX = 0;
+        let touchEndX = 0;
 
-                    clearTimeout(wheelTimeout);
-                    wheelTimeout = setTimeout(() => {
-                        if (e.deltaX > 20) {
-                            goToSection(currentSectionIndex + 1);
-                        } else if (e.deltaX < -20) {
-                            goToSection(currentSectionIndex - 1);
-                        }
-                    }, 50); 
-                }
-            }, { passive: false });
-            
-            // Initial call
-            updateProgress(0);
+        window.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        window.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            const threshold = 50;
+            if (touchStartX - touchEndX > threshold) moveToSection(currentIndex + 1);
+            else if (touchEndX - touchStartX > threshold) moveToSection(currentIndex - 1);
         });
     </script>
 </body>
