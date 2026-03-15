@@ -2,371 +2,378 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>토기장이 | The Potter & The Vessel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>질그릇: The Unbreakable Jar</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --neon-blue: #00f2ff;
-            --neon-purple: #bc13fe;
+            --bg-dark: #0a0a0c;
+            --neon-purple: #a855f7;
+            --neon-blue: #3b82f6;
+            --neon-gold: #f59e0b;
         }
+
         body {
-            background-color: #050505;
-            color: white;
+            background-color: var(--bg-dark);
             font-family: 'Noto Sans KR', sans-serif;
-            overflow: hidden; 
-        }
-        .font-montserrat { font-family: 'Montserrat', sans-serif; }
-
-        /* Scroll Container */
-        #snap-container {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        #snap-container::-webkit-scrollbar { display: none; }
-
-        /* Card Section */
-        section {
-            height: 100vh;
-            scroll-snap-align: start;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-            position: relative;
-            perspective: 1000px;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 400px;
-            height: 85vh;
-            border-radius: 2rem;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; /* 가로 중앙 정렬 추가 */
-            text-align: center; /* 텍스트 중앙 정렬 추가 */
-            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            transform: scale(0.9);
-            opacity: 0.5;
-            position: relative;
+            color: #ffffff;
+            margin: 0;
             overflow: hidden;
         }
 
-        section.active .card {
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+
+        #container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #container::-webkit-scrollbar { display: none; }
+
+        section {
+            min-height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        section.active .glass-card {
             transform: scale(1);
             opacity: 1;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
-        }
-        section.active .reveal {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        section.active .reveal-delay-1 { transition-delay: 0.2s; }
-        section.active .reveal-delay-2 { transition-delay: 0.4s; }
-        section.active .reveal-delay-3 { transition-delay: 0.6s; }
+        .bg-gradient-1 { background: radial-gradient(circle at top right, #2d1b4e, #0a0a0c); }
+        .bg-gradient-2 { background: radial-gradient(circle at bottom left, #1e293b, #0a0a0c); }
+        .bg-gradient-3 { background: radial-gradient(circle at center, #312e81, #0a0a0c); }
+        .bg-gradient-4 { background: radial-gradient(circle at top left, #4c1d95, #0a0a0c); }
 
-        /* Background Gradients */
-        .bg-gradient-1 { background: radial-gradient(circle at top right, #1e1b4b, #000); }
-        .bg-gradient-2 { background: radial-gradient(circle at bottom left, #312e81, #000); }
-        .bg-gradient-3 { background: radial-gradient(circle at center, #4c1d95, #000); }
-        .bg-gradient-4 { background: radial-gradient(circle at top left, #1e293b, #000); }
-        .bg-gradient-5 { background: radial-gradient(circle at bottom right, #581c87, #000); }
-        .bg-gradient-6 { background: radial-gradient(circle at top, #0f172a, #000); }
-
-        .english-tag {
-            font-family: 'Montserrat', sans-serif;
+        .sub-text-en {
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--neon-blue);
-            font-size: 0.7rem;
-            font-weight: 900;
-            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
         }
 
-        .eng-sub {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 0.25rem;
-            line-height: 1.2;
-        }
-
-        .eng-body {
-            font-size: 0.75rem;
+        .translation-en {
+            font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.5);
             margin-top: 0.75rem;
-            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .progress-bar {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 50;
+        }
+
+        .progress-dot {
+            width: 4px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            height: 40px;
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+
+        .hint-scroll {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.5;
+            font-size: 0.8rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+            40% {transform: translateY(-10px) translateX(-50%);}
+            60% {transform: translateY(-5px) translateX(-50%);}
         }
     </style>
 </head>
 <body>
 
-    <div id="snap-container">
-        <!-- 01 Intro -->
-        <section class="bg-gradient-1 active">
-            <div class="card">
-                <div class="english-tag reveal">ROMANS 9:21-24</div>
-                <h1 class="text-4xl font-black font-montserrat reveal reveal-delay-1">THE<br><span class="text-cyan-400">POTTER</span></h1>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-xl font-bold">너는 어떤 그릇이니?</p>
-                    <p class="eng-sub italic">What kind of vessel are you?</p>
-                </div>
-                <div class="h-1 w-12 bg-cyan-400 my-8 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        지난주엔 '누가 우리를 선택했나'에 대해 나눴지. 오늘은 더 깊이 들어가보자. 우리를 만드신 분, '토기장이'의 이야기야.
-                    </p>
-                    <p class="eng-body">
-                        Last week we talked about who chose us. Today, let's go deeper into the story of the Potter who created us.
-                    </p>
-                </div>
-                <div class="mt-8 opacity-40 text-[10px] text-gray-400 font-montserrat reveal-delay-3">KM YOUTH MINISTRY</div>
+    <!-- Progress Indicator -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <main id="container">
+        <!-- 1. Intro -->
+        <section class="bg-gradient-1 active" id="sec-0">
+            <div class="glass-card flex flex-col items-center text-center">
+                <span class="sub-text-en font-montserrat">Vessel Series Part.3</span>
+                <h1 class="text-4xl font-bold mb-4 leading-tight">질그릇:<br><span class="text-purple-400">보잘것없는 나</span></h1>
+                <p class="text-gray-300 font-light leading-relaxed">
+                    오늘 우리는 사도 바울이 자신을 비유한<br>
+                    <strong class="text-white">질그릇</strong>에 대해 나눠보려고 해.
+                </p>
+                <p class="translation-en">
+                    Today, we’re talking about the "Clay Jar,"<br>
+                    a metaphor Paul used for himself.
+                </p>
+                <div class="mt-8 font-montserrat text-xl text-purple-500 opacity-80">CLAY JAR</div>
             </div>
+            <div class="hint-scroll">Swipe or Scroll down <i class="fa-solid fa-chevron-down ml-1"></i></div>
         </section>
 
-        <!-- 02 Problem -->
-        <section class="bg-gradient-2">
-            <div class="card">
-                <div class="english-tag reveal">THE CONFLICT</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 uppercase text-indigo-300">WHO'S<br>BETTER?</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">로마 교회는 지금 '전쟁 중'</p>
-                    <p class="eng-sub italic">The Church of Rome is at war</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        유대인과 이방인 크리스천들이 섞여 있던 로마 교회. 서로 "내가 더 잘났어"라며 갈등하고 있었어. 바울은 이 문제를 해결하고 싶었지.
-                    </p>
-                    <p class="eng-body">
-                        Jewish and Gentile Christians were clashing, each claiming to be superior. Paul wanted to address this conflict head-on.
+        <!-- 2. Definition -->
+        <section class="bg-gradient-2" id="sec-1">
+            <div class="glass-card">
+                <span class="sub-text-en font-montserrat">What is a Clay Jar?</span>
+                <h2 class="text-2xl font-bold mb-4">사실 질그릇은<br><span class="text-blue-400">좋은 그릇이 아냐.</span></h2>
+                <div class="space-y-4 text-gray-300 font-light">
+                    <div class="p-4 bg-white/5 border-l-4 border-blue-500 rounded-r">
+                        "더러워지면 깨뜨려야 하는 것"
+                    </div>
+                    <p class="text-sm">나무나 쇠 그릇은 씻으면 되지만, 질그릇은 깨야만 했지.</p>
+                    <p class="translation-en">
+                        Unlike wood or metal, if a clay jar became defiled, it had to be shattered. It was disposable.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- 03 Metaphor -->
-        <section class="bg-gradient-3">
-            <div class="card">
-                <div class="english-tag reveal">THE ANALOGY</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-purple-300">CLAY &<br>HANDS</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">같은 흙, 다른 목적</p>
-                    <p class="eng-sub italic">Same clay, different purposes</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        토기장이는 한 덩이의 진흙으로 '귀한 그릇'도, '평범한 그릇'도 만들 권리가 있어. 중요한 건 그릇의 질이 아니라 '주인의 목적'이야.
+        <!-- 3. Conflict -->
+        <section class="bg-gradient-3" id="sec-2">
+            <div class="glass-card">
+                <span class="sub-text-en font-montserrat">The Stain of Sin</span>
+                <h2 class="text-2xl font-bold mb-6">우리도 사실<br><span class="text-red-400">깨져야 하는 존재야.</span></h2>
+                <p class="text-gray-300 font-light mb-4 text-sm">
+                    죄는 우리를 더럽게 만들어.<br>
+                    우리는 스스로를 씻어낼 수 없는 죄인이지.
+                </p>
+                <p class="translation-en">
+                    Sin defiles us. We are sinners who cannot cleanse ourselves, doomed to be broken.
+                </p>
+                <p class="mt-4 text-lg font-medium text-white italic">
+                    "결국 우린 깨져버려야 할 운명일까?"
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Empathy -->
+        <section class="bg-gradient-4" id="sec-3">
+            <div class="glass-card border-amber-500/30">
+                <span class="sub-text-en font-montserrat">The Treasure Within</span>
+                <h2 class="text-2xl font-bold mb-6">그런데 여기에<br><span class="text-amber-400">반전이 있어.</span></h2>
+                <div class="relative py-4">
+                    <i class="fa-solid fa-gem absolute -top-2 -right-2 text-amber-400 text-3xl float-anim"></i>
+                    <p class="text-gray-200 leading-relaxed text-sm">
+                        우리가 이 보배를 질그릇에 가졌으니<br>
+                        이는 <span class="text-amber-400 font-bold">심히 큰 능력</span>이 하나님께 있음을...
                     </p>
-                    <p class="eng-body">
-                        The potter has the right to make both special and common vessels from the same clay. What matters is the Master's purpose.
+                    <p class="translation-en mt-2">
+                        "But we have this treasure in jars of clay to show that this all-surpassing power is from God."
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- 04 Wrath & Patience -->
-        <section class="bg-gradient-4">
-            <div class="card">
-                <div class="english-tag reveal">DIVINE PATIENCE</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-orange-300">ENDLESS<br>WAITING</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">진노의 그릇? 그건 '기다림'이야</p>
-                    <p class="eng-sub italic">Vessels of wrath? It's about waiting</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        심판받을 그릇조차 하나님은 오래 참으셔. 왜? 하나님의 자비와 능력을 보여주기 위해서지. 우리를 향한 끝없는 기다림, 그게 바로 하나님의 마음이야.
-                    </p>
-                    <p class="eng-body">
-                        God endures even the vessels of wrath with great patience to show His mercy. His heart is defined by this endless waiting.
-                    </p>
-                </div>
+        <!-- 5. Core Message -->
+        <section class="bg-gradient-1" id="sec-4">
+            <div class="glass-card">
+                <span class="sub-text-en font-montserrat">The Great Exchange</span>
+                <h2 class="text-2xl font-bold mb-6">거룩한 전염,<br><span class="text-purple-400">역설의 신비.</span></h2>
+                <p class="text-gray-300 font-light mb-4 text-sm">
+                    깨끗하신 예수님이 대신 깨지시고,<br>우리의 더러움을 도로 가져가셨어.
+                </p>
+                <p class="translation-en">
+                    The Holy Exchange: Jesus was broken for our sins so that we wouldn't have to be.
+                </p>
+                <p class="mt-4 text-white font-bold">
+                    이제 우리는 깨지지 않아도 돼!
+                </p>
             </div>
         </section>
 
-        <!-- 05 Mercy & Riches -->
-        <section class="bg-gradient-5">
-            <div class="card">
-                <div class="english-tag reveal">ABUNDANCE</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-pink-300">RICHES OF<br>GLORY</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">긍휼의 그릇은 '넘치는 것'</p>
-                    <p class="eng-sub italic">Vessels of mercy mean overflowing</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        단순히 나만 구원받고 끝나는 게 아냐. 하나님의 영광이 내 안에 가득 채워져서 밖으로 '흘러넘치는 것', 그게 바로 하나님의 풍성함이야.
-                    </p>
-                    <p class="eng-body">
-                        It’s not just about personal salvation. It’s about God’s glory filling us so much that it overflows—that is the "Riches of His Glory."
-                    </p>
-                </div>
+        <!-- 6. Result -->
+        <section class="bg-gradient-2" id="sec-5">
+            <div class="glass-card">
+                <span class="sub-text-en font-montserrat">Unstoppable</span>
+                <h2 class="text-xl font-bold mb-4">절대<br><span class="text-blue-400">무너지지 않는 나.</span></h2>
+                <ul class="space-y-3 text-xs font-light">
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-shield-halved text-blue-400"></i>
+                        <span>우겨쌈을 당해도 쌓이지 않아. (Not crushed)</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-compass text-blue-400"></i>
+                        <span>답답해도 낙심하지 않아. (Not in despair)</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fa-solid fa-hand-holding-heart text-blue-400"></i>
+                        <span>박해를 받아도 버려지지 않아. (Not abandoned)</span>
+                    </li>
+                </ul>
+                <p class="translation-en italic text-[0.7rem] mt-4">
+                    God will never let you be destroyed because you hold His Son.
+                </p>
             </div>
         </section>
 
-        <!-- 06 Interpretation -->
-        <section class="bg-gradient-6">
-            <div class="card">
-                <div class="english-tag reveal">THE MESSAGE</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-red-400">STOP<br>JUDGING</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">손가락질은 이제 그만</p>
-                    <p class="eng-sub italic">No more pointing fingers at others</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        "너는 진노의 그릇이야"라고 비난하지 마. 어떤 그릇이든 토기장이의 손에 있으면 결국 하나님의 성품과 사랑을 드러내게 되어 있어.
-                    </p>
-                    <p class="eng-body">
-                        Don't judge others as "vessels of wrath." In the Potter's hands, every vessel ultimately reveals God's beautiful character and love.
-                    </p>
-                </div>
+        <!-- 7. Identity -->
+        <section class="bg-gradient-3" id="sec-6">
+            <div class="glass-card text-center">
+                <span class="sub-text-en font-montserrat">Our Identity</span>
+                <h2 class="text-2xl font-bold mb-6">금그릇이 아니라서<br><span class="text-indigo-400">더 기쁜 거야.</span></h2>
+                <p class="text-gray-300 font-light text-sm mb-4">
+                    우리가 얼마나 잘났는지는 중요하지 않아.<br>
+                    무엇을 담았느냐가 진짜 가치니까.
+                </p>
+                <p class="translation-en mb-4">
+                    It's not about being a "gold jar." It's about what's inside that makes us priceless.
+                </p>
+                <p class="text-white font-medium bg-indigo-500/30 py-2 rounded-full text-sm">
+                    "너는 깨지지 않는 나의 보석이야."
+                </p>
             </div>
         </section>
 
-        <!-- 07 Call -->
-        <section class="bg-gradient-1">
-            <div class="card">
-                <div class="english-tag reveal">THE CALLING</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-emerald-400">CHOSEN<br>TO SHOW</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">하나님을 보여주는 그릇</p>
-                    <p class="eng-sub italic">Vessels designed to reveal God</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        하나님은 우리를 '바로 이 그릇'으로 부르셨어. 유대인이든 이방인이든 상관없이, 우리를 통해 하나님의 아름다우심이 드러나길 원하셔.
-                    </p>
-                    <p class="eng-body">
-                        God called us to be these very vessels. Regardless of our background, He wants His beauty to be reflected through our lives.
-                    </p>
+        <!-- 8. Conclusion -->
+        <section class="bg-gradient-4" id="sec-7">
+            <div class="glass-card text-center">
+                <span class="sub-text-en font-montserrat">Source of Joy</span>
+                <h2 class="text-2xl font-bold mb-6">깨지지 않는다는<br><span class="text-amber-400">당당함으로.</span></h2>
+                <p class="text-gray-300 font-light text-sm mb-6">
+                    세상 속에서 당당하게 기쁨을 말하자.<br>
+                    우리는 결코 깨지지 않는 질그릇이니까.
+                </p>
+                <p class="translation-en">
+                    Walk with confidence. You are the joy of the world, an unbreakable clay jar in His hands.
+                </p>
+                <div class="mt-8 space-y-1">
+                    <p class="text-amber-400 font-bold text-lg">우리는 세상의 기쁨이야.</p>
+                    <p class="text-xs text-gray-500 font-montserrat">WE ARE THE JOY OF THE WORLD</p>
                 </div>
             </div>
         </section>
-
-        <!-- 08 Application 1 -->
-        <section class="bg-gradient-2">
-            <div class="card">
-                <div class="english-tag reveal">UNITY</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-sky-300">ONE LUMP<br>OF CLAY</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">우리는 다 같은 흙에서 왔어</p>
-                    <p class="eng-sub italic">We all come from the same source</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        서로 다를 게 하나도 없어. 친구를 비난하는 건 결국 나 자신을 비난하는 거야. 우리는 서로를 보듬어야 하는 하나의 운명 공동체야.
-                    </p>
-                    <p class="eng-body">
-                        There is no difference between us. Criticizing a friend is ultimately criticizing yourself. We are one community meant to embrace each other.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 09 Conclusion -->
-        <section class="bg-gradient-3">
-            <div class="card">
-                <div class="english-tag reveal">THE MISSION</div>
-                <h2 class="text-3xl font-black font-montserrat reveal reveal-delay-1 text-yellow-300">CITY'S<br>JOY</h2>
-                <div class="mt-2 reveal reveal-delay-1">
-                    <p class="text-lg font-bold">이 도시의 기쁨이 되자</p>
-                    <p class="eng-sub italic">Let's become the joy of this city</p>
-                </div>
-                <div class="h-px w-8 bg-white/20 my-6 reveal reveal-delay-2 mx-auto"></div>
-                <div class="reveal reveal-delay-3">
-                    <p class="text-sm leading-relaxed text-gray-200">
-                        우리의 모양이 아니라 하나님이 어떻게 쓰시는지 기대해봐. 부름받은 그릇으로서, 세상을 밝게 만드는 '기쁨의 존재'가 되길 축복해!
-                    </p>
-                    <p class="eng-body">
-                        Don't focus on your shape, but on how God uses you. As chosen vessels, I bless you to be the "presence of joy" that lights up the world!
-                    </p>
-                </div>
-                <div class="mt-8 opacity-20 text-[12px] font-montserrat tracking-widest reveal reveal-delay-3">THE END</div>
-            </div>
-        </section>
-    </div>
+    </main>
 
     <script>
-        const container = document.getElementById('snap-container');
+        const container = document.getElementById('container');
         const sections = document.querySelectorAll('section');
+        const progressBar = document.getElementById('progressBar');
+        let currentIdx = 0;
         let isScrolling = false;
-        let currentIndex = 0;
 
-        const observerOptions = { threshold: 0.6 };
+        sections.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = `progress-dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => scrollToSection(i);
+            progressBar.appendChild(dot);
+        });
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    currentIndex = Array.from(sections).indexOf(entry.target);
+                    updateProgress(Array.from(sections).indexOf(entry.target));
                 } else {
                     entry.target.classList.remove('active');
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.5 });
 
-        sections.forEach(section => observer.observe(section));
+        sections.forEach(sec => observer.observe(sec));
 
-        function moveToSection(index) {
-            if (index < 0 || index >= sections.length || isScrolling) return;
+        function updateProgress(index) {
+            currentIdx = index;
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function scrollToSection(index) {
+            if (index < 0 || index >= sections.length) return;
             isScrolling = true;
             sections[index].scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => { isScrolling = false; }, 800);
         }
 
-        window.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 20) {
+        container.addEventListener('wheel', (e) => {
+            if (isScrolling) return;
+            if (Math.abs(e.deltaX) > 30) {
                 e.preventDefault();
-                if (e.deltaX > 0) moveToSection(currentIndex + 1);
-                else moveToSection(currentIndex - 1);
+                if (e.deltaX > 0) scrollToSection(currentIdx + 1);
+                else scrollToSection(currentIdx - 1);
             }
         }, { passive: false });
 
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') moveToSection(currentIndex + 1);
-            else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') moveToSection(currentIndex - 1);
+            if (isScrolling) return;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') scrollToSection(currentIdx + 1);
+            else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') scrollToSection(currentIdx - 1);
         });
 
         let touchStartX = 0;
-        let touchEndX = 0;
-
-        window.addEventListener('touchstart', e => {
+        let touchStartY = 0;
+        container.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
-        });
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
 
-        window.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            const threshold = 50;
-            if (touchStartX - touchEndX > threshold) moveToSection(currentIndex + 1);
-            else if (touchEndX - touchStartX > threshold) moveToSection(currentIndex - 1);
-        });
+        container.addEventListener('touchend', (e) => {
+            if (isScrolling) return;
+            let diffX = touchStartX - e.changedTouches[0].screenX;
+            let diffY = touchStartY - e.changedTouches[0].screenY;
+            if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) scrollToSection(currentIdx + 1);
+                else scrollToSection(currentIdx - 1);
+            }
+        }, { passive: true });
     </script>
 </body>
 </html>
