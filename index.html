@@ -3,38 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>귀히 쓰는 그릇 - Youth Message</title>
-    <!-- Tailwind CSS -->
+    <title>겸손하여서 - The Humble King</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        mont: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* Base Setup */
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #0f172a; /* Slate 900 */
-            color: #f8fafc;
-            overflow: hidden; /* Prevent body scroll, handled by main container */
-        }
-        .font-montserrat { font-family: 'Montserrat', sans-serif; }
-
-        /* Scroll Snap Container */
+        /* Base styles & Hide Scrollbar */
+        body { margin: 0; background-color: #050505; color: white; overflow: hidden; }
         .snap-container {
+            height: 100vh; /* Fallback */
             height: 100dvh;
             overflow-y: scroll;
             overflow-x: hidden;
             scroll-snap-type: y mandatory;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
             scroll-behavior: smooth;
         }
-        .snap-container::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for clean UI */
-        }
+        .snap-container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-        /* Section Setup */
-        section {
+        .section {
+            height: 100vh;
             height: 100dvh;
             width: 100vw;
             scroll-snap-align: start;
@@ -43,500 +50,403 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1rem;
+            padding: 5rem 1.5rem 6rem 1.5rem; /* IG Story Safe Zones */
         }
 
-        /* Glassmorphism Card Base */
+        /* Glassmorphism Card */
         .glass-card {
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 9 / 16;
-            max-height: 85dvh;
-            background: rgba(255, 255, 255, 0.03);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 2.5rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            border-radius: 2rem;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            max-height: 700px;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
             z-index: 10;
-            
-            /* Initial Animation State */
+        }
+
+        /* Animations */
+        .anim-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .anim-scale {
             transform: scale(0.9);
-            opacity: 0.5;
+            opacity: 0;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Active State Animations (Triggered by JS Observer) */
-        section.active-card .glass-card {
-            transform: scale(1);
-            opacity: 1;
-        }
+        /* Active State Classes (Triggered by JS) */
+        .is-active .anim-scale { transform: scale(1); opacity: 1; }
+        .is-active .anim-element { opacity: 1; transform: translateY(0); }
+        
+        /* Staggered Delays */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.5s; }
+        .delay-4 { transition-delay: 0.7s; }
 
-        /* Staggered Text Animations */
-        .anim-item {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Neon Text Effects */
+        .neon-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
         }
-        section.active-card .anim-1 { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
-        section.active-card .anim-2 { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
-        section.active-card .anim-3 { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
-        section.active-card .anim-4 { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
-
-        /* Background Typography Styling */
-        .bg-typography {
-            position: absolute;
-            font-size: 6rem;
-            font-weight: 900;
-            line-height: 0.8;
-            color: rgba(255, 255, 255, 0.02);
-            white-space: nowrap;
-            z-index: 0;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        /* Neon Text Utilities */
-        .text-neon-pink {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(236, 72, 153, 0.8), 0 0 20px rgba(236, 72, 153, 0.4);
-        }
-        .text-neon-blue {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.4);
-        }
+        
+        /* Background Gradients */
+        .bg-grad-1 { background: radial-gradient(circle at top right, #1a1a2e, #0f0c29); }
+        .bg-grad-2 { background: radial-gradient(circle at bottom left, #0b3d2c, #000000); }
+        .bg-grad-3 { background: radial-gradient(circle at center, #3a0000, #110000); }
+        .bg-grad-4 { background: radial-gradient(circle at top left, #2c2c34, #050505); }
+        .bg-grad-5 { background: radial-gradient(circle at bottom right, #4a0010, #0a0000); }
+        .bg-grad-6 { background: radial-gradient(circle at top center, #380036, #000000); }
+        .bg-grad-7 { background: radial-gradient(circle at center, #001f3f, #000000); }
+        .bg-grad-8 { background: radial-gradient(circle at top, #2b1d0f, #000000); }
 
         /* Progress Bar */
-        #progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
-            z-index: 50;
-            transition: width 0.3s ease;
+        .progress-bar {
+            position: fixed; top: 1rem; left: 1rem; right: 1rem; height: 3px;
+            background: rgba(255,255,255,0.2); z-index: 50; border-radius: 3px;
+            display: flex; gap: 4px;
         }
+        .progress-segment {
+            flex: 1; height: 100%; background: rgba(255,255,255,0.3); border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .progress-segment.active { background: white; box-shadow: 0 0 8px white; }
 
-        /* Safe zones for IG Story styling */
-        .safe-padding {
-            padding-top: 3rem; /* Space for profile */
-            padding-bottom: 4rem; /* Space for reply box */
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
+        .floating { animation: float 4s ease-in-out infinite; }
     </style>
 </head>
 <body>
 
-    <div id="progress-bar" style="width: 0%;"></div>
+    <!-- IG Story Style Progress Bar -->
+    <div class="progress-bar" id="progressBar">
+        <!-- Segments injected by JS -->
+    </div>
 
-    <main class="snap-container" id="main-container">
+    <!-- Main Scroll Container -->
+    <div class="snap-container" id="container">
 
         <!-- Slide 1: Intro -->
-        <section class="bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
-            <div class="bg-typography -rotate-90 origin-bottom-left left-full bottom-0">PRECIOUS VESSEL</div>
-            <div class="bg-typography top-10 -left-10">SERIES<br>FINALE</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <span class="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-widest text-purple-300 border border-purple-500/50 rounded-full">PART 04</span>
-                    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mb-1 leading-tight">
-                        귀하게 쓰이는<br>그릇 💎
-                    </h1>
-                    <p class="text-sm text-purple-200/60 font-montserrat font-semibold mb-4">Vessels for Noble Use</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-4">
-                    <div>
-                        <p class="text-lg leading-relaxed text-gray-200">
-                            벌써 그릇 시리즈 마지막 시간이야!<br>
-                            그동안 우리는 <span class="text-pink-400 font-bold">'선택받은 그릇'</span>, <span class="text-blue-400 font-bold">'하나님의 작품'</span>, 그리고 <span class="text-yellow-400 font-bold">'절대 안 깨지는 질그릇'</span>에 대해 나눴지?
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">It's the finale of our Vessel Series! We've talked about the 'Chosen Vessel', 'God's Masterpiece', and the 'Unbreakable Clay Jar'.</p>
-                    </div>
-                    <div>
-                        <p class="text-lg leading-relaxed text-gray-200">
-                            오늘은 그 완결판,<br>
-                            진짜 <strong class="text-white border-b-2 border-purple-500">'귀하게 쓰임받는 비결'</strong>에 대해 이야기해 볼게! 😎
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Today, we're uncovering the ultimate secret to being 'truly used for noble purposes'!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 2: The Verse -->
-        <section class="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-900">
-            <div class="bg-typography top-1/4 -right-20">NOT ABOUT</div>
-            <div class="bg-typography bottom-1/4 -left-10">MATERIAL</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <h2 class="text-2xl font-black text-neon-blue mb-1">금그릇? 흙그릇?<br>중요한 건 그게 아냐 🙅‍♂️</h2>
-                    <p class="text-sm text-blue-200/60 font-montserrat font-semibold mb-6">Gold or Clay? The material doesn't matter.</p>
-                </div>
-                
-                <div class="anim-item anim-2 bg-black/30 p-5 rounded-xl border-l-4 border-blue-500 mb-6">
-                    <p class="text-sm text-gray-300 italic mb-2 font-montserrat tracking-widest text-xs">2 TIMOTHY 2:20-21</p>
-                    <p class="text-base text-gray-100 leading-relaxed font-light mb-3">
-                        "큰 집에는 금과 은, 나무와 흙 그릇이 있어. 어떤 건 귀하게, 어떤 건 막 쓰이지. 자기를 깨끗하게 하면 주인이 쓰기 좋은 귀한 그릇이 될 거야!"
-                    </p>
-                    <p class="text-[11px] text-blue-200/60 font-montserrat italic leading-relaxed">
-                        "In a large house there are articles not only of gold and silver, but also of wood and clay; some are for special purposes and some for common use. Those who cleanse themselves from the latter will be instruments for special purposes..."
-                    </p>
-                </div>
-
-                <div class="anim-item anim-3">
-                    <p class="text-lg text-gray-200 leading-relaxed">
-                        재질이 뭐든 상관없이, 주인이 쓰기에 <strong class="text-blue-300">'깨끗하면'</strong> 그게 바로 VIP 아이템이라는 사실! ✨
-                    </p>
-                    <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Regardless of what you're made of, if you cleanse yourself, you become a VIP item ready for the Master's use!</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: Problem/Illusion -->
-        <section class="bg-gradient-to-br from-gray-900 via-rose-950 to-slate-900">
-            <div class="bg-typography top-20 right-0 text-right">BIG<br>ILLUSION</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400 mb-1">우리는 가끔<br>착각해 🤔</h2>
-                    <p class="text-sm text-rose-200/60 font-montserrat font-semibold mb-6">We often fall for the big illusion.</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-5">
-                    <div>
-                        <p class="text-lg text-gray-200 leading-relaxed">
-                            '귀하게 쓰인다'는 게 뭘까?<br>
-                            무조건 엄청 큰 무대에 서고, 수많은 사람들에게 박수받는 대단한 일만 귀한 걸까?
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">What does it mean to be used nobly? Is it only about standing on a huge stage and receiving applause?</p>
-                    </div>
-                    <div class="bg-rose-900/30 p-4 rounded-lg border border-rose-500/20">
-                        <p class="text-base text-rose-200 mb-1">
-                            그래서 내가 좀 작고 평범해 보일 때,<br>
-                            자존감이 뚝 떨어지는 경험...<br>다들 있지 않아? 🥲
-                        </p>
-                        <p class="text-xs text-rose-300/60 font-montserrat mt-2 leading-relaxed">That's why our self-esteem drops when we feel small and ordinary... We've all been there, right?</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Empathy & Truth -->
-        <section class="bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900">
-            <div class="bg-typography rotate-90 origin-bottom-left left-1/2 bottom-10">PURPOSE OVER SIZE</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <h2 class="text-3xl font-black text-teal-300 mb-1 leading-tight">사이즈가 가치를<br>정하지 않아 ☝️</h2>
-                    <p class="text-sm text-teal-200/60 font-montserrat font-semibold mb-6">Size doesn't determine your value.</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-5">
-                    <div>
-                        <p class="text-lg text-gray-100 leading-relaxed font-light">
-                            토기장이이신 하나님은 우리를 각자 다르게 디자인하셨어. 누군 큰 대야로, 누군 작은 간장 종지로.
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">God, our Potter, designed each of us differently. Some as large bowls, others as small saucers.</p>
-                    </div>
-                    <div>
-                        <p class="text-lg text-gray-100 leading-relaxed">
-                            중요한 건 크기가 아니라,<br>
-                            <strong class="text-teal-400 text-xl inline-block mt-2 font-bold bg-teal-900/40 px-2 py-1 rounded">
-                                '하나님의 뜻과 타이밍에 딱 맞게 쓰이는가'
-                            </strong><br>
-                            바로 이거야.
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-3 leading-relaxed">What matters isn't the size, but 'being used exactly according to God's purpose and timing'.</p>
-                    </div>
-                </div>
-                
-                <div class="anim-item anim-3 mt-auto">
-                    <p class="text-sm font-montserrat font-bold text-teal-500 tracking-widest">MASTER'S CHOICE</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: The Challenge -->
-        <section class="bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-950">
-            <div class="bg-typography -top-10 -left-10 text-white/5">CLEANSE<br>YOURSELF</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <h2 class="text-2xl font-black text-violet-300 mb-1">그럼 어떻게 해야<br>귀하게 쓰일까? 🧼</h2>
-                    <p class="text-sm text-violet-200/60 font-montserrat font-semibold mb-6">How can we be used for noble purposes?</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-4">
-                    <div>
-                        <p class="text-lg text-gray-200 leading-relaxed">
-                            바울은 <strong class="text-white">"자신을 깨끗하게 하라"</strong>고 했어.
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Paul urged us to "cleanse ourselves."</p>
-                    </div>
-                    <ul class="space-y-3 mt-4 text-gray-300">
-                        <li>
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-check text-violet-400"></i> 나쁜 행동 줄이기</div>
-                            <div class="text-[11px] text-gray-400 ml-7 font-montserrat">Reduce bad habits</div>
-                        </li>
-                        <li>
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-check text-violet-400"></i> 정직하게 살기</div>
-                            <div class="text-[11px] text-gray-400 ml-7 font-montserrat">Live honestly</div>
-                        </li>
-                        <li>
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-check text-violet-400"></i> 친구들 돕고 배려하기</div>
-                            <div class="text-[11px] text-gray-400 ml-7 font-montserrat">Help and care for friends</div>
-                        </li>
-                    </ul>
-                    <div class="mt-4">
-                        <p class="text-lg text-gray-200 leading-relaxed">
-                            맞아, 이런 '행동의 노력' 엄청 중요해!<br>
-                            하지만...
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Yes, these 'behavioral efforts' are super important! But...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: The Limitation -->
-        <section class="bg-gradient-to-br from-neutral-900 via-stone-800 to-black">
-            <div class="bg-typography top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 text-center">BROKEN<br>CLAY</div>
-            
-            <div class="glass-card safe-padding bg-black/40 border-red-900/30">
-                <div class="anim-item anim-1">
-                    <h2 class="text-3xl font-black text-red-400 mb-1">우리 힘만으론<br>무리잖아? 🥀</h2>
-                    <p class="text-sm text-red-200/60 font-montserrat font-semibold mb-6">We can't do it entirely on our own.</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-5">
-                    <div>
-                        <p class="text-lg text-gray-300 leading-relaxed">
-                            우린 지난주에 나눴듯 한 번 더러워지면 깨져야 하는 '질그릇'이야.
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">As discussed last week, we are 'clay jars' that must be broken once stained.</p>
-                    </div>
-                    <div>
-                        <p class="text-xl font-bold text-gray-100 leading-relaxed">
-                            내 노력만으로는 완벽히 깨끗해질 수 없다는 것.
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Our own efforts can never make us perfectly clean.</p>
-                    </div>
-                    <div class="inline-block px-4 py-2 bg-red-900/50 text-red-200 rounded-lg text-sm font-montserrat tracking-wider mt-2">
-                        THIS IS OUR LIMITATION
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Core Message / Solution -->
-        <section class="bg-gradient-to-br from-blue-950 via-cyan-900 to-slate-900">
-            <div class="bg-typography rotate-90 origin-bottom-left -left-20 bottom-0 text-cyan-200/5">HOLD ON TO JESUS</div>
-            
-            <div class="glass-card safe-padding border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-                <div class="anim-item anim-1">
-                    <span class="text-cyan-400 font-montserrat font-bold tracking-widest text-xs mb-1 block">THE ULTIMATE SOLUTION</span>
-                    <h2 class="text-3xl font-black text-neon-blue mb-1">그래서 예수님이<br>필요한 거야 ✝️</h2>
-                    <p class="text-sm text-cyan-200/60 font-montserrat font-semibold mb-6">That is exactly why we need Jesus.</p>
-                </div>
-                
-                <div class="anim-item anim-2 space-y-5">
-                    <div>
-                        <p class="text-lg text-cyan-50 leading-relaxed font-medium">
-                            더러워진 내 안에 찾아오신 예수님을 꽉! 붙잡는 것.
-                        </p>
-                        <p class="text-xs text-cyan-200/60 font-montserrat mt-2 leading-relaxed">Holding tightly onto Jesus, who came into our stained hearts.</p>
-                    </div>
-                    <div>
-                        <p class="text-base text-gray-300 leading-relaxed">
-                            예수님의 빛으로 나를 비추고, 나의 부족함을 이길 수 있도록 말씀과 기도로 능력을 구하는 게 우리가 해야 할 <strong class="text-cyan-300">1순위(Primary) 액션</strong>이야!
-                        </p>
-                        <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">Reflecting His light and seeking strength through the Word and prayer to overcome our flaws—that's our Primary action!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Action -->
-        <section class="bg-gradient-to-br from-fuchsia-950 via-pink-900 to-rose-950">
-            <div class="bg-typography top-10 right-0 text-right">PRESS<br>ON</div>
-            
-            <div class="glass-card safe-padding">
-                <div class="anim-item anim-1">
-                    <h2 class="text-3xl font-black text-pink-300 mb-1">완벽하지 않아도<br>괜찮아 🏃‍♂️</h2>
-                    <p class="text-sm text-pink-200/60 font-montserrat font-semibold mb-6">It's perfectly fine if you're not perfect.</p>
-                </div>
-                
-                <div class="anim-item anim-2 bg-pink-900/40 p-5 rounded-xl border border-pink-500/20 mb-6">
-                    <p class="text-base text-pink-100 leading-relaxed italic">
-                        "내가 이미 얻었다 함도 아니요 온전히 이루었다 함도 아니라 오직 내가 그리스도 예수께 잡힌 바 된 그것을 잡으려고 달려가노라"
-                    </p>
-                    <p class="text-[11px] text-pink-200/60 font-montserrat italic mt-3 leading-relaxed">
-                        "Not that I have already obtained all this, or have already arrived at my goal, but I press on to take hold of that for which Christ Jesus took hold of me."
-                    </p>
-                    <p class="text-right text-xs text-pink-300 mt-2 font-montserrat">PHILIPPIANS 3:12</p>
-                </div>
-
-                <div class="anim-item anim-3">
-                    <p class="text-lg text-gray-100 leading-relaxed font-medium">
-                        지금 당장 완벽하지 않아도 돼.<br>포기하지 않고 나를 붙드신 예수님만 꽉 붙잡고 달려가자!
-                    </p>
-                    <p class="text-xs text-gray-400/80 font-montserrat mt-2 leading-relaxed">You don't have to be perfect right now. Don't give up—just hold onto Jesus, who holds you, and keep pressing on!</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 9: Conclusion -->
-        <section class="bg-gradient-to-br from-indigo-950 via-blue-900 to-purple-950">
-            <div class="bg-typography top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-[8rem]">AMEN</div>
-            
-            <div class="glass-card safe-padding shadow-[0_0_50px_rgba(139,92,246,0.3)] border-purple-500/50 text-center">
-                <div class="anim-item anim-1 flex justify-center mb-5">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 to-purple-500 flex items-center justify-center shadow-lg shadow-purple-500/50">
-                        <i class="fa-solid fa-heart text-2xl text-white"></i>
-                    </div>
-                </div>
-                
-                <div class="anim-item anim-2 mb-6">
-                    <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 mb-1">
-                        하나님의 아름다움을<br>담는 그릇 🏺
+        <section class="section bg-grad-1">
+            <div class="glass-card anim-scale">
+                <h1 class="font-mont text-7xl uppercase text-white/10 absolute -right-4 top-10 whitespace-nowrap -rotate-90 origin-bottom-right z-0">
+                    Intro
+                </h1>
+                <div class="z-10 relative">
+                    <span class="text-indigo-400 font-mont font-bold tracking-widest text-sm anim-element delay-1 uppercase">Zechariah 9:9-10</span>
+                    <h2 class="text-4xl font-black mt-4 mb-6 leading-tight anim-element delay-2 font-mont text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 neon-text">
+                        THE HUMBLE<br>KING
                     </h2>
-                    <p class="text-xs text-purple-200/60 font-montserrat font-semibold mb-5">Vessels holding God's beautiful grace.</p>
-                    
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-200 leading-relaxed mb-1">
-                            우리 삶의 주권은 하나님께 있어.<br>어떤 상황에도 우릴 안 놓으시는 하나님을 우리도 끝까지 붙잡자.
-                        </p>
-                        <p class="text-[11px] text-gray-400/80 font-montserrat leading-relaxed">God has sovereignty over our lives. Let's hold onto Him to the end, just as He never lets us go.</p>
-                    </div>
-                    <div>
-                        <p class="text-base font-bold text-white leading-relaxed mb-1">
-                            주님이 딱 쓰기 좋게,<br>귀하게 쓰임받는 우리가 되길 축복해! 🙏
-                        </p>
-                        <p class="text-[11px] text-purple-300/80 font-montserrat leading-relaxed">Blessings to you all, that we may be perfectly prepared and nobly used by our Lord!</p>
-                    </div>
-                </div>
-                
-                <div class="anim-item anim-3 mt-auto">
-                    <p class="text-xs font-montserrat tracking-widest text-purple-400">HIS SOVEREIGNTY / YOU ARE CHOSEN</p>
+                    <p class="text-xl font-medium text-gray-200 leading-relaxed anim-element delay-3">
+                        오늘은 한 명의<br>
+                        <span class="text-white font-bold">특별한 왕</span> 이야기를 해볼까 해.
+                        <span class="block text-sm text-gray-400/80 font-mont mt-3 font-normal">Today, let's talk about a very special king.</span>
+                    </p>
                 </div>
             </div>
         </section>
 
-    </main>
+        <!-- Slide 2: The Scene -->
+        <section class="section bg-grad-2">
+            <div class="glass-card anim-scale">
+                <h1 class="font-mont text-8xl text-emerald-500/5 absolute -top-4 -left-4 z-0">
+                    PALM
+                </h1>
+                <div class="z-10 relative">
+                    <div class="w-12 h-1 bg-emerald-400 mb-6 anim-element delay-1 rounded"></div>
+                    <h2 class="text-3xl font-black mb-4 font-mont text-emerald-300 anim-element delay-2 uppercase">
+                        Expectations<br>vs Reality
+                    </h2>
+                    <p class="text-lg text-gray-200 leading-relaxed anim-element delay-3">
+                        엄청난 사람들의 환호 속에<br>등장한 왕.
+                        <span class="block text-sm text-emerald-100/60 font-mont mt-2 font-normal">A king who appeared amidst the roaring cheers of the crowd.</span>
+                    </p>
+                    <p class="text-lg text-gray-200 leading-relaxed mt-4 anim-element delay-4">
+                        근데 멋진 백마 대신...<br>
+                        <span class="text-emerald-400 font-bold text-2xl inline-block mt-2">볼품없는 나귀를 타셨어 🐴</span>
+                        <span class="block text-sm text-emerald-100/60 font-mont mt-2 font-normal">But instead of a majestic white horse... he rode a lowly donkey 🐴</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: The Problem -->
+        <section class="section bg-grad-3">
+            <div class="glass-card anim-scale">
+                <h1 class="font-mont text-[10rem] text-red-500/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">
+                    ?
+                </h1>
+                <div class="z-10 relative text-center">
+                    <h2 class="text-3xl font-black mb-6 font-mont text-red-400 anim-element delay-1 uppercase">
+                        What We Want
+                    </h2>
+                    <p class="text-xl text-gray-100 leading-relaxed anim-element delay-2 font-medium">
+                        솔직히 우리는<br>
+                        <span class="text-red-300 font-bold">"내 문제"</span>를 한방에 해결해 줄<br>
+                        짱 센 왕을 원하잖아?
+                        <span class="block text-sm text-red-200/60 font-mont mt-3 font-normal">Honestly, don't we all want a powerful king who can instantly solve 'my problems'?</span>
+                    </p>
+                    <div class="mt-8 inline-block px-4 py-2 border border-red-500/30 rounded-full text-sm text-red-200 anim-element delay-3 backdrop-blur-sm">
+                        #문제해결사 #능력자 #기대감<br>
+                        <span class="text-xs text-red-300/60 font-mont mt-1 block">#ProblemSolver #Powerful #Expectations</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Empathy -->
+        <section class="section bg-grad-4">
+            <div class="glass-card anim-scale">
+                <div class="z-10 relative">
+                    <h2 class="text-2xl font-black mb-2 font-mont text-gray-400 anim-element delay-1 uppercase tracking-widest">
+                        Too Ordinary
+                    </h2>
+                    <h2 class="text-4xl font-black mb-8 font-mont text-white anim-element delay-2 uppercase opacity-40">
+                        Too Weak
+                    </h2>
+                    <p class="text-lg text-gray-300 leading-relaxed anim-element delay-3">
+                        하지만 이 왕은...<br>
+                        너무 평범하고 약해 보여.<br>
+                        전혀 주도적이지도 않지.
+                        <span class="block text-sm text-gray-400/80 font-mont mt-2 font-normal">But this king... seems too ordinary and weak. Not proactive at all.</span>
+                    </p>
+                    <p class="text-xl text-white font-bold leading-relaxed mt-6 anim-element delay-4 border-l-4 border-white pl-4">
+                        그 평범함 앞에<br>우리는 쉽게 실망해버려.
+                        <span class="block text-sm text-gray-400/80 font-mont mt-2 font-normal">Faced with such ordinariness, we easily get disappointed.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: The Turn -->
+        <section class="section bg-grad-5">
+            <div class="glass-card anim-scale border-rose-500/30">
+                <div class="absolute inset-0 bg-rose-500/5 blur-xl z-0 rounded-3xl anim-element delay-1"></div>
+                <div class="z-10 relative text-center">
+                    <i class="fa-solid fa-heart-crack text-4xl text-rose-500 mb-6 anim-element delay-1 floating"></i>
+                    <h2 class="text-3xl font-black mb-6 font-mont text-rose-400 anim-element delay-2 uppercase neon-text">
+                        Fake Emotions
+                    </h2>
+                    <p class="text-lg text-gray-200 leading-relaxed anim-element delay-3">
+                        '내 기대'가 채워질 때만<br>기뻐하고 환호한다면?
+                        <span class="block text-sm text-rose-200/60 font-mont mt-2 font-normal">What if we only rejoice and cheer when 'our expectations' are met?</span>
+                    </p>
+                    <p class="text-lg font-bold text-white leading-relaxed mt-6 anim-element delay-4 bg-rose-950/50 p-4 rounded-xl">
+                        그건 내 요구를 들어주지 않으면<br>금방 <span class="text-rose-400">분노로 바뀔 가짜 감정</span>일지도 몰라.
+                        <span class="block text-sm text-rose-200/60 font-mont mt-3 font-normal">That might just be a fake emotion that quickly turns into anger when our demands aren't met.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Core Message -->
+        <section class="section bg-grad-6">
+            <div class="glass-card anim-scale">
+                <h1 class="font-mont text-6xl text-fuchsia-500/10 absolute bottom-10 -right-10 z-0 rotate-12">
+                    WORSHIP
+                </h1>
+                <div class="z-10 relative">
+                    <span class="text-fuchsia-400 font-mont font-bold tracking-widest text-xs anim-element delay-1 uppercase block mb-4 border-b border-fuchsia-500/30 pb-2">The Real Worship</span>
+                    <p class="text-xl text-white leading-relaxed anim-element delay-2 font-medium">
+                        예배하고 찬양할 때<br>
+                        진짜 위로와 새 힘을 얻고 싶어?
+                        <span class="block text-sm text-fuchsia-200/60 font-mont mt-2 font-normal">Do you want to find true comfort and new strength when you worship and praise?</span>
+                    </p>
+                    <p class="text-lg text-gray-300 leading-relaxed mt-6 anim-element delay-3">
+                        그렇다면,<br>
+                        내 욕심과 내 방식의 기대를<br>
+                        예수님께 강요하지 않는 게 먼저야.
+                        <span class="block text-sm text-fuchsia-200/60 font-mont mt-2 font-normal">If so, the first step is to stop forcing your own desires and expectations onto Jesus.</span>
+                    </p>
+                    <div class="mt-8 font-mont font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-300 anim-element delay-4">
+                        LET GO OF YOUR DEMANDS.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Question -->
+        <section class="section bg-grad-7">
+            <div class="glass-card anim-scale flex justify-center items-center text-center">
+                <div class="z-10 relative w-full">
+                    <h2 class="text-3xl font-black mb-10 font-mont text-cyan-400 anim-element delay-1 uppercase tracking-widest">
+                        Who Are You?
+                    </h2>
+                    
+                    <div class="flex flex-col gap-4 w-full">
+                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl anim-element delay-2">
+                            <span class="block text-xs text-gray-400 font-mont mb-1">Option A</span>
+                            <span class="text-lg font-medium">왕에게 문제 해결만<br>요구하는 <span class="text-red-400 font-bold">민원인</span></span>
+                            <span class="block text-xs text-gray-400/80 font-mont mt-2 font-normal">A complainer who only demands problem-solving from the king</span>
+                        </div>
+                        
+                        <div class="text-cyan-500 font-black font-mont anim-element delay-3 text-xl">VS</div>
+                        
+                        <div class="bg-cyan-900/30 border border-cyan-500/30 p-5 rounded-2xl anim-element delay-4">
+                            <span class="block text-xs text-cyan-300 font-mont mb-1">Option B</span>
+                            <span class="text-lg font-medium text-white">왕의 겸손함을 함께<br>배워가는 <span class="text-cyan-300 font-bold">진짜 백성</span></span>
+                            <span class="block text-xs text-cyan-300/60 font-mont mt-2 font-normal">A true citizen who learns the king's humility together</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Conclusion -->
+        <section class="section bg-grad-8">
+            <div class="glass-card anim-scale">
+                <div class="absolute inset-0 bg-gradient-to-t from-yellow-600/20 to-transparent z-0 anim-element delay-1"></div>
+                <div class="z-10 relative flex flex-col h-full justify-between pb-4">
+                    <div>
+                        <span class="text-yellow-500 font-mont font-bold tracking-widest text-sm anim-element delay-1 uppercase">Application</span>
+                        <h2 class="text-4xl font-black mt-2 mb-6 font-mont text-white anim-element delay-2 uppercase">
+                            Walk With<br>Him
+                        </h2>
+                        <p class="text-xl text-gray-200 leading-relaxed anim-element delay-3 font-medium">
+                            이번 한 주,<br>
+                            왕이신 예수님 앞에<br>
+                            우리가 어떤 모습으로 서 있는지<br>
+                            깊게 고민해보자. 🙏
+                            <span class="block text-sm text-yellow-200/60 font-mont mt-3 font-normal">This week, let's deeply reflect on how we stand before Jesus, our King. 🙏</span>
+                        </p>
+                    </div>
+                    
+                    <div class="text-center anim-element delay-4 mt-auto">
+                        <div class="w-16 h-1 bg-white/20 mx-auto rounded-full mb-4"></div>
+                        <span class="font-mont font-bold text-yellow-500/70 tracking-widest text-sm">LEARN HIS HUMILITY</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('main-container');
-            const sections = document.querySelectorAll('section');
-            const progressBar = document.getElementById('progress-bar');
+            const container = document.getElementById('container');
+            const sections = document.querySelectorAll('.section');
+            const progressBar = document.getElementById('progressBar');
             let currentIndex = 0;
             let isAnimating = false;
 
-            // Update Active Class and Progress Bar via Intersection Observer
+            // Initialize Progress Bar
+            sections.forEach((_, index) => {
+                const seg = document.createElement('div');
+                seg.classList.add('progress-segment');
+                if(index === 0) seg.classList.add('active');
+                progressBar.appendChild(seg);
+            });
+            const progressSegments = document.querySelectorAll('.progress-segment');
+
+            const updateProgress = (index) => {
+                progressSegments.forEach((seg, i) => {
+                    if (i <= index) seg.classList.add('active');
+                    else seg.classList.remove('active');
+                });
+            };
+
+            // Intersection Observer for Animations
             const observerOptions = {
                 root: container,
-                threshold: 0.6 // Trigger when 60% of the section is visible
+                threshold: 0.5
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Remove active class from all
-                        sections.forEach(sec => sec.classList.remove('active-card'));
-                        // Add active class to current
-                        entry.target.classList.add('active-card');
-                        
-                        // Update current index
+                        entry.target.classList.add('is-active');
                         currentIndex = Array.from(sections).indexOf(entry.target);
-                        
-                        // Update Progress Bar
-                        const progress = ((currentIndex) / (sections.length - 1)) * 100;
-                        progressBar.style.width = `${progress}%`;
+                        updateProgress(currentIndex);
+                    } else {
+                        // Optional: remove class to re-animate when scrolling back
+                        entry.target.classList.remove('is-active');
                     }
                 });
             }, observerOptions);
 
-            sections.forEach(sec => {
-                observer.observe(sec);
-                // Trigger reflow to ensure animations run cleanly if re-entering
-                sec.addEventListener('transitionend', () => {});
-            });
+            sections.forEach(sec => observer.observe(sec));
 
-            // --- Hybrid Navigation Logic ---
-            
+            // Hybrid Navigation Logic
             const goToSection = (index) => {
-                if (index < 0 || index >= sections.length || isAnimating) return;
+                if (isAnimating || index < 0 || index >= sections.length) return;
                 isAnimating = true;
+                
+                // Scroll behavior
                 sections[index].scrollIntoView({ behavior: 'smooth' });
                 
-                // Prevent multiple rapid scrolls
+                // Debounce to prevent multiple rapid triggers
                 setTimeout(() => {
                     isAnimating = false;
                 }, 800); 
             };
 
-            // 1. Keyboard Navigation
+            // 1. Keyboard Navigation (Arrows)
             window.addEventListener('keydown', (e) => {
-                if (['ArrowDown', 'ArrowRight', ' '].includes(e.key)) {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                     e.preventDefault();
                     goToSection(currentIndex + 1);
-                } else if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                     e.preventDefault();
                     goToSection(currentIndex - 1);
                 }
             });
 
-            // 2. Touch / Swipe Navigation (Horizontal to Vertical Mapping)
+            // 2. Mouse Wheel Navigation (Horizontal Map to Vertical)
+            // Vertical wheel is handled natively by CSS Scroll Snap.
+            // We only intercept horizontal wheel movements.
+            container.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    e.preventDefault(); // Stop default horizontal scroll
+                    if (e.deltaX > 50) {
+                        goToSection(currentIndex + 1);
+                    } else if (e.deltaX < -50) {
+                        goToSection(currentIndex - 1);
+                    }
+                }
+            }, { passive: false });
+
+            // 3. Touch Swipe Navigation (Horizontal Map to Vertical)
             let touchStartX = 0;
             let touchStartY = 0;
 
-            container.addEventListener('touchstart', e => {
+            container.addEventListener('touchstart', (e) => {
                 touchStartX = e.changedTouches[0].screenX;
                 touchStartY = e.changedTouches[0].screenY;
             }, { passive: true });
 
-            container.addEventListener('touchend', e => {
+            container.addEventListener('touchend', (e) => {
                 let touchEndX = e.changedTouches[0].screenX;
                 let touchEndY = e.changedTouches[0].screenY;
                 
-                let dx = touchEndX - touchStartX;
-                let dy = touchEndY - touchStartY;
+                let diffX = touchStartX - touchEndX;
+                let diffY = touchStartY - touchEndY;
 
-                // If horizontal swipe is more prominent than vertical swipe
-                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-                    if (dx < 0) {
-                        // Swipe Left -> Next
+                // If horizontal swipe is dominant and significant
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swiped left
                         goToSection(currentIndex + 1);
                     } else {
-                        // Swipe Right -> Prev
+                        // Swiped right
                         goToSection(currentIndex - 1);
                     }
                 }
-                // Note: Vertical touch swipe is naturally handled by CSS Scroll Snap
             }, { passive: true });
-
-            // 3. Horizontal Wheel / Trackpad (Optional enhancement)
-            let wheelTimeout;
-            container.addEventListener('wheel', (e) => {
-                // If scrolling horizontally
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault(); // Stop native horizontal behavior
-                    if (isAnimating) return;
-                    
-                    clearTimeout(wheelTimeout);
-                    wheelTimeout = setTimeout(() => {
-                        if (e.deltaX > 20) goToSection(currentIndex + 1);
-                        else if (e.deltaX < -20) goToSection(currentIndex - 1);
-                    }, 50);
-                }
-            }, { passive: false });
         });
     </script>
 </body>
