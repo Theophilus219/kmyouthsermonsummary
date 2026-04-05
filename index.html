@@ -3,22 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>겸손하여서 - The Humble King</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <title>우리가 살리라 - Easter 2026</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,800;0,900;1,800&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Noto Sans KR"', 'sans-serif'],
-                        mont: ['Montserrat', 'sans-serif'],
+                        'sans': ['Noto Sans KR', 'sans-serif'],
+                        'mont': ['Montserrat', 'sans-serif'],
                     },
                     colors: {
-                        glass: 'rgba(255, 255, 255, 0.05)',
-                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                        neon: {
+                            blue: '#4facfe',
+                            purple: '#a18cd1',
+                            pink: '#f093fb',
+                            red: '#ff0844',
+                            gold: '#f6d365'
+                        }
                     }
                 }
             }
@@ -26,310 +38,418 @@
     </script>
 
     <style>
-        /* Base styles & Hide Scrollbar */
-        body { margin: 0; background-color: #050505; color: white; overflow: hidden; }
-        .snap-container {
-            height: 100vh; /* Fallback */
+        /* Base styles to prevent unwanted browser behaviors */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Slate 900 */
+            color: #ffffff;
+            overflow: hidden; /* Main body hide scroll */
+            touch-action: pan-y; /* Allow native vertical scroll, JS handles horizontal */
+        }
+
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Scroll Container */
+        #scroll-container {
             height: 100dvh;
+            width: 100vw;
             overflow-y: scroll;
             overflow-x: hidden;
             scroll-snap-type: y mandatory;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
             scroll-behavior: smooth;
         }
-        .snap-container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-        .section {
-            height: 100vh;
+        /* Section Settings */
+        section {
             height: 100dvh;
             width: 100vw;
             scroll-snap-align: start;
             scroll-snap-stop: always;
             position: relative;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5rem 1.5rem 6rem 1.5rem; /* IG Story Safe Zones */
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            border-radius: 2rem;
-            width: 100%;
-            max-width: 400px;
-            height: 100%;
-            max-height: 700px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 2rem;
+            align-items: center;
+            /* Instagram Story Safe Zones */
+            padding: 80px 24px 100px 24px; 
+            overflow: hidden;
+        }
+
+        /* Mobile Max-Width Container (Story ratio) */
+        .story-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Glassmorphism Card Initial State */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 40px 28px;
+            width: 100%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9) translateY(30px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
             z-index: 10;
         }
 
-        /* Animations */
-        .anim-element {
+        /* Elements inside card initial state */
+        .glass-card .animate-item {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .anim-scale {
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(15px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Active State Classes (Triggered by JS) */
-        .is-active .anim-scale { transform: scale(1); opacity: 1; }
-        .is-active .anim-element { opacity: 1; transform: translateY(0); }
-        
-        /* Staggered Delays */
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.3s; }
-        .delay-3 { transition-delay: 0.5s; }
-        .delay-4 { transition-delay: 0.7s; }
-
-        /* Neon Text Effects */
-        .neon-text {
-            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        /* Active State (Triggered by IntersectionObserver) */
+        .glass-card.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
         
-        /* Background Gradients */
-        .bg-grad-1 { background: radial-gradient(circle at top right, #1a1a2e, #0f0c29); }
-        .bg-grad-2 { background: radial-gradient(circle at bottom left, #0b3d2c, #000000); }
-        .bg-grad-3 { background: radial-gradient(circle at center, #3a0000, #110000); }
-        .bg-grad-4 { background: radial-gradient(circle at top left, #2c2c34, #050505); }
-        .bg-grad-5 { background: radial-gradient(circle at bottom right, #4a0010, #0a0000); }
-        .bg-grad-6 { background: radial-gradient(circle at top center, #380036, #000000); }
-        .bg-grad-7 { background: radial-gradient(circle at center, #001f3f, #000000); }
-        .bg-grad-8 { background: radial-gradient(circle at top, #2b1d0f, #000000); }
+        .glass-card.active .animate-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delays for sequential animation */
+        .glass-card .delay-1 { transition-delay: 0.3s; }
+        .glass-card .delay-2 { transition-delay: 0.5s; }
+        .glass-card .delay-3 { transition-delay: 0.7s; }
+
+        /* Typography Background Texture */
+        .bg-text {
+            position: absolute;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 8rem;
+            line-height: 0.8;
+            color: rgba(255, 255, 255, 0.02);
+            text-transform: uppercase;
+            word-wrap: break-word;
+            text-align: center;
+            width: 150%;
+            left: -25%;
+            top: 50%;
+            transform: translateY(-50%) rotate(-10deg);
+            z-index: 0;
+            pointer-events: none;
+        }
 
         /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 420px;
+            display: flex;
+            gap: 4px;
+            z-index: 50;
+        }
         .progress-bar {
-            position: fixed; top: 1rem; left: 1rem; right: 1rem; height: 3px;
-            background: rgba(255,255,255,0.2); z-index: 50; border-radius: 3px;
-            display: flex; gap: 4px;
+            height: 3px;
+            flex-grow: 1;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
         }
-        .progress-segment {
-            flex: 1; height: 100%; background: rgba(255,255,255,0.3); border-radius: 3px;
-            transition: background 0.3s;
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #fff;
+            transition: width 0.3s ease;
         }
-        .progress-segment.active { background: white; box-shadow: 0 0 8px white; }
+        .progress-bar.active .progress-fill { width: 100%; }
+        .progress-bar.current .progress-fill { width: 50%; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Background Gradients */
+        .bg-gradient-1 { background: radial-gradient(circle at 10% 20%, rgb(33, 44, 76) 0%, rgb(18, 23, 33) 90%); }
+        .bg-gradient-2 { background: radial-gradient(circle at 90% 80%, rgb(61, 33, 76) 0%, rgb(18, 23, 33) 90%); }
+        .bg-gradient-3 { background: radial-gradient(circle at 50% 50%, rgb(20, 50, 60) 0%, rgb(10, 15, 20) 90%); }
+        .bg-gradient-4 { background: radial-gradient(circle at top right, rgb(76, 33, 44) 0%, rgb(15, 10, 15) 90%); }
+        .bg-gradient-5 { background: radial-gradient(circle at bottom left, rgb(50, 20, 20) 0%, rgb(10, 10, 10) 90%); }
+        .bg-gradient-6 { background: radial-gradient(circle at center, rgb(80, 10, 10) 0%, rgb(5, 5, 5) 100%); }
+        .bg-gradient-7 { background: radial-gradient(circle at 50% 20%, rgb(40, 20, 80) 0%, rgb(5, 5, 15) 100%); }
+        .bg-gradient-8 { background: radial-gradient(circle at center, rgb(80, 60, 20) 0%, rgb(20, 20, 20) 100%); }
+        .bg-gradient-9 { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+        .bg-gradient-10 { background: linear-gradient(135deg, #112a2e 0%, #0f172a 100%); }
 
         /* Floating Animation */
+        .floating { animation: float 6s ease-in-out infinite; }
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
+            0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
-        .floating { animation: float 4s ease-in-out infinite; }
     </style>
 </head>
 <body>
 
     <!-- IG Story Style Progress Bar -->
-    <div class="progress-bar" id="progressBar">
-        <!-- Segments injected by JS -->
+    <div class="progress-container" id="progress-container">
+        <!-- JS will populate bars here -->
     </div>
 
     <!-- Main Scroll Container -->
-    <div class="snap-container" id="container">
+    <div id="scroll-container">
 
         <!-- Slide 1: Intro -->
-        <section class="section bg-grad-1">
-            <div class="glass-card anim-scale">
-                <h1 class="font-mont text-7xl uppercase text-white/10 absolute -right-4 top-10 whitespace-nowrap -rotate-90 origin-bottom-right z-0">
-                    Intro
-                </h1>
-                <div class="z-10 relative">
-                    <span class="text-indigo-400 font-mont font-bold tracking-widest text-sm anim-element delay-1 uppercase">Zechariah 9:9-10</span>
-                    <h2 class="text-4xl font-black mt-4 mb-6 leading-tight anim-element delay-2 font-mont text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 neon-text">
-                        THE HUMBLE<br>KING
-                    </h2>
-                    <p class="text-xl font-medium text-gray-200 leading-relaxed anim-element delay-3">
-                        오늘은 한 명의<br>
-                        <span class="text-white font-bold">특별한 왕</span> 이야기를 해볼까 해.
-                        <span class="block text-sm text-gray-400/80 font-mont mt-3 font-normal">Today, let's talk about a very special king.</span>
+        <section class="bg-gradient-1">
+            <div class="bg-text">EASTER<br>IS COMING</div>
+            <div class="story-container">
+                <div class="glass-card flex flex-col items-center text-center">
+                    <i class="fa-solid fa-egg text-4xl text-neon-gold mb-6 animate-item delay-1 floating"></i>
+                    <p class="font-mont font-bold tracking-widest text-neon-gold text-xs mb-2 animate-item delay-1 uppercase">Not Just About Eggs</p>
+                    <h1 class="text-3xl font-black mb-6 leading-tight animate-item delay-2">
+                        우리가 살리라
+                    </h1>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3 text-lg">
+                        얘들아, <span class="font-bold text-white">부활절</span> 하면 뭐가 떠올라?<br>
+                        혹시 찐계란만 생각나는 건 아니지? 🥚<br>
+                        오늘 조금 진짜 이야기를 해볼까 해.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-sm italic leading-relaxed animate-item delay-3 mt-5">
+                        Hey guys, what comes to mind when you think of Easter? Not just boiled eggs, right? Let's talk about the real story today.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 2: The Scene -->
-        <section class="section bg-grad-2">
-            <div class="glass-card anim-scale">
-                <h1 class="font-mont text-8xl text-emerald-500/5 absolute -top-4 -left-4 z-0">
-                    PALM
-                </h1>
-                <div class="z-10 relative">
-                    <div class="w-12 h-1 bg-emerald-400 mb-6 anim-element delay-1 rounded"></div>
-                    <h2 class="text-3xl font-black mb-4 font-mont text-emerald-300 anim-element delay-2 uppercase">
-                        Expectations<br>vs Reality
+        <!-- Slide 2: Problem -->
+        <section class="bg-gradient-2">
+            <div class="bg-text">CHRISTMAS<br>VS<br>EASTER</div>
+            <div class="story-container">
+                <div class="glass-card">
+                    <i class="fa-solid fa-scale-unbalanced text-3xl text-neon-pink mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-neon-pink text-xs mb-3 animate-item delay-1">REASONABLE?</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        성탄절 vs 부활절
                     </h2>
-                    <p class="text-lg text-gray-200 leading-relaxed anim-element delay-3">
-                        엄청난 사람들의 환호 속에<br>등장한 왕.
-                        <span class="block text-sm text-emerald-100/60 font-mont mt-2 font-normal">A king who appeared amidst the roaring cheers of the crowd.</span>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        솔직히 크리스마스는 따뜻하고 로맨틱한데, 부활절은 좀 무겁지 않아?<br><br>
+                        처녀가 아기를 낳았다는 것도 안 믿기지만, 
+                        <span class="font-medium text-white border-b border-neon-pink pb-1">죽은 사람이 다시 살아난다?</span><br><br>
+                        이건 진짜 그닥 '합리적(reasonable)'으로 보이지 않잖아. 그래서 대충 넘어가게 되고.
                     </p>
-                    <p class="text-lg text-gray-200 leading-relaxed mt-4 anim-element delay-4">
-                        근데 멋진 백마 대신...<br>
-                        <span class="text-emerald-400 font-bold text-2xl inline-block mt-2">볼품없는 나귀를 타셨어 🐴</span>
-                        <span class="block text-sm text-emerald-100/60 font-mont mt-2 font-normal">But instead of a majestic white horse... he rode a lowly donkey 🐴</span>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        Honestly, Christmas feels warm and romantic, but Easter feels kinda heavy, right? A virgin having a baby is hard enough to believe, but a dead person coming back to life? That really doesn't seem 'reasonable.' So we often just brush past it.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: The Problem -->
-        <section class="section bg-grad-3">
-            <div class="glass-card anim-scale">
-                <h1 class="font-mont text-[10rem] text-red-500/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">
-                    ?
-                </h1>
-                <div class="z-10 relative text-center">
-                    <h2 class="text-3xl font-black mb-6 font-mont text-red-400 anim-element delay-1 uppercase">
-                        What We Want
+        <!-- Slide 3: Core Identity -->
+        <section class="bg-gradient-3">
+            <div class="bg-text">OUR<br>IDENTITY</div>
+            <div class="story-container">
+                <div class="glass-card border-neon-blue/30">
+                    <i class="fa-solid fa-fingerprint text-3xl text-neon-blue mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-neon-blue text-xs mb-3 animate-item delay-1">THE PROMISE KEEPERS</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        우리의 진짜 정체성
                     </h2>
-                    <p class="text-xl text-gray-100 leading-relaxed anim-element delay-2 font-medium">
-                        솔직히 우리는<br>
-                        <span class="text-red-300 font-bold">"내 문제"</span>를 한방에 해결해 줄<br>
-                        짱 센 왕을 원하잖아?
-                        <span class="block text-sm text-red-200/60 font-mont mt-3 font-normal">Honestly, don't we all want a powerful king who can instantly solve 'my problems'?</span>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        근데 있잖아, <span class="font-bold text-white text-xl">부활</span>이 없다면<br>
+                        우리가 교회 다닐 이유도 없어.<br><br>
+                        우리는 부활을 믿는 사람들이야.<br>
+                        창세기부터 아브라함까지, 아주 오래전부터 하나님이 약속하셨거든. <br><br>
+                        <span class="italic font-medium text-neon-blue">"반드시 다시 살릴 거야."</span> 라고.
                     </p>
-                    <div class="mt-8 inline-block px-4 py-2 border border-red-500/30 rounded-full text-sm text-red-200 anim-element delay-3 backdrop-blur-sm">
-                        #문제해결사 #능력자 #기대감<br>
-                        <span class="text-xs text-red-300/60 font-mont mt-1 block">#ProblemSolver #Powerful #Expectations</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Empathy -->
-        <section class="section bg-grad-4">
-            <div class="glass-card anim-scale">
-                <div class="z-10 relative">
-                    <h2 class="text-2xl font-black mb-2 font-mont text-gray-400 anim-element delay-1 uppercase tracking-widest">
-                        Too Ordinary
-                    </h2>
-                    <h2 class="text-4xl font-black mb-8 font-mont text-white anim-element delay-2 uppercase opacity-40">
-                        Too Weak
-                    </h2>
-                    <p class="text-lg text-gray-300 leading-relaxed anim-element delay-3">
-                        하지만 이 왕은...<br>
-                        너무 평범하고 약해 보여.<br>
-                        전혀 주도적이지도 않지.
-                        <span class="block text-sm text-gray-400/80 font-mont mt-2 font-normal">But this king... seems too ordinary and weak. Not proactive at all.</span>
-                    </p>
-                    <p class="text-xl text-white font-bold leading-relaxed mt-6 anim-element delay-4 border-l-4 border-white pl-4">
-                        그 평범함 앞에<br>우리는 쉽게 실망해버려.
-                        <span class="block text-sm text-gray-400/80 font-mont mt-2 font-normal">Faced with such ordinariness, we easily get disappointed.</span>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        But you know what? Without the resurrection, there's no reason for us to go to church. We are people who believe in the resurrection. From Genesis to Abraham, God promised this a long time ago. "I will surely bring them back to life."
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 5: The Turn -->
-        <section class="section bg-grad-5">
-            <div class="glass-card anim-scale border-rose-500/30">
-                <div class="absolute inset-0 bg-rose-500/5 blur-xl z-0 rounded-3xl anim-element delay-1"></div>
-                <div class="z-10 relative text-center">
-                    <i class="fa-solid fa-heart-crack text-4xl text-rose-500 mb-6 anim-element delay-1 floating"></i>
-                    <h2 class="text-3xl font-black mb-6 font-mont text-rose-400 anim-element delay-2 uppercase neon-text">
-                        Fake Emotions
+        <!-- Slide 4: The Twist (Bridge) -->
+        <section class="bg-gradient-4">
+            <div class="bg-text">THE<br>TWIST</div>
+            <div class="story-container">
+                <div class="glass-card border-teal-500/30">
+                    <i class="fa-solid fa-book-open-reader text-3xl text-teal-400 mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-teal-400 text-xs mb-3 animate-item delay-1">A STRANGE REACTION</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        오늘 말씀의 반전
                     </h2>
-                    <p class="text-lg text-gray-200 leading-relaxed anim-element delay-3">
-                        '내 기대'가 채워질 때만<br>기뻐하고 환호한다면?
-                        <span class="block text-sm text-rose-200/60 font-mont mt-2 font-normal">What if we only rejoice and cheer when 'our expectations' are met?</span>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        부활은 이렇게 영광스러운 하나님의 약속인데,<br>
+                        오늘 읽은 <span class="font-medium text-white border-b border-teal-400 pb-1">호세아 6장 말씀</span>을 보면 좀 당황스러워.<br><br>
+                        위대한 약속을 받은 이스라엘 백성들의 반응이...<br>
+                        우리가 기대한 그런 믿음의 모습이 아니거든.
                     </p>
-                    <p class="text-lg font-bold text-white leading-relaxed mt-6 anim-element delay-4 bg-rose-950/50 p-4 rounded-xl">
-                        그건 내 요구를 들어주지 않으면<br>금방 <span class="text-rose-400">분노로 바뀔 가짜 감정</span>일지도 몰라.
-                        <span class="block text-sm text-rose-200/60 font-mont mt-3 font-normal">That might just be a fake emotion that quickly turns into anger when our demands aren't met.</span>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        Resurrection is such a glorious promise from God, but looking at today's passage in Hosea 6, it's a bit baffling. The reaction of the Israelites... isn't exactly the faithful response we'd expect.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 6: Core Message -->
-        <section class="section bg-grad-6">
-            <div class="glass-card anim-scale">
-                <h1 class="font-mont text-6xl text-fuchsia-500/10 absolute bottom-10 -right-10 z-0 rotate-12">
-                    WORSHIP
-                </h1>
-                <div class="z-10 relative">
-                    <span class="text-fuchsia-400 font-mont font-bold tracking-widest text-xs anim-element delay-1 uppercase block mb-4 border-b border-fuchsia-500/30 pb-2">The Real Worship</span>
-                    <p class="text-xl text-white leading-relaxed anim-element delay-2 font-medium">
-                        예배하고 찬양할 때<br>
-                        진짜 위로와 새 힘을 얻고 싶어?
-                        <span class="block text-sm text-fuchsia-200/60 font-mont mt-2 font-normal">Do you want to find true comfort and new strength when you worship and praise?</span>
-                    </p>
-                    <p class="text-lg text-gray-300 leading-relaxed mt-6 anim-element delay-3">
-                        그렇다면,<br>
-                        내 욕심과 내 방식의 기대를<br>
-                        예수님께 강요하지 않는 게 먼저야.
-                        <span class="block text-sm text-fuchsia-200/60 font-mont mt-2 font-normal">If so, the first step is to stop forcing your own desires and expectations onto Jesus.</span>
-                    </p>
-                    <div class="mt-8 font-mont font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-300 anim-element delay-4">
-                        LET GO OF YOUR DEMANDS.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Question -->
-        <section class="section bg-grad-7">
-            <div class="glass-card anim-scale flex justify-center items-center text-center">
-                <div class="z-10 relative w-full">
-                    <h2 class="text-3xl font-black mb-10 font-mont text-cyan-400 anim-element delay-1 uppercase tracking-widest">
-                        Who Are You?
+        <!-- Slide 5: Deep Dive (Hosea) -->
+        <section class="bg-gradient-5">
+            <div class="bg-text">SHALLOW<br>PRAYERS</div>
+            <div class="story-container">
+                <div class="glass-card">
+                    <i class="fa-solid fa-cloud-rain text-3xl text-gray-400 mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-gray-400 text-xs mb-3 animate-item delay-1">SAVE US RIGHT NOW</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        이스라엘의 얕은 생떼
                     </h2>
-                    
-                    <div class="flex flex-col gap-4 w-full">
-                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl anim-element delay-2">
-                            <span class="block text-xs text-gray-400 font-mont mb-1">Option A</span>
-                            <span class="text-lg font-medium">왕에게 문제 해결만<br>요구하는 <span class="text-red-400 font-bold">민원인</span></span>
-                            <span class="block text-xs text-gray-400/80 font-mont mt-2 font-normal">A complainer who only demands problem-solving from the king</span>
-                        </div>
-                        
-                        <div class="text-cyan-500 font-black font-mont anim-element delay-3 text-xl">VS</div>
-                        
-                        <div class="bg-cyan-900/30 border border-cyan-500/30 p-5 rounded-2xl anim-element delay-4">
-                            <span class="block text-xs text-cyan-300 font-mont mb-1">Option B</span>
-                            <span class="text-lg font-medium text-white">왕의 겸손함을 함께<br>배워가는 <span class="text-cyan-300 font-bold">진짜 백성</span></span>
-                            <span class="block text-xs text-cyan-300/60 font-mont mt-2 font-normal">A true citizen who learns the king's humility together</span>
-                        </div>
-                    </div>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        본문을 보면 이스라엘 백성들은 죄 때문에 엄청 맞고 나서 이렇게 말해.<br><br>
+                        <span class="bg-white/10 px-2 py-1 rounded text-white font-medium">"이틀 뒤면 살려주실 거야!"</span><br><br>
+                        이건 진정한 회개가 아니었어.<br>
+                        그냥 지금 당장 아프니까 '빨리 고쳐주세요!' 하고 생떼를 쓰는 거였지.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        Looking at the text, after being struck for their sins, the Israelites say: "He will revive us after two days!" This wasn't true repentance. They were just throwing a tantrum saying, "Fix this quickly!" because they were hurting right now.
+                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 8: Conclusion -->
-        <section class="section bg-grad-8">
-            <div class="glass-card anim-scale">
-                <div class="absolute inset-0 bg-gradient-to-t from-yellow-600/20 to-transparent z-0 anim-element delay-1"></div>
-                <div class="z-10 relative flex flex-col h-full justify-between pb-4">
-                    <div>
-                        <span class="text-yellow-500 font-mont font-bold tracking-widest text-sm anim-element delay-1 uppercase">Application</span>
-                        <h2 class="text-4xl font-black mt-2 mb-6 font-mont text-white anim-element delay-2 uppercase">
-                            Walk With<br>Him
-                        </h2>
-                        <p class="text-xl text-gray-200 leading-relaxed anim-element delay-3 font-medium">
-                            이번 한 주,<br>
-                            왕이신 예수님 앞에<br>
-                            우리가 어떤 모습으로 서 있는지<br>
-                            깊게 고민해보자. 🙏
-                            <span class="block text-sm text-yellow-200/60 font-mont mt-3 font-normal">This week, let's deeply reflect on how we stand before Jesus, our King. 🙏</span>
-                        </p>
-                    </div>
-                    
-                    <div class="text-center anim-element delay-4 mt-auto">
-                        <div class="w-16 h-1 bg-white/20 mx-auto rounded-full mb-4"></div>
-                        <span class="font-mont font-bold text-yellow-500/70 tracking-widest text-sm">LEARN HIS HUMILITY</span>
-                    </div>
+        <!-- Slide 6: Empathy & Response -->
+        <section class="bg-gradient-6">
+            <div class="bg-text">HE HEARS<br>YOU</div>
+            <div class="story-container">
+                <div class="glass-card border-neon-red/20">
+                    <i class="fa-solid fa-ear-listen text-3xl text-neon-red mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-neon-red text-xs mb-3 animate-item delay-1">EVEN IN OUR SELFISHNESS</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        그럼에도 불구하고
+                    </h2>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        우리도 비슷하지 않아?<br>
+                        힘들 때만 <span class="font-medium text-white">"당장 내 문제 좀 해결해 주세요!"</span> 조르잖아.<br><br>
+                        그런데 놀랍게도, 하나님은 그 얕고 이기적인 기도마저도 진심으로 기억하셨어.<br>
+                        진짜로 살려주기로 결심하신 거지.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        Aren't we kind of similar? We only beg, "Solve my problems right now!" when things get tough. But surprisingly, God genuinely remembered even those shallow, selfish prayers. He decided to truly save us.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: The Climax -->
+        <section class="bg-gradient-7">
+            <div class="bg-text">THE<br>THIRD DAY</div>
+            <div class="story-container">
+                <div class="glass-card bg-red-950/40 border-red-500/30">
+                    <i class="fa-solid fa-cross text-4xl text-red-500 mb-4 animate-item delay-1 floating"></i>
+                    <p class="font-mont font-bold tracking-wider text-red-400 text-xs mb-3 animate-item delay-1">THE ULTIMATE SACRIFICE</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        대신 죽으신 아들
+                    </h2>
+                    <p class="text-gray-200 font-light leading-relaxed animate-item delay-3">
+                        너희를 죽음에 내버려 둘 순 없으니,<br>
+                        대신 내 아들을 죽이겠다.<br><br>
+                        우리의 살려달라는 이기적인 기도를<br>
+                        <span class="font-bold text-white text-xl">예수님</span>이 십자가에서 고스란히 다 받아내셨어.<br><br>
+                        그리고 그들의 기도처럼, 약속처럼<br>
+                        <span class="font-bold text-red-400">셋째 날에</span> 다시 살아나셨지.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        "I can't leave you to die, so I will let my Son die instead." Jesus absorbed all of our selfish prayers for survival on the cross. And just like their prayers, just like the promise, He rose again on the third day.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Perspective -->
+        <section class="bg-gradient-8">
+            <div class="bg-text">ETERNAL<br>TIME</div>
+            <div class="story-container">
+                <div class="glass-card">
+                    <i class="fa-regular fa-hourglass-half text-3xl text-purple-400 mb-4 animate-item delay-1"></i>
+                    <p class="font-mont font-bold tracking-wider text-purple-400 text-xs mb-3 animate-item delay-1">THE WEIGHT OF 3 DAYS</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        영원 같았던 3일
+                    </h2>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        우리한테 3일은 '잠깐'이야.<br>
+                        예수님의 무덤 속 40시간도 그냥 견딜 만한 시간처럼 느껴질지 몰라.<br><br>
+                        하지만 하나님께는, 세상을 창조할 때부터 예수님이 십자가에 달릴 때까지...<br>
+                        <span class="font-medium text-white">정말 영원같이 고통스러운 죽음의 시간</span>이었어.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        To us, 3 days is just a 'moment.' The 40 hours Jesus spent in the tomb might just feel bearable. But to God, from the creation of the world until Jesus hung on the cross... it was an agonizing time of death that felt like an eternity.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Joy / Reversal -->
+        <section class="bg-gradient-9">
+            <div class="bg-text">THE<br>REVERSAL</div>
+            <div class="story-container">
+                <div class="glass-card border-neon-gold/40">
+                    <i class="fa-solid fa-sun text-4xl text-neon-gold mb-4 animate-item delay-1 floating"></i>
+                    <p class="font-mont font-bold tracking-wider text-neon-gold text-xs mb-3 animate-item delay-1">THE REVERSAL OF DESPAIR</p>
+                    <h2 class="text-2xl font-bold mb-4 animate-item delay-2">
+                        부활, 절망이 뒤집히다
+                    </h2>
+                    <p class="text-gray-300 font-light leading-relaxed animate-item delay-3">
+                        영원할 것 같던 죽음의 시간이 끝나고<br>
+                        예수님이 무덤을 열고 나오셨을 때!<br><br>
+                        그 부활은 끝난 줄 알았던 절망이<br>
+                        <span class="font-bold text-white text-xl">완벽한 승리와 기쁨</span>으로<br>
+                        완전히 뒤집히는 짜릿한 순간이었어.
+                    </p>
+                    <p class="text-gray-400/80 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        When that seemingly eternal time of death ended and Jesus stepped out of the tomb! That resurrection was an electrifying moment where a despair we thought was the end was completely overturned into perfect victory and joy.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Conclusion -->
+        <section class="bg-gradient-10">
+            <div class="bg-text">BEYOND<br>PAIN</div>
+            <div class="story-container">
+                <div class="glass-card text-center border-white/40 bg-white/10 backdrop-blur-xl">
+                    <i class="fa-solid fa-seedling text-4xl text-green-400 mb-6 animate-item delay-1 floating"></i>
+                    <p class="font-mont font-bold tracking-wider text-green-300 text-xs mb-2 animate-item delay-1">THE PROOF OF HOPE</p>
+                    <h2 class="text-3xl font-black mb-6 animate-item delay-2">
+                        아픔 너머의 소망
+                    </h2>
+                    <p class="text-gray-200 font-light leading-relaxed animate-item delay-3">
+                        그래서 부활은 우리에게 진짜 위로야.<br>
+                        지금 겪는 아픔이 결코 내 삶의 '끝'이 아니라,<br>
+                        마침내 부활처럼 승리로 뒤집힐 거라는<br>
+                        <span class="font-bold text-white text-lg">확실한 증거</span>니까.<br><br>
+                        당장의 고통 속에서도 결국 우리를 살리실 하나님을 기대해보자.<br>
+                        이 강력한 소망이 너의 삶을 이끌어가길 축복해! ✨
+                    </p>
+                    <p class="text-gray-300/70 font-mont text-xs italic leading-relaxed animate-item delay-3 mt-5">
+                        So the resurrection is true comfort for us. It's solid proof that the pain we're going through now is never the 'end', but will ultimately be overturned into victory. May this powerful hope guide your life!
+                    </p>
                 </div>
             </div>
         </section>
@@ -337,117 +457,131 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('container');
-            const sections = document.querySelectorAll('.section');
-            const progressBar = document.getElementById('progressBar');
-            let currentIndex = 0;
-            let isAnimating = false;
+        const scrollContainer = document.getElementById('scroll-container');
+        const sections = document.querySelectorAll('section');
+        const progressContainer = document.getElementById('progress-container');
+        
+        let currentIndex = 0;
+        let isScrolling = false;
+        let scrollTimeout;
 
-            // Initialize Progress Bar
-            sections.forEach((_, index) => {
-                const seg = document.createElement('div');
-                seg.classList.add('progress-segment');
-                if(index === 0) seg.classList.add('active');
-                progressBar.appendChild(seg);
-            });
-            const progressSegments = document.querySelectorAll('.progress-segment');
-
-            const updateProgress = (index) => {
-                progressSegments.forEach((seg, i) => {
-                    if (i <= index) seg.classList.add('active');
-                    else seg.classList.remove('active');
-                });
-            };
-
-            // Intersection Observer for Animations
-            const observerOptions = {
-                root: container,
-                threshold: 0.5
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-active');
-                        currentIndex = Array.from(sections).indexOf(entry.target);
-                        updateProgress(currentIndex);
-                    } else {
-                        // Optional: remove class to re-animate when scrolling back
-                        entry.target.classList.remove('is-active');
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(sec => observer.observe(sec));
-
-            // Hybrid Navigation Logic
-            const goToSection = (index) => {
-                if (isAnimating || index < 0 || index >= sections.length) return;
-                isAnimating = true;
-                
-                // Scroll behavior
-                sections[index].scrollIntoView({ behavior: 'smooth' });
-                
-                // Debounce to prevent multiple rapid triggers
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 800); 
-            };
-
-            // 1. Keyboard Navigation (Arrows)
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    goToSection(currentIndex + 1);
-                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    goToSection(currentIndex - 1);
-                }
-            });
-
-            // 2. Mouse Wheel Navigation (Horizontal Map to Vertical)
-            // Vertical wheel is handled natively by CSS Scroll Snap.
-            // We only intercept horizontal wheel movements.
-            container.addEventListener('wheel', (e) => {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault(); // Stop default horizontal scroll
-                    if (e.deltaX > 50) {
-                        goToSection(currentIndex + 1);
-                    } else if (e.deltaX < -50) {
-                        goToSection(currentIndex - 1);
-                    }
-                }
-            }, { passive: false });
-
-            // 3. Touch Swipe Navigation (Horizontal Map to Vertical)
-            let touchStartX = 0;
-            let touchStartY = 0;
-
-            container.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
-
-            container.addEventListener('touchend', (e) => {
-                let touchEndX = e.changedTouches[0].screenX;
-                let touchEndY = e.changedTouches[0].screenY;
-                
-                let diffX = touchStartX - touchEndX;
-                let diffY = touchStartY - touchEndY;
-
-                // If horizontal swipe is dominant and significant
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                    if (diffX > 0) {
-                        // Swiped left
-                        goToSection(currentIndex + 1);
-                    } else {
-                        // Swiped right
-                        goToSection(currentIndex - 1);
-                    }
-                }
-            }, { passive: true });
+        // Initialize Progress Bars
+        sections.forEach((_, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            bar.innerHTML = '<div class="progress-fill"></div>';
+            progressContainer.appendChild(bar);
         });
+        const progressBars = document.querySelectorAll('.progress-bar');
+
+        // Update UI (Progress bar and Cards)
+        function updateUI(index) {
+            progressBars.forEach((bar, i) => {
+                bar.classList.remove('active', 'current');
+                if (i < index) bar.classList.add('active');
+                if (i === index) bar.classList.add('current');
+            });
+        }
+
+        // Navigate to specific slide smoothly
+        function goToSlide(index) {
+            if (index < 0 || index >= sections.length || isScrolling) return;
+            
+            isScrolling = true;
+            currentIndex = index;
+            
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+            
+            // Cooldown to prevent multi-skips
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isScrolling = false;
+            }, 700); 
+        }
+
+        // 1. Intersection Observer for Animations & Syncing Index on native scroll
+        const observerOptions = {
+            root: scrollContainer,
+            threshold: 0.5 // Trigger when 50% of the section is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const card = entry.target.querySelector('.glass-card');
+                const idx = Array.from(sections).indexOf(entry.target);
+                
+                if (entry.isIntersecting) {
+                    card.classList.add('active');
+                    if (!isScrolling) {
+                        currentIndex = idx;
+                    }
+                    updateUI(idx);
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(sec => observer.observe(sec));
+
+        // 2. Keyboard Navigation (Arrows)
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(e.key)) {
+                e.preventDefault();
+                goToSlide(currentIndex + 1);
+            } else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                e.preventDefault();
+                goToSlide(currentIndex - 1);
+            }
+        });
+
+        // 3. Horizontal Wheel Navigation
+        scrollContainer.addEventListener('wheel', (e) => {
+            // If the user scrolls horizontally using trackpad or shift+wheel
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                e.preventDefault(); // Prevent browser back/forward swipe
+                if (isScrolling) return;
+                
+                if (e.deltaX > 30) {
+                    goToSlide(currentIndex + 1);
+                } else if (e.deltaX < -30) {
+                    goToSlide(currentIndex - 1);
+                }
+            }
+        }, { passive: false });
+
+        // 4. Touch / Swipe Navigation (Horizontal)
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        scrollContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        scrollContainer.addEventListener('touchend', (e) => {
+            if (isScrolling) return;
+
+            let touchEndX = e.changedTouches[0].screenX;
+            let touchEndY = e.changedTouches[0].screenY;
+            
+            let diffX = touchStartX - touchEndX;
+            let diffY = touchStartY - touchEndY;
+
+            // Determine if it was a horizontal swipe
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swipe Left -> Next
+                    goToSlide(currentIndex + 1);
+                } else {
+                    // Swipe Right -> Prev
+                    goToSlide(currentIndex - 1);
+                }
+            }
+        }, { passive: true });
+
+        // Initial UI setup
+        updateUI(0);
     </script>
 </body>
 </html>
