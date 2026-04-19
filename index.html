@@ -84,7 +84,7 @@
             }
         }
 
-        /* 글래스모피즘 카드 */
+        /* 글래스모피즘 카드 - 높이 고정 및 중앙 정렬 추가 */
         .glass-card {
             background: rgba(20, 20, 20, 0.4);
             backdrop-filter: blur(16px);
@@ -94,13 +94,35 @@
             padding: 40px 32px;
             width: 100%;
             max-width: 768px; /* 데스크탑 대응 최대 너비 */
+            
+            /* 카드 상하 높이 고정 부분 */
+            height: 650px; 
+            max-height: calc(100% - 40px); /* 화면이 작을 경우 패딩 밖으로 나가지 않게 방어 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; /* 내용이 넘칠 경우 카드 내부 스크롤 허용 */
+            
             margin: 0 auto;
             z-index: 10;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
+        /* 카드 내부 스크롤바 디자인 (넘칠 경우를 대비) */
+        .glass-card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .glass-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .glass-card::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
         /* Intersection Observer 애니메이션 초기 상태 */
-        .glass-card {
+        .glass-card-anim {
             transform: scale(0.9) translateY(20px);
             opacity: 0;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -112,7 +134,7 @@
         }
 
         /* active 클래스가 붙었을 때 애니메이션 실행 */
-        .slide.active .glass-card {
+        .slide.active .glass-card-anim {
             transform: scale(1) translateY(0);
             opacity: 1;
         }
@@ -199,7 +221,7 @@
             <div class="bg-blob w-72 h-72 bg-indigo-600 top-10 -left-10"></div>
             <div class="bg-blob w-64 h-64 bg-fuchsia-600 bottom-10 -right-10"></div>
             
-            <div class="glass-card text-center flex flex-col items-center">
+            <div class="glass-card glass-card-anim text-center">
                 <i class="fa-solid fa-users text-4xl text-indigo-400 mb-6 anim-element delay-1"></i>
                 <h1 class="font-montserrat font-black text-4xl leading-none tracking-tight mb-2 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-fuchsia-300">
                     ORDINARY<br>PEOPLE
@@ -207,7 +229,7 @@
                 <h2 class="font-montserrat font-bold text-lg text-white/50 tracking-[0.2em] mb-8 anim-element delay-2">
                     A YOUNG GIRL
                 </h2>
-                <div class="w-12 h-1 bg-white/20 rounded-full mb-8 anim-element delay-2"></div>
+                <div class="w-12 h-1 bg-white/20 rounded-full mb-8 anim-element delay-2 mx-auto"></div>
                 <p class="font-noto text-lg font-light leading-relaxed text-gray-200 anim-element delay-3">
                     주인공은 아니지만,<br>
                     없어서는 안 될 사람들의 이야기.<br>
@@ -223,7 +245,7 @@
             <div class="bg-blob w-80 h-80 bg-red-900 top-20 right-0"></div>
             <div class="bg-blob w-64 h-64 bg-orange-800 bottom-0 left-0"></div>
             
-            <div class="glass-card text-center">
+            <div class="glass-card glass-card-anim text-center">
                 <h1 class="font-montserrat font-black text-5xl mb-1 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-br from-red-400 to-orange-500">
                     CAPTURED
                 </h1>
@@ -245,7 +267,7 @@
             <div class="bg-blob w-96 h-96 bg-green-900/50 -top-10 -left-20"></div>
             <div class="bg-blob w-72 h-72 bg-emerald-800/40 bottom-20 -right-10"></div>
             
-            <div class="glass-card text-center">
+            <div class="glass-card glass-card-anim text-center">
                 <i class="fa-solid fa-virus text-4xl text-green-400 mb-6 anim-element delay-1"></i>
                 <h1 class="font-montserrat font-black text-3xl mb-1 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-500">
                     THE INCURABLE
@@ -268,7 +290,7 @@
         <section class="slide" data-index="3">
             <div class="bg-blob w-full h-full bg-blue-900/40 top-0 left-0"></div>
             
-            <div class="glass-card text-center flex flex-col justify-center h-full border-blue-500/30">
+            <div class="glass-card glass-card-anim text-center border-blue-500/30">
                 <h1 class="font-montserrat font-black text-5xl mb-6 anim-element delay-1 text-white drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]">
                     WHAT<br>WOULD<br>YOU DO?
                 </h1>
@@ -288,7 +310,7 @@
         <section class="slide" data-index="4">
             <div class="bg-blob w-80 h-80 bg-cyan-600/50 top-1/4 -right-20"></div>
             
-            <div class="glass-card text-center">
+            <div class="glass-card glass-card-anim text-center">
                 <i class="fa-solid fa-hand-holding-heart text-5xl text-cyan-300 mb-6 anim-element delay-1"></i>
                 <h1 class="font-montserrat font-black text-3xl mb-2 anim-element delay-1 text-cyan-200">
                     UNEXPECTED
@@ -313,7 +335,7 @@
             <div class="bg-blob w-72 h-72 bg-purple-700/40 bottom-0 left-0"></div>
             <div class="bg-blob w-64 h-64 bg-pink-700/30 top-10 right-10"></div>
             
-            <div class="glass-card text-center">
+            <div class="glass-card glass-card-anim text-center">
                 <h1 class="font-montserrat font-black text-3xl mb-2 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
                     LISTENING TO<br>THE LOWLY
                 </h1>
@@ -331,7 +353,7 @@
         <section class="slide" data-index="6">
             <div class="bg-blob w-full h-96 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
             
-            <div class="glass-card text-center bg-white/5 border-white/20">
+            <div class="glass-card glass-card-anim text-center bg-white/5 border-white/20">
                 <i class="fa-solid fa-infinity text-4xl text-white/80 mb-4 anim-element delay-1"></i>
                 <h1 class="font-montserrat font-black text-2xl mb-8 anim-element delay-1 tracking-widest text-white">
                     BUTTERFLY<br>EFFECT
@@ -364,14 +386,14 @@
             <div class="bg-blob w-80 h-80 bg-yellow-600/40 top-0 left-0"></div>
             <div class="bg-blob w-80 h-80 bg-amber-600/30 bottom-0 right-0"></div>
             
-            <div class="glass-card text-center border-yellow-500/30 bg-black/40">
+            <div class="glass-card glass-card-anim text-center border-yellow-500/30 bg-black/40">
                 <h1 class="font-montserrat font-black text-3xl mb-1 anim-element delay-1 text-yellow-400">
                     RADICAL LOVE
                 </h1>
                 <h2 class="font-montserrat font-bold text-sm text-yellow-200/50 tracking-widest mb-8 anim-element delay-1">
                     & HUMILITY
                 </h2>
-                <div class="space-y-6 text-left font-noto text-[1.05rem] anim-element delay-2">
+                <div class="space-y-6 text-left w-full font-noto text-[1.05rem] anim-element delay-2">
                     <div class="bg-yellow-500/10 p-4 rounded-xl border border-yellow-500/20">
                         <span class="text-yellow-400 font-bold mr-2">Q1.</span>
                         <span class="text-gray-200">나한테 상처 준 사람에게 선을 베풀 수 있을까?</span>
@@ -395,7 +417,7 @@
         <section class="slide" data-index="8">
             <div class="bg-blob w-full h-full bg-slate-900 top-0 left-0 opacity-80"></div>
             
-            <div class="glass-card text-center bg-transparent border-none shadow-none mt-10">
+            <div class="glass-card glass-card-anim text-center bg-transparent border-none shadow-none">
                 <h1 class="font-montserrat font-black text-[2rem] leading-tight mb-2 anim-element delay-1 text-white">
                     FORGOTTEN
                 </h1>
