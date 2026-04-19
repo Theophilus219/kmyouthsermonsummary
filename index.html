@@ -30,12 +30,16 @@
 
     <style>
         /* 기본 리셋 및 폰트 설정 */
+        html {
+            background-color: #0a0a0a;
+        }
+
         body {
             margin: 0;
-            background-color: #000;
+            background-color: #0a0a0a;
             font-family: 'Noto Sans KR', sans-serif;
             color: white;
-            overflow: hidden; /* body 스크롤 방지, 컨테이너에서 처리 */
+            overflow: hidden; /* 원래대로 body 스크롤 방지 (페이지 분할 구조 유지) */
         }
 
         /* 스크롤 컨테이너 */
@@ -45,10 +49,10 @@
             height: 100dvh; /* 모바일 동적 높이 대응 */
             margin: 0 auto;
             position: relative;
-            background-color: #0a0a0a;
+            overflow: hidden; /* 컨테이너 외부 여백 방지 */
         }
 
-        /* Y축 스크롤 스냅 래퍼 */
+        /* Y축 스크롤 스냅 래퍼 (원래 기능으로 복구) */
         #scroll-wrapper {
             width: 100%;
             height: 100%;
@@ -75,7 +79,7 @@
             align-items: center;
             position: relative;
             padding: 40px 24px;
-            overflow: hidden;
+            overflow: visible; /* 핵심: 배경 블롭(빛)들이 슬라이드 경계를 넘어 위아래로 부드럽게 번지도록 허용 */
         }
 
         @media (max-width: 768px) {
@@ -171,7 +175,7 @@
             width: 90%;
             display: flex;
             gap: 4px;
-            z-index: 50;
+            z-index: 100;
         }
         .progress-bar {
             height: 3px;
@@ -196,7 +200,7 @@
             text-align: center;
             font-size: 0.75rem;
             color: rgba(255,255,255,0.5);
-            z-index: 50;
+            z-index: 100;
             pointer-events: none;
             display: flex;
             justify-content: center;
@@ -522,7 +526,7 @@
 
         // Intersection Observer 설정 (애니메이션 및 활성 슬라이드 감지)
         const observerOptions = {
-            root: wrapper,
+            root: wrapper, /* 원래대로 스크롤 래퍼를 기준으로 설정 */
             rootMargin: "0px",
             threshold: 0.6 
         };
@@ -554,7 +558,7 @@
         }
 
         // 1. 가로 마우스 휠 (트랙패드 등) 감지 -> 세로 스크롤로 변환
-        wrapper.addEventListener('wheel', (e) => {
+        window.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
                 e.preventDefault(); 
                 if(isAnimating) return;
@@ -582,12 +586,12 @@
         let touchStartX = 0;
         let touchStartY = 0;
 
-        wrapper.addEventListener('touchstart', (e) => {
+        window.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
         }, { passive: true });
 
-        wrapper.addEventListener('touchend', (e) => {
+        window.addEventListener('touchend', (e) => {
             let touchEndX = e.changedTouches[0].screenX;
             let touchEndY = e.changedTouches[0].screenY;
             handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
