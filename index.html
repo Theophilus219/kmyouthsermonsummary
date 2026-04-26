@@ -3,184 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Youth Sermon: A Young Girl</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Ordinary People: Eutychus</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        'montserrat': ['Montserrat', 'sans-serif'],
-                        'noto': ['"Noto Sans KR"', 'sans-serif'],
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
                     },
                     colors: {
-                        glass: 'rgba(255, 255, 255, 0.05)',
-                        glassborder: 'rgba(255, 255, 255, 0.1)',
+                        neon: {
+                            blue: '#00f3ff',
+                            purple: '#b535f6',
+                            pink: '#ff00ff',
+                            yellow: '#ffde00',
+                            green: '#00ff66'
+                        }
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* 기본 리셋 및 폰트 설정 */
-        html {
-            background-color: #0a0a0a;
-        }
-
-        body {
+        /* Base reset & hiding scrollbars */
+        body, html {
             margin: 0;
-            background-color: #0a0a0a;
-            font-family: 'Noto Sans KR', sans-serif;
+            padding: 0;
+            background-color: #050505;
             color: white;
-            overflow: hidden; /* 원래대로 body 스크롤 방지 (페이지 분할 구조 유지) */
+            overflow: hidden; /* Prevent body scroll */
+            overscroll-behavior-y: none;
         }
 
-        /* 스크롤 컨테이너 */
-        #app-container {
-            width: 100%;
-            height: 100vh;
-            height: 100dvh; /* 모바일 동적 높이 대응 */
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden; /* 컨테이너 외부 여백 방지 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-
-        /* Y축 스크롤 스냅 래퍼 (원래 기능으로 복구) */
-        #scroll-wrapper {
-            width: 100%;
-            height: 100%;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
+        .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        #scroll-wrapper::-webkit-scrollbar {
-            display: none;
+
+        /* Snap Container */
+        .snap-container {
+            height: 100dvh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
         }
 
-        /* 개별 슬라이드 */
-        .slide {
-            width: 100%;
-            height: 100%;
+        .snap-slide {
             scroll-snap-align: start;
-            scroll-snap-stop: always;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            height: 100dvh;
+            width: 100%;
             position: relative;
-            padding: 40px 24px;
-            overflow: visible; /* 핵심: 배경 블롭(빛)들이 슬라이드 경계를 넘어 위아래로 부드럽게 번지도록 허용 */
         }
 
-        @media (max-width: 768px) {
-            .slide {
-                padding: 70px 20px 90px 20px; /* 모바일 패딩 조정 */
-            }
-        }
-
-        /* 글래스모피즘 카드 - 높이 고정 및 중앙 정렬 추가 */
+        /* Glassmorphism Card */
         .glass-card {
-            background: rgba(20, 20, 20, 0.4);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            padding: 40px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.02);
+            /* IG Story Safe Area Aspect Ratio Constraints */
             width: 100%;
-            max-width: 768px;
-            
-            /* 카드 상하 높이 고정 (단, 모바일에서는 조금 더 컴팩트하게) */
-            height: 650px; 
-            max-height: calc(100% - 20px); 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow-y: auto;
-            
+            max-width: 420px;
+            height: 100%;
+            max-height: 900px;
             margin: 0 auto;
-            z-index: 10;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 421px) {
             .glass-card {
-                padding: 30px 20px; /* 모바일 카드 내부 여백 줄임 */
-                height: 600px; /* 모바일 최적화 높이 */
+                height: 90vh;
+                border-radius: 2rem;
+                margin-top: 5vh;
+            }
+            .snap-slide {
+                padding: 0 1rem;
             }
         }
 
-        /* 카드 내부 스크롤바 디자인 */
-        .glass-card::-webkit-scrollbar {
-            width: 4px;
-        }
-        .glass-card::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .glass-card::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        /* Intersection Observer 애니메이션 */
-        .glass-card-anim {
-            transform: scale(0.95) translateY(15px);
-            opacity: 0;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .anim-element {
-            opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Background Typography */
+        .bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            font-size: 15vh;
+            line-height: 1;
+            white-space: nowrap;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+            z-index: 0;
+            pointer-events: none;
         }
 
-        .slide.active .glass-card-anim {
+        /* Animations driven by IntersectionObserver */
+        .anim-card {
+            transform: scale(0.92) translateY(20px);
+            opacity: 0.5;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .is-active .anim-card {
             transform: scale(1) translateY(0);
             opacity: 1;
         }
-        .slide.active .anim-element.delay-1 { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
-        .slide.active .anim-element.delay-2 { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
-        .slide.active .anim-element.delay-3 { transition-delay: 0.45s; opacity: 1; transform: translateY(0); }
 
-        /* 배경 효과 */
-        .bg-blob {
-            position: absolute;
-            filter: blur(80px);
-            opacity: 0.6;
-            z-index: 0;
-            border-radius: 50%;
-            animation: pulse 8s infinite alternate;
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s ease-out;
         }
+        
+        .is-active .stagger-1 { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .is-active .stagger-2 { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .is-active .stagger-3 { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+        .is-active .stagger-4 { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
 
-        @keyframes pulse {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
-            100% { transform: scale(1.2) translate(20px, -20px); opacity: 0.8; }
-        }
-
-        /* 상단 인디케이터 바 */
-        .progress-container {
-            position: absolute;
-            top: 20px;
-            left: 5%;
-            width: 90%;
+        /* Story UI Mock */
+        .story-progress {
             display: flex;
             gap: 4px;
-            z-index: 100;
+            padding: 1rem 1rem 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
         }
         .progress-bar {
-            height: 3px;
-            flex-grow: 1;
-            background: rgba(255,255,255,0.3);
+            height: 2px;
+            flex: 1;
+            background: rgba(255,255,255,0.2);
             border-radius: 2px;
             overflow: hidden;
         }
@@ -188,429 +154,406 @@
             height: 100%;
             background: white;
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.3s;
         }
+        .is-active .progress-fill { width: 100%; }
+        .is-past .progress-fill { width: 100%; }
 
-        /* 하단 스와이프 힌트 */
-        .swipe-hint {
-            position: absolute;
-            bottom: 25px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            z-index: 100;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            animation: bounce 2s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
+        .korean-text { word-break: keep-all; }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-neon-purple selection:text-white">
 
-<div id="app-container">
-    
-    <div class="progress-container" id="progress-container"></div>
+    <!-- Scroll Container -->
+    <main class="snap-container no-scrollbar" id="mainContainer">
 
-    <div id="scroll-wrapper">
-
-        <!-- Slide 1: Intro -->
-        <section class="slide" data-index="0">
-            <div class="bg-blob w-72 h-72 bg-indigo-600 top-10 -left-10"></div>
-            <div class="bg-blob w-64 h-64 bg-fuchsia-600 bottom-10 -right-10"></div>
+        <!-- Slide 1 : Intro -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-900 via-indigo-950 to-black overflow-hidden" data-index="0">
+            <div class="bg-text font-montserrat font-black">ORDINARY PEOPLE</div>
             
-            <div class="glass-card glass-card-anim text-center">
-                <i class="fa-solid fa-users text-4xl text-indigo-400 mb-6 anim-element delay-1"></i>
-                <h1 class="font-montserrat font-black text-4xl leading-none tracking-tight mb-2 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-fuchsia-300">
-                    ORDINARY<br>PEOPLE
-                </h1>
-                <h2 class="font-montserrat font-bold text-base md:text-lg text-white/50 tracking-[0.2em] mb-6 anim-element delay-2">
-                    A YOUNG GIRL
-                </h2>
-                <div class="w-12 h-1 bg-white/20 rounded-full mb-6 mx-auto anim-element delay-2"></div>
-                <p class="font-noto text-base md:text-lg font-light leading-relaxed text-gray-200 anim-element delay-3">
-                    주인공은 아니지만,<br>없어서는 안 될 사람들의 이야기.<br>
-                    <span class="block mt-2 mb-4 text-xs md:text-sm text-gray-400 font-montserrat italic">A story of those who aren't the main characters, but are essential.</span>
-                    <span class="font-bold text-white block mt-4">오늘은 이름 없는<br>한 소녀의 이야기야.</span>
-                    <span class="block mt-2 text-xs md:text-sm text-white/70 font-montserrat italic">Today, it's the story of a nameless young girl.</span>
-                </p>
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-0"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-blue tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">VOL.3 EUTYCHUS</p>
+                    <h1 class="text-4xl md:text-5xl font-black leading-tight mb-6 stagger-item stagger-2 korean-text text-white">
+                        오늘이 바로<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">마지막</span> 시간이야!
+                        <span class="block text-sm text-indigo-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">Today is the final session!</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        구약 인물들에 이어, 오늘은 신약의 평범한 인물 <strong class="text-white font-bold">'유두고'</strong> 이야기를 해볼까 해. 준비됐어?
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">Following the Old Testament figures, today we'll talk about an ordinary New Testament person, 'Eutychus'. Ready?</span>
+                    </p>
+                </div>
+
+                <div class="text-center text-gray-500 text-xs mt-auto stagger-item stagger-4 animate-bounce">
+                    <i class="fa-solid fa-angles-down mb-1"></i><br>Scroll or Swipe
+                </div>
             </div>
         </section>
 
-        <!-- Slide 2: Problem -->
-        <section class="slide" data-index="1">
-            <div class="bg-blob w-80 h-80 bg-red-900 top-20 right-0"></div>
-            <div class="bg-blob w-64 h-64 bg-orange-800 bottom-0 left-0"></div>
+        <!-- Slide 2 : Problem -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-950 via-slate-900 to-black overflow-hidden" data-index="1">
+            <div class="bg-text font-montserrat font-black">THE TRAGIC FALL</div>
             
-            <div class="glass-card glass-card-anim text-center">
-                <h1 class="font-montserrat font-black text-4xl md:text-5xl mb-1 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-br from-red-400 to-orange-500">
-                    CAPTURED
-                </h1>
-                <h2 class="font-montserrat font-bold text-xs md:text-sm text-red-300/70 tracking-widest mb-6 anim-element delay-1">
-                    & NAMELESS
-                </h2>
-                <p class="font-noto text-[0.95rem] md:text-[1.05rem] font-light leading-relaxed text-gray-300 anim-element delay-2">
-                    이스라엘이 주변 나라들한테 계속 괴롭힘 당하던 시절.<br>
-                    <span class="block mt-1 mb-5 text-xs text-gray-400 font-montserrat italic">When Israel was constantly harassed by surrounding nations.</span>
-                    적국 아람(시리아)에 포로로 끌려가 가족도 고향도 다 잃어버린<br>
-                    <span class="text-white font-medium bg-red-500/20 px-2 py-1 rounded inline-block mt-3 mb-2">이름 없는 한 여자아이</span>가 있었어.<br>
-                    <span class="block mt-1 text-xs text-red-300/70 font-montserrat italic">There was a nameless young girl taken captive to Aram.</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 3: The Twist -->
-        <section class="slide" data-index="2">
-            <div class="bg-blob w-96 h-96 bg-green-900/50 -top-10 -left-20"></div>
-            <div class="bg-blob w-72 h-72 bg-emerald-800/40 bottom-20 -right-10"></div>
-            
-            <div class="glass-card glass-card-anim text-center">
-                <i class="fa-solid fa-virus text-4xl text-green-400 mb-5 anim-element delay-1"></i>
-                <h1 class="font-montserrat font-black text-3xl mb-1 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-500">
-                    THE INCURABLE
-                </h1>
-                <h2 class="font-montserrat font-bold text-sm text-emerald-400/60 tracking-[0.3em] mb-6 anim-element delay-1">
-                    CURSE
-                </h2>
-                <p class="font-noto text-[0.95rem] md:text-base font-light leading-relaxed text-gray-200 anim-element delay-2 text-left px-1 md:px-6">
-                    적국 장군의 집에서 하녀로 일하게 됐는데, 충격적인 소식이 들려와.<br>
-                    <span class="block mt-1 mb-4 text-xs text-gray-400 font-montserrat italic">Shocking news arrived while working as a maid for the enemy commander.</span>
-                    <span class="text-emerald-300 font-medium">그 장군이 불치병(나병)에 걸렸대.</span><br>
-                    <span class="block mt-1 mb-4 text-xs text-emerald-300/70 font-montserrat italic">The commander caught an incurable disease.</span>
-                    사회에서 완전히 쫓겨나는 무서운 병. 치료는 불가능했어.<br>
-                    <span class="block mt-1 text-xs text-gray-400 font-montserrat italic">A terrifying disease casting him out of society.</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 4: Empathy -->
-        <section class="slide" data-index="3">
-            <div class="bg-blob w-full h-full bg-blue-900/40 top-0 left-0"></div>
-            
-            <div class="glass-card glass-card-anim text-center border-blue-500/30">
-                <h1 class="font-montserrat font-black text-4xl md:text-5xl mb-5 anim-element delay-1 text-white drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]">
-                    WHAT<br>WOULD<br>YOU DO?
-                </h1>
-                <div class="w-full h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent mb-6 anim-element delay-2"></div>
-                <p class="font-noto text-lg md:text-xl font-medium leading-snug text-blue-100 anim-element delay-3">
-                    솔직히 너라면 어떨 거 같아?<br>
-                    <span class="block mt-1 mb-5 text-xs text-blue-200/70 font-montserrat italic">Honestly, what would you do?</span>
-                    내 인생 망친 원수 같은 주인이<br>몹쓸 병에 걸렸대.<br>
-                    <span class="block mt-1 mb-5 text-xs text-blue-200/70 font-montserrat italic">The enemy master caught a dreadful disease.</span>
-                    <span class="text-white/70 text-sm md:text-base font-light">"완전 쌤통이다!" 라고 생각하지 않을까?</span><br>
-                    <span class="block mt-1 text-xs text-white/50 font-montserrat italic">Wouldn't you think, "Serves him right!"?</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 5: Unexpected -->
-        <section class="slide" data-index="4">
-            <div class="bg-blob w-80 h-80 bg-cyan-600/50 top-1/4 -right-20"></div>
-            
-            <div class="glass-card glass-card-anim text-center">
-                <i class="fa-solid fa-hand-holding-heart text-4xl md:text-5xl text-cyan-300 mb-5 anim-element delay-1"></i>
-                <h1 class="font-montserrat font-black text-3xl mb-1 anim-element delay-1 text-cyan-200">
-                    UNEXPECTED
-                </h1>
-                <h2 class="font-montserrat font-bold text-xs md:text-sm text-cyan-100/50 tracking-widest mb-6 anim-element delay-2">
-                    COMPASSION
-                </h2>
-                <p class="font-noto text-[0.95rem] md:text-lg font-light leading-relaxed text-gray-200 anim-element delay-3 px-1 md:px-6">
-                    근데 이 소녀는 반전이었어. 자기 주인을 <span class="text-cyan-300 font-bold">불쌍히 여겨서</span>,<br>
-                    <span class="block mt-1 mb-4 text-xs text-gray-400 font-montserrat italic">But this girl had compassion on her master,</span>
-                    엘리사를 찾아가면 나을 수 있다고 꿀팁을 알려준 거야.<br>
-                    <span class="block mt-1 mb-4 text-xs text-cyan-200/70 font-montserrat italic">and told him how he could be healed.</span>
-                    <span class="text-white font-medium opacity-80">어떻게 원수를 도울 수 있었을까?</span><br>
-                    <span class="block mt-1 text-xs text-white/50 font-montserrat italic">How could she help her enemy?</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 6: Listening -->
-        <section class="slide" data-index="5">
-            <div class="bg-blob w-72 h-72 bg-purple-700/40 bottom-0 left-0"></div>
-            <div class="bg-blob w-64 h-64 bg-pink-700/30 top-10 right-10"></div>
-            
-            <div class="glass-card glass-card-anim text-center">
-                <h1 class="font-montserrat font-black text-3xl md:text-4xl mb-2 anim-element delay-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
-                    LISTENING TO<br>THE LOWLY
-                </h1>
-                <p class="font-noto text-[0.95rem] md:text-[1.05rem] font-light leading-relaxed text-gray-300 anim-element delay-2 mt-6 text-left px-1 md:px-6">
-                    장군도 참 특이해.<br>
-                    어린 하녀의 말을 듣고 적국으로 치료를 받으러 떠나.<br>
-                    <span class="block mt-1 mb-5 text-xs text-gray-400 font-montserrat italic">The commander was also unique. He listened to a young maid and set off to the enemy country for a cure.</span>
-                    <span class="text-pink-300 font-medium block">너라면 너보다 어리고 낮은 사람의 말에<br>귀 기울일 수 있어?</span>
-                    <span class="block mt-1 text-xs text-pink-300/70 font-montserrat italic">Could you listen to someone lower than you?</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 7: Butterfly Effect (Diagram) - 분리됨 -->
-        <section class="slide" data-index="6">
-            <div class="bg-blob w-full h-96 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-            
-            <div class="glass-card glass-card-anim text-center bg-white/5 border-white/20">
-                <i class="fa-solid fa-infinity text-4xl text-white/80 mb-4 anim-element delay-1"></i>
-                <h1 class="font-montserrat font-black text-2xl md:text-3xl mb-8 anim-element delay-1 tracking-widest text-white">
-                    BUTTERFLY<br>EFFECT
-                </h1>
-                <div class="flex flex-col gap-4 font-noto text-sm font-light text-gray-200 anim-element delay-2 items-center w-full mt-4">
-                    <div class="bg-white/10 px-6 py-3 rounded-full w-full max-w-[280px]">
-                        작은 소녀의 말이<br><span class="text-[0.65rem] md:text-xs text-white/50 font-montserrat italic">The young girl's words</span>
-                    </div>
-                    <i class="fa-solid fa-arrow-down text-white/30 text-xs"></i>
-                    <div class="bg-white/10 px-6 py-3 rounded-full w-full max-w-[280px]">
-                        주인을 움직이고<br><span class="text-[0.65rem] md:text-xs text-white/50 font-montserrat italic">moved the master</span>
-                    </div>
-                    <i class="fa-solid fa-arrow-down text-white/30 text-xs"></i>
-                    <div class="bg-white/10 px-6 py-3 rounded-full w-full max-w-[280px]">
-                        왕을 움직였어<br><span class="text-[0.65rem] md:text-xs text-white/50 font-montserrat italic">moved the king</span>
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-1"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-pink tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">SLEEPING IN CHURCH?</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        솔직히 유두고 하면<br>
+                        어떤 이미지가 떠올라?
+                        <span class="block text-sm text-pink-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">Honestly, what comes to mind when you hear Eutychus?</span>
+                    </h2>
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm stagger-item stagger-3 mb-4">
+                        <p class="text-gray-300 text-md leading-relaxed korean-text font-light">
+                            "아, 그 예배 시간에 졸다가 창문에서 떨어져 죽은 애?" 😨<br>
+                            맞아. 성경을 읽다 보면 황당한 죽음 때문에 조롱받기 쉬운 인물이지.
+                            <span class="block text-xs text-gray-400 font-montserrat italic mt-3">"Oh, that guy who fell out the window and died while sleeping in church?" Right. He's easily mocked for his bizarre death.</span>
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 8: Two Hearts (Explanation) - 분리됨 -->
-        <section class="slide" data-index="7">
-            <div class="bg-blob w-72 h-72 bg-blue-600/30 top-10 left-10"></div>
-            <div class="bg-blob w-72 h-72 bg-pink-600/30 bottom-10 right-10"></div>
+        <!-- Slide 3 : Context -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-black via-red-950 to-gray-900 overflow-hidden" data-index="2">
+            <div class="bg-text font-montserrat font-black text-red-500/10">NO OXYGEN</div>
             
-            <div class="glass-card glass-card-anim text-center bg-white/5 border-white/20 flex flex-col justify-center">
-                <h1 class="font-montserrat font-black text-3xl mb-6 anim-element delay-1 tracking-widest text-white">
-                    TWO HEARTS
-                </h1>
-                <p class="font-noto text-[1.05rem] md:text-lg mt-4 text-white/90 anim-element delay-2 leading-relaxed">
-                    원수를 돕고자 한 <span class="font-bold text-white text-xl">소녀의 마음</span>,<br>
-                    하찮은 조언을 들은 <span class="font-bold text-white text-xl">장군의 마음</span>.<br>
-                    <span class="block mt-2 mb-6 text-xs text-white/50 font-montserrat italic">The girl's heart to help an enemy, and the commander's heart to listen to humble advice.</span>
-                </p>
-                <div class="w-16 h-px bg-white/30 mx-auto mb-6 anim-element delay-3"></div>
-                <p class="font-noto text-base md:text-lg text-white/80 anim-element delay-3">
-                    이 두 마음을 통해<br>하나님이 일하신 거야.<br>
-                    <span class="block mt-2 text-xs text-white/50 font-montserrat italic">God worked through these two hearts.</span>
-                </p>
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-2"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-yellow tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">WE'VE ALL BEEN THERE</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        근데 팩트 체크를<br>좀 해보자고.
+                        <span class="block text-sm text-yellow-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">But let's do a quick fact check.</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        장소는 트로이. 사도바울의 마지막일지도 모르는 설교가 <strong>밤새도록</strong> 이어지고 있었어. 
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">The place is Troas. Paul's potentially last sermon was going on all night long.</span>
+                    </p>
+                    <div class="flex gap-3 mt-6 stagger-item stagger-4">
+                        <span class="px-3 py-1 rounded-full border border-gray-600 text-xs">🔥 수많은 등불 열기</span>
+                        <span class="px-3 py-1 rounded-full border border-gray-600 text-xs">💨 빽빽한 사람들의 이산화탄소</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-4 stagger-item stagger-4 korean-text">
+                        이런 3층 집 창가에서 안 조는 게 오히려 초인적인 거 아닐까?
+                        <span class="block text-xs text-gray-600 font-montserrat italic mt-1">Wouldn't it be superhuman NOT to fall asleep by the window of a 3rd-floor room?</span>
+                    </p>
+                </div>
             </div>
         </section>
 
-        <!-- Slide 9: Core Message (Questions) - 분리됨 -->
-        <section class="slide" data-index="8">
-            <div class="bg-blob w-80 h-80 bg-yellow-600/40 top-0 left-0"></div>
+        <!-- Slide 4 : Empathy -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-900 via-teal-950 to-black overflow-hidden" data-index="3">
+            <div class="bg-text font-montserrat font-black">DON'T JUDGE</div>
             
-            <div class="glass-card glass-card-anim text-center border-yellow-500/30 bg-black/40">
-                <h1 class="font-montserrat font-black text-3xl md:text-4xl mb-1 anim-element delay-1 text-yellow-400">
-                    RADICAL LOVE
-                </h1>
-                <h2 class="font-montserrat font-bold text-xs md:text-sm text-yellow-200/50 tracking-widest mb-8 anim-element delay-1">
-                    THE QUESTIONS
-                </h2>
-                <div class="space-y-5 text-left w-full font-noto text-[0.95rem] md:text-[1.05rem] anim-element delay-2">
-                    <div class="bg-yellow-500/10 p-5 rounded-xl border border-yellow-500/20 shadow-lg">
-                        <span class="text-yellow-400 font-bold mr-2 text-lg">Q1.</span>
-                        <span class="text-gray-200 block mt-1">나한테 상처 준 사람에게 선을 베풀 수 있을까?</span>
-                        <span class="block mt-2 text-[0.7rem] md:text-xs text-yellow-200/60 font-montserrat italic">Can I do good to someone who hurt me?</span>
-                    </div>
-                    <div class="bg-yellow-500/10 p-5 rounded-xl border border-yellow-500/20 shadow-lg">
-                        <span class="text-yellow-400 font-bold mr-2 text-lg">Q2.</span>
-                        <span class="text-gray-200 block mt-1">나보다 작고 약한 사람의 목소리를 들을 수 있을까?</span>
-                        <span class="block mt-2 text-[0.7rem] md:text-xs text-yellow-200/60 font-montserrat italic">Can I listen to the voice of someone smaller and weaker?</span>
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-3"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-green tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">BEYOND THE STEREOTYPE</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text text-white">
+                        그래서 이 이야기는<br>
+                        <span class="text-teal-400">"예배 때 졸지 마!"</span>라는<br>
+                        잔소리가 아니야.
+                        <span class="block text-sm text-teal-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">So this story isn't a nag saying "Don't sleep in church!".</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        피곤하면 충분히 졸 수 있지. 트로이 교회 그 누구도 유두고가 존다고 탓하지 않았어. 우리가 봐야 할 건 유두고의 조는 모습이 아니라...
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">If you're tired, you can fall asleep. No one in the Troas church blamed Eutychus for sleeping. What we need to look at isn't him sleeping, but...</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5 : The Struggle (NEW) -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-black via-orange-950 to-gray-900 overflow-hidden" data-index="4">
+            <div class="bg-text font-montserrat font-black">THE STRUGGLE</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-4"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-orange-400 tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">STAYING AWAKE</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text text-white">
+                        애초에 창가에 앉은<br>이유가 뭘까?
+                        <span class="block text-sm text-orange-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">Why did he sit by the window in the first place?</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        시원한 바람을 맞으며 <strong class="text-white">어떻게든 잠을 깨보려던</strong> 유두고의 치열한 사투 아니었을까? 졸음과 싸우면서까지 말씀을 듣고 싶었던 거지.
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">Wasn't it Eutychus's fierce struggle to stay awake by getting some cool breeze? He wanted to hear the Word even while fighting off sleep.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6 : Core 1 -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-black via-fuchsia-950 to-gray-900 overflow-hidden" data-index="5">
+            <div class="bg-text font-montserrat font-black">CRAVING TRUTH</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-5"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-purple tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">INTENT OVER PERFECTION</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        그 밤에 그 자리에<br>나왔던 <span class="text-fuchsia-400">'마음'</span>이야.
+                        <span class="block text-sm text-fuchsia-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">It's the 'heart' that brought him there that night.</span>
+                    </h2>
+                    <div class="border-l-2 border-fuchsia-500 pl-4 stagger-item stagger-3">
+                        <p class="text-gray-300 text-md leading-relaxed korean-text font-light">
+                            부모님한테 억지로 끌려와서 팔짱 끼고 잔 게 아냐. 고된 일상 속에서도 <strong>'말씀을 들어보겠다'</strong>는 의지 하나로 그 늦은 시간까지 버틴 한 사람이었던 거지.
+                            <span class="block text-xs text-gray-500 font-montserrat italic mt-3">He wasn't dragged there to just sleep with folded arms. Even in a tiring daily life, he was a person who endured until that late hour with the single will to 'listen to the Word'.</span>
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 10: The Answer - 분리됨 -->
-        <section class="slide" data-index="9">
-            <div class="bg-blob w-80 h-80 bg-amber-600/30 bottom-0 right-0"></div>
+        <!-- Slide 7 : Core 2 -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-950 via-blue-900/40 to-black overflow-hidden" data-index="6">
+            <div class="bg-text font-montserrat font-black">THE REVIVAL</div>
             
-            <div class="glass-card glass-card-anim text-center border-amber-500/30 bg-black/40 flex flex-col justify-center">
-                <h1 class="font-montserrat font-black text-3xl md:text-4xl mb-6 anim-element delay-1 text-amber-400">
-                    GOD'S HEART
-                </h1>
-                <p class="font-noto text-lg md:text-xl leading-relaxed text-amber-100/90 anim-element delay-2 px-2">
-                    내 상식으론 당연히 불가능해.<br><br>
-                    하지만 <span class="font-bold text-amber-300 text-2xl border-b-2 border-amber-400/50 pb-1 inline-block">하나님의 구원하는 마음</span>이<br>
-                    내 안에 들어오면, 그땐 가능해져!<br>
-                    <span class="block mt-6 text-xs text-amber-200/60 font-montserrat italic leading-relaxed">It's impossible by my common sense, but it becomes possible when God's saving heart enters me!</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 11: Conclusion (Forgotten) - 분리됨 -->
-        <section class="slide" data-index="10">
-            <div class="bg-blob w-full h-full bg-slate-900 top-0 left-0 opacity-80"></div>
-            
-            <div class="glass-card glass-card-anim text-center bg-transparent border-none shadow-none">
-                <h1 class="font-montserrat font-black text-4xl md:text-[3rem] leading-tight mb-2 anim-element delay-1 text-white">
-                    FORGOTTEN
-                </h1>
-                <h2 class="font-montserrat font-medium text-xs md:text-sm text-gray-400 tracking-[0.2em] mb-10 anim-element delay-1">
-                    IN THE BIBLE
-                </h2>
-                <p class="font-noto text-[1.05rem] md:text-lg font-light leading-relaxed text-gray-300 anim-element delay-2">
-                    결국 이 소녀는 성경에서 철저히 잊혀져. 이름조차 남지 않았지.<br>
-                    <span class="block mt-2 mb-6 text-xs text-gray-400 font-montserrat italic">Ultimately, this girl is completely forgotten in the Bible. Not even her name remains.</span>
-                    <span class="text-white font-medium text-xl mt-4 block">근데 이게 실패한 인생일까?</span>
-                    <span class="block mt-2 text-xs text-white/50 font-montserrat italic">But is this a failed life?</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 12: Conclusion (Remembered) - 분리됨 -->
-        <section class="slide" data-index="11">
-            <div class="bg-blob w-full h-full bg-slate-900 top-0 left-0 opacity-80"></div>
-            
-            <div class="glass-card glass-card-anim text-center bg-transparent border-none shadow-none">
-                <h1 class="font-montserrat font-black text-3xl md:text-[2.5rem] leading-tight mb-2 anim-element delay-1 text-white">
-                    REMEMBERED
-                </h1>
-                <h2 class="font-montserrat font-medium text-xs md:text-sm text-gray-400 tracking-[0.2em] mb-8 anim-element delay-1">
-                    FOREVER
-                </h2>
-                <p class="font-noto text-base md:text-lg font-light leading-relaxed text-gray-300 anim-element delay-2">
-                    아니야.<br>
-                    <span class="text-white font-medium block mt-2">세상은 그녀를 잊었어도,<br>생명을 얻은 장군과 하나님은 영원히 그녀를 기억할 테니까.</span><br>
-                    <span class="block mt-1 mb-6 text-xs text-white/70 font-montserrat italic">Even if the world forgot her, the saved commander and God will remember her forever.</span>
-                    <span class="text-xl md:text-2xl font-bold text-white mt-2 block">그거면 충분하지 않아?</span>
-                    <span class="block mt-2 text-xs text-white/70 font-montserrat italic">Isn't that enough?</span>
-                </p>
-                <div class="mt-12 text-gray-500 text-xs md:text-sm font-noto anim-element delay-3">
-                    열왕기하 5장 2-4절 (2 Kings 5:2-4)
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-6"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-blue tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">AWAKENED BY GRACE</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        결국 그 열정 위에<br>
+                        <span class="text-blue-400">기적</span>이 일어났어.
+                        <span class="block text-sm text-blue-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">Eventually, a miracle happened upon that passion.</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        하나님은 떨어져 죽은 그를 다시 살리셨어. 그리고 사람들은 살아난 청년을 보며 엄청난 <strong class="text-white">위로</strong>를 받았지.
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">God brought him back to life from death. And the people were immensely comforted seeing the revived young man.</span>
+                    </p>
+                    <p class="text-gray-400 text-sm mt-4 stagger-item stagger-4 korean-text">
+                        복음에 대한 뜨거운 마음을 가졌을 때, 구원하시는 하나님의 능력을 목격했기 때문이야.
+                        <span class="block text-[10px] text-gray-600 font-montserrat italic mt-1">It's because they witnessed God's saving power when they had a burning heart for the Gospel.</span>
+                    </p>
                 </div>
             </div>
         </section>
 
-    </div>
+        <!-- Slide 8 : Core 3 -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-black via-pink-950 to-gray-900 overflow-hidden" data-index="7">
+            <div class="bg-text font-montserrat font-black">LOVE COVERS ALL</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-7"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-pink tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">GRACE OVER JUDGMENT</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        그리고 복음은<br>
+                        우리의 <span class="text-pink-400">연약함</span>을 덮어.
+                        <span class="block text-sm text-pink-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">And the Gospel covers our weaknesses.</span>
+                    </h2>
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-pink-500/10 to-transparent border border-pink-500/20 stagger-item stagger-3">
+                        <p class="text-gray-300 text-md leading-relaxed korean-text font-light">
+                            "쟤 예배 태도 왜 저래?" 지적하는 대신, 피곤에 지친 지체를 이해하고 사랑으로 보듬어준 트로이 교회. 예수님이 우릴 덮어주신 그 사랑 그대로 말이야.
+                            <span class="block text-xs text-gray-400 font-montserrat italic mt-3">Instead of pointing out "What's wrong with his attitude?", the Troas church understood and embraced their exhausted brother with love. Just like the love Jesus covered us with.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- 스와이프/방향키 힌트 -->
-    <div class="swipe-hint font-noto">
-        <i class="fa-solid fa-arrows-up-down text-white/30"></i>
-        <span>Scroll, Swipe or Arrows</span>
-    </div>
+        <!-- Slide 9 : United (NEW) -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-950 to-black overflow-hidden" data-index="8">
+            <div class="bg-text font-montserrat font-black">UNITED WE STAND</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-8"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-purple-400 tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">POWER TO UNITE</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text text-white">
+                        나눠진 우리를<br>
+                        <span class="text-purple-400">하나</span>로 만드는 능력.
+                        <span class="block text-sm text-purple-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">The power to unite the divided us into one.</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        서로의 허물을 탓하기보다, 그 연약함이 회복되기를 <strong>기도하며 보듬어갈 때</strong> 진짜 기적이 시작되는 거야.
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">Real miracles begin when we pray for the recovery of weaknesses and embrace them, rather than blaming each other's faults.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-</div>
+        <!-- Slide 10 : Application -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-gray-900 via-amber-950/30 to-black overflow-hidden" data-index="9">
+            <div class="bg-text font-montserrat font-black">WE ARE ONE</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-between pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-9"></div>
+                
+                <div class="flex-1 flex flex-col justify-center">
+                    <p class="font-montserrat font-black text-neon-yellow tracking-[0.2em] text-xs mb-4 stagger-item stagger-1">EMBRACE THE WEAKNESS</p>
+                    <h2 class="text-3xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                        우리 주변에도<br>보기 얄미운 사람,<br>분명 있지? 🤔
+                        <span class="block text-sm text-yellow-300/80 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">There must be people around us who are hard to like, right?</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg leading-relaxed stagger-item stagger-3 korean-text font-light">
+                        친구일 수도, 선생님일 수도, 혹은 나 자신일 수도 있어.
+                        <span class="block text-xs text-gray-500 font-montserrat italic mt-2">It could be a friend, a teacher, or even myself.</span>
+                    </p>
+                    <p class="text-gray-400 text-sm mt-4 stagger-item stagger-4 korean-text border-t border-gray-800 pt-4">
+                        하지만 서로의 가시 돋친 모습만 보지 말고, 그 위를 덮는 하나님의 사랑을 바라보는 건 어떨까?
+                        <span class="block text-[10px] text-gray-500 font-montserrat italic mt-1">But instead of only seeing each other's thorny sides, how about looking at God's love that covers them?</span>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const wrapper = document.getElementById('scroll-wrapper');
-        const slides = document.querySelectorAll('.slide');
-        const progressContainer = document.getElementById('progress-container');
-        const totalSlides = slides.length;
+        <!-- Slide 11 : Outro -->
+        <section class="snap-slide flex items-center justify-center bg-gradient-to-br from-black to-slate-900 overflow-hidden" data-index="10">
+            <div class="bg-text font-montserrat font-black">BE THE LIGHT</div>
+            
+            <div class="glass-card anim-card flex flex-col justify-center items-center text-center pt-16 pb-12 px-8">
+                <div class="story-progress" id="progress-10"></div>
+                
+                <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-6 stagger-item stagger-1">
+                    <i class="fa-solid fa-heart text-neon-pink text-2xl"></i>
+                </div>
+                
+                <h2 class="text-2xl font-bold leading-tight mb-6 stagger-item stagger-2 korean-text">
+                    기적과 위로를 경험했던<br>
+                    트로이 교회처럼,
+                    <span class="block text-sm text-gray-400 font-montserrat italic font-normal mt-3 tracking-normal leading-snug">Like the Troas church that experienced miracles and comfort,</span>
+                </h2>
+                <p class="text-gray-300 text-md leading-relaxed stagger-item stagger-3 korean-text font-light mb-8">
+                    우리 모두가 서로의 연약함을 품어주는 <strong class="text-white">하나님의 위로의 공동체</strong>가 되기를 축복해! 🙏
+                    <span class="block text-xs text-gray-500 font-montserrat italic mt-3">I bless that we all become God's community of comfort that embraces each other's weaknesses!</span>
+                </p>
+                
+                <button class="px-6 py-3 rounded-full bg-white text-black font-bold text-sm stagger-item stagger-4 flex items-center gap-2 hover:bg-gray-200 transition-colors" onclick="goToSlide(0)">
+                    <i class="fa-solid fa-rotate-left"></i> 처음으로 돌아가기
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const container = document.getElementById('mainContainer');
+        const slides = document.querySelectorAll('.snap-slide');
         let currentIndex = 0;
         let isAnimating = false;
 
-        // 진행 바 생성
-        for(let i=0; i<totalSlides; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'progress-bar';
-            bar.innerHTML = `<div class="progress-fill" id="fill-${i}"></div>`;
-            progressContainer.appendChild(bar);
-        }
-
-        // 진행 바 업데이트 함수
-        function updateProgress(index) {
-            for(let i=0; i<totalSlides; i++) {
-                const fill = document.getElementById(`fill-${i}`);
-                if(i < index) fill.style.width = '100%';
-                else if (i === index) fill.style.width = '100%'; 
-                else fill.style.width = '0%';
+        // Initialize progress bars for IG Story Mockup
+        slides.forEach((slide, idx) => {
+            const progressContainer = document.getElementById(`progress-${idx}`);
+            if(progressContainer) {
+                // Add bars based on total slides
+                for(let i=0; i<slides.length; i++) {
+                    progressContainer.innerHTML += `
+                        <div class="progress-bar">
+                            <div class="progress-fill ${i < idx ? 'w-full' : ''}"></div>
+                        </div>
+                    `;
+                }
             }
-        }
+        });
 
-        // Intersection Observer 설정 (애니메이션 및 활성 슬라이드 감지)
+        // Intersection Observer to trigger animations when slide is in view
         const observerOptions = {
-            root: wrapper, /* 원래대로 스크롤 래퍼를 기준으로 설정 */
-            rootMargin: "0px",
-            threshold: 0.6 
+            root: container,
+            threshold: 0.5 // Trigger when 50% visible
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+                    entry.target.classList.add('is-active');
                     currentIndex = parseInt(entry.target.getAttribute('data-index'));
-                    updateProgress(currentIndex);
+                    
+                    // Update progress bars specifically for the active slide
+                    const activeBars = entry.target.querySelectorAll('.progress-fill');
+                    activeBars.forEach((bar, idx) => {
+                        if (idx < currentIndex) bar.style.width = '100%';
+                        else if (idx === currentIndex) bar.style.width = '100%'; // Animate via CSS
+                        else bar.style.width = '0%';
+                    });
                 } else {
-                    entry.target.classList.remove('active');
+                    entry.target.classList.remove('is-active');
+                    // Reset current slide's progress bar when it leaves
+                    const currentBar = entry.target.querySelectorAll('.progress-fill')[parseInt(entry.target.getAttribute('data-index'))];
+                    if(currentBar) currentBar.style.width = '0%';
                 }
             });
         }, observerOptions);
 
         slides.forEach(slide => observer.observe(slide));
 
-        // 부드러운 스크롤 이동 함수
-        function goToSlide(index) {
-            if (index < 0 || index >= totalSlides || isAnimating) return;
+        // Smooth navigation function
+        window.goToSlide = (index) => {
+            if (index < 0 || index >= slides.length || isAnimating) return;
             isAnimating = true;
             slides[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
-            // CSS smooth scroll 완료 예상 시간 후 잠금 해제
-            setTimeout(() => {
-                isAnimating = false;
-            }, 600); 
-        }
+            // Prevent multiple rapid triggers
+            setTimeout(() => { isAnimating = false; }, 600);
+        };
 
-        // 1. 가로 마우스 휠 (트랙패드 등) 감지 -> 세로 스크롤로 변환
-        window.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault(); 
-                if(isAnimating) return;
-                
-                if (e.deltaX > 20) {
-                    goToSlide(currentIndex + 1);
-                } else if (e.deltaX < -20) {
-                    goToSlide(currentIndex - 1);
-                }
-            }
-        }, { passive: false });
-
-        // 2. 키보드 방향키 감지
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                goToSlide(currentIndex + 1);
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        // --- Hybrid Navigation (Keyboard) ---
+        document.addEventListener('keydown', (e) => {
+            if (['ArrowUp', 'ArrowLeft', 'w', 'a'].includes(e.key)) {
                 e.preventDefault();
                 goToSlide(currentIndex - 1);
+            } else if (['ArrowDown', 'ArrowRight', 's', 'd', ' '].includes(e.key)) {
+                e.preventDefault();
+                goToSlide(currentIndex + 1);
             }
         });
 
-        // 3. 터치 스와이프 감지
+        // --- Hybrid Navigation (Mouse Wheel Horizontal Mapping) ---
+        // Allow horizontal scroll (trackpad/mousewheel shift) to trigger vertical snap
+        container.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                e.preventDefault();
+                if (e.deltaX > 20) goToSlide(currentIndex + 1);
+                else if (e.deltaX < -20) goToSlide(currentIndex - 1);
+            }
+        }, { passive: false });
+
+        // --- Hybrid Navigation (Touch Swipe Left/Right) ---
         let touchStartX = 0;
         let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
 
-        window.addEventListener('touchstart', (e) => {
+        container.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
+        }, {passive: true});
 
-        window.addEventListener('touchend', (e) => {
-            let touchEndX = e.changedTouches[0].screenX;
-            let touchEndY = e.changedTouches[0].screenY;
-            handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
-        }, { passive: true });
+        container.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, {passive: true});
 
-        function handleSwipe(startX, startY, endX, endY) {
-            const diffX = startX - endX;
-            const diffY = startY - endY;
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance to be considered a swipe
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
 
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            // If horizontal swipe is greater than vertical swipe
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
                 if (diffX > 0) {
+                    // Swiped Left -> Next
                     goToSlide(currentIndex + 1);
                 } else {
+                    // Swiped Right -> Prev
                     goToSlide(currentIndex - 1);
                 }
             }
         }
-    });
-</script>
-
+    </script>
 </body>
 </html>
