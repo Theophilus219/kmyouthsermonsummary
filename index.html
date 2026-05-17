@@ -3,458 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spiritual Blessings : To whom is it given?</title>
+    <title>말랑퐁퐁 설교 카드 🎈</title>
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,800;0,900;1,300;1,400&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Noto Sans KR"', 'sans-serif'],
-                        display: ['"Montserrat"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        /* Base styles & Scrollbar hiding */
-        body, html { margin: 0; padding: 0; background-color: #050505; color: white; overflow: hidden; overscroll-behavior-y: none; }
-        ::-webkit-scrollbar { display: none; }
-        * { -ms-overflow-style: none; scrollbar-width: none; -webkit-tap-highlight-color: transparent; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 영문: Fredoka (둥글둥글), 국문: Jua (말랑말랑) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Jua&display=swap" rel="stylesheet">
 
-        /* Container for scroll snap */
-        #scroll-container {
-            height: 100vh;
+    <style>
+        :root {
+            /* 엠보싱(클레이모피즘) 그림자 변수 세팅 */
+            --clay-shadow: 12px 12px 24px rgba(212, 165, 204, 0.3), 
+                           -12px -12px 24px rgba(255, 255, 255, 0.9),
+                           inset 4px 4px 10px rgba(255, 255, 255, 0.7),
+                           inset -4px -4px 10px rgba(212, 165, 204, 0.1);
+        }
+
+        body {
+            font-family: 'Jua', sans-serif;
+            /* 부드러운 파스텔 그라데이션 배경 */
+            background: linear-gradient(135deg, #fceceb, #eef2f3, #fff0f5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            overflow: hidden; /* 전체 페이지 스크롤 방지, 컨테이너 내부 스크롤만 허용 */
+            overscroll-behavior-y: none;
+        }
+
+        /* 배경 그라데이션 애니메이션 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .font-en { font-family: 'Fredoka', sans-serif; }
+
+        /* 모바일 인스타 스토리 비율 컨테이너 */
+        .story-container {
+            max-width: 450px;
             height: 100dvh;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(to bottom right, #ffffff80, #ffffff40);
+            box-shadow: 0 0 40px rgba(0,0,0,0.05);
+            /* 스냅 스크롤 설정 */
             overflow-y: scroll;
-            overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
-        /* Section layout */
-        .section-snap {
-            height: 100vh;
+        /* 스크롤바 숨기기 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 개별 카드 섹션 */
+        .card-section {
             height: 100dvh;
-            width: 100vw;
-            scroll-snap-align: start;
+            width: 100%;
+            scroll-snap-align: center;
             scroll-snap-stop: always;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
             position: relative;
         }
 
-        /* 9:16 Card UI with Glassmorphism */
-        .story-card {
+        /* 클레이모피즘 카드 박스 */
+        .clay-card {
             width: 100%;
-            max-width: 420px;
-            height: 100%;
-            max-height: 850px;
-            aspect-ratio: 9/16;
+            height: 80%;
+            max-height: 700px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 3rem; /* 엄청 둥글게 */
+            box-shadow: var(--clay-shadow);
+            padding: 2.5rem;
+            display: flex;
+            flex-col;
+            justify-content: center;
             position: relative;
             overflow: hidden;
-            border-radius: 0;
-            background: rgba(20, 20, 20, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
-            transform: scale(0.9);
-            opacity: 0.5;
-        }
-
-        @media (min-width: 480px) {
-            .story-card {
-                height: 85vh;
-                height: 85dvh;
-                border-radius: 2rem;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-            }
-        }
-
-        /* Active state triggered by JS Observer */
-        .section-snap.active .story-card {
-            transform: scale(1);
-            opacity: 1;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02);
-        }
-
-        /* Background Text (English Typography) */
-        .bg-typography {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-10deg);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 5rem;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.03);
-            white-space: nowrap;
-            z-index: 0;
-            pointer-events: none;
-            line-height: 0.8;
-            text-align: center;
-        }
-
-        /* Text Animation Classes */
-        .stagger-item {
+            
+            /* 초기 상태: 작고 투명하고 아래에 있음 (팝 애니메이션 준비) */
+            transform: scale(0.85) translateY(30px);
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* 통통 튀는 베지에 곡선 */
         }
-        
-        .section-snap.active .stagger-item {
+
+        /* 화면에 보일 때 적용될 클래스 */
+        .card-section.is-visible .clay-card {
+            transform: scale(1) translateY(0);
             opacity: 1;
-            transform: translateY(0);
         }
 
-        .section-snap.active .delay-1 { transition-delay: 0.15s; }
-        .section-snap.active .delay-2 { transition-delay: 0.30s; }
-        .section-snap.active .delay-3 { transition-delay: 0.45s; }
-        .section-snap.active .delay-4 { transition-delay: 0.60s; }
+        /* 타이포그래피 및 내부 요소 애니메이션 딜레이 */
+        .clay-card > * {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-        /* Neon Text Utilities */
-        .text-neon-blue { text-shadow: 0 0 10px rgba(0, 243, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.4); color: #00f3ff; }
-        .text-neon-pink { text-shadow: 0 0 10px rgba(255, 0, 255, 0.6), 0 0 20px rgba(255, 0, 255, 0.4); color: #ff00ff; }
-        .text-neon-orange { text-shadow: 0 0 10px rgba(255, 94, 0, 0.6), 0 0 20px rgba(255, 94, 0, 0.4); color: #ffad7a; }
-        .text-neon-green { text-shadow: 0 0 10px rgba(0, 255, 102, 0.6), 0 0 20px rgba(0, 255, 102, 0.4); color: #00ff66; }
+        .card-section.is-visible .clay-card > * {
+            transform: translateY(0);
+            opacity: 1;
+        }
 
-        /* Gradients */
-        .grad-1 { background: radial-gradient(circle at top right, rgba(0,243,255,0.15), transparent 60%), radial-gradient(circle at bottom left, rgba(176,38,255,0.15), transparent 60%); }
-        .grad-2 { background: radial-gradient(circle at top left, rgba(255,0,255,0.15), transparent 60%), radial-gradient(circle at bottom right, rgba(0,243,255,0.15), transparent 60%); }
-        .grad-3 { background: radial-gradient(circle at center, rgba(80,80,80,0.2), transparent 70%); }
-        .grad-4 { background: radial-gradient(circle at bottom, rgba(255,94,0,0.15), transparent 60%); }
-        .grad-5 { background: radial-gradient(circle at top, rgba(0,255,102,0.15), transparent 60%); }
-        .grad-6 { background: radial-gradient(circle at center, rgba(255,0,255,0.1), rgba(0,243,255,0.1), transparent 80%); }
-        .grad-7 { background: radial-gradient(circle at top left, rgba(255,215,0,0.15), transparent 60%); }
-        .grad-8 { background: radial-gradient(circle at bottom right, rgba(0,243,255,0.2), transparent 70%); }
-        .grad-9 { background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 80%); }
+        .card-section.is-visible .clay-card > :nth-child(1) { transition-delay: 0.1s; }
+        .card-section.is-visible .clay-card > :nth-child(2) { transition-delay: 0.2s; }
+        .card-section.is-visible .clay-card > :nth-child(3) { transition-delay: 0.3s; }
+        .card-section.is-visible .clay-card > :nth-child(4) { transition-delay: 0.4s; }
 
-        /* UI Helpers */
-        .safe-zone { padding: 60px 24px 80px 24px; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
-        
-        /* Progress Indicator */
-        .progress-container {
-            position: fixed;
-            top: 20px;
+        /* 배경에 깔리는 거대한 영문 워터마크 텍스트 */
+        .watermark {
+            position: absolute;
+            top: 10%;
+            left: -10%;
+            font-size: 6rem;
+            line-height: 1;
+            color: rgba(255, 182, 193, 0.15); /* 연한 핑크 투명 */
+            z-index: -1;
+            transform: rotate(-10deg);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* 스크롤 유도 화살표 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            z-index: 50;
-            width: 100%;
-            max-width: 400px;
-            padding: 0 20px;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 3px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: white;
-            transition: width 0.3s ease;
+            color: #d1a3cc;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            opacity: 0.6;
         }
 
-        /* Navigation Hint */
-        .nav-hint {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-15px) translateX(-50%); }
+            60% { transform: translateY(-7px) translateX(-50%); }
+        }
+
+        /* 진행 상태 바 */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-            animation: pulse 2s infinite;
+            max-width: 450px;
+            height: 5px;
+            background: rgba(255,255,255,0.5);
+            z-index: 50;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: translateY(0); }
-            50% { opacity: 0.8; transform: translateY(5px); }
-        }
-        
-        /* Sub-text English Styling */
-        .en-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        .en-body {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-style: italic;
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 0 5px 5px 0;
         }
     </style>
 </head>
-<body>
+<body class="text-gray-700">
 
-    <div class="progress-container" id="progress-bars"></div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-    <div id="scroll-container">
+    <!-- 앱 컨테이너 -->
+    <div class="story-container no-scrollbar" id="appContainer">
         
-        <!-- Slide 1 -->
-        <section class="section-snap" data-index="0">
-            <div class="story-card grad-1">
-                <div class="bg-typography">RELATION<br>SHIP</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-neon-blue text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">Part 01. Review</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            안녕!<br>지난주 이야기 기억해?
-                        </h1>
-                        <p class="en-title text-xs text-neon-blue opacity-70">Do you remember last week's story?</p>
-                    </div>
-
-                    <div class="stagger-item delay-3 mb-6">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            Spiritual Blessing은 그냥 기분 좋은 '럭키'한 일이 아니야.<br><br>
-                            하나님과 완전 친밀해지는 <strong>'관계(Relationship)'</strong>라고 했지! 이건 오직 하나님만이 주실 수 있는 엄청난 특권이야.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Spiritual Blessing isn't just about getting lucky. It's about a deep, intimate 'Relationship' with God! This is an incredible privilege that only God can give.
-                        </p>
-                    </div>
-                    
-                    <div class="nav-hint stagger-item delay-4"><i class="fa-solid fa-chevron-down mb-1"></i><br>Scroll or Swipe</div>
-                </div>
+        <section class="card-section" id="card-0">
+            <div class="clay-card flex flex-col items-center justify-center text-center">
+                <div class="watermark font-en">GIFT?</div>
+                <div class="text-6xl mb-6 text-pink-400">🎁</div>
+                <h2 class="font-en text-pink-500 font-bold text-2xl mb-2 tracking-widest">WHAT DOES HE GIVE?</h2>
+                <h1 class="text-3xl md:text-4xl text-gray-800 leading-tight">
+                    하나님이 우리에게<br>
+                    <span class="bg-yellow-200 px-2 rounded-lg">진짜 주시는 것</span>은 뭘까?
+                </h1>
+                <p class="mt-3 text-lg text-gray-500 font-en font-medium leading-snug">
+                    What does God <span class="text-yellow-500">really give</span> us?
+                </p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 2 -->
-        <section class="section-snap" data-index="1">
-            <div class="story-card grad-2">
-                <div class="bg-typography">PREDESTI<br>NATION</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-neon-pink text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">The Question</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            그럼 이 축복은<br>도대체 <span class="text-neon-pink">누구에게</span> 주시는 걸까?
-                        </h1>
-                        <p class="en-title text-xs text-neon-pink opacity-70">Then, to whom is this blessing given?</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            오늘 말씀(엡 1:4-6)은 그 대답으로 두 가지 어려운 단어를 던져.<br><br>
-                            바로 <strong>'예정(Predestination)'</strong>과 <strong>'선택(Election)'</strong>이야.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Today's passage (Eph 1:4-6) answers this with two difficult words: 'Predestination' and 'Election'.
-                        </p>
-                    </div>
+        <section class="card-section" id="card-1">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-purple-200">RECAP</div>
+                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500 text-3xl mb-6 shadow-sm">
+                    <i class="fas fa-history"></i>
                 </div>
+                <h2 class="font-en text-purple-500 font-bold text-xl mb-3">PREVIOUSLY ON...</h2>
+                <p class="text-2xl leading-relaxed text-gray-700">
+                    지난 2주 요약 들어갈게!<br>
+                    하나님이 픽!해서 입양한 우리에게 
+                    <span class="text-purple-600 border-b-2 border-purple-300">Spiritual Blessing(신령한 복)</span>을 주신다는데...
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    Quick recap! God handpicked and adopted us, giving us 'Spiritual Blessings'...
+                </p>
+                <p class="mt-4 text-xl text-gray-500">
+                    그래서 정확히 뭘 주신다는 거지? 🧐
+                </p>
+                <p class="mt-1 text-sm text-gray-400 font-en">So, what exactly is He giving us? 🧐</p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 3 -->
-        <section class="section-snap" data-index="2">
-            <div class="story-card grad-3">
-                <div class="bg-typography text-gray-800">ROBOT<br>DESTINY</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-gray-400 text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">Misconception</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep text-gray-200 mb-1">
-                            예정과 선택?<br>뭔가 운명처럼<br>꽉 막힌 느낌이지?
-                        </h1>
-                        <p class="en-title text-xs text-gray-400">Predestination and Election?<br>Feels like a rigid destiny, right?</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-300 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            내 의견은 1도 없이 로봇처럼 조종당하는 기분이랄까.<br><br>
-                            가끔은 하나님의 뜻이 숨 막히는 <strong>'강요'</strong>처럼 느껴져서 거부감이 들 때도 있을 거야.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-gray-500 leading-relaxed">
-                            It feels like being controlled like a robot with zero input. Sometimes, God's will might feel like a suffocating 'force', making you want to push back.
-                        </p>
-                    </div>
+        <section class="card-section" id="card-2">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-red-100">DEBTOR</div>
+                <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-red-400 text-3xl mb-6 shadow-sm">
+                    <i class="fas fa-bomb"></i>
                 </div>
+                <h2 class="font-en text-red-500 font-bold text-xl mb-3">FACT CHECK</h2>
+                <p class="text-2xl leading-relaxed text-gray-700">
+                    일단 팩폭 하나 할게 💣<br>
+                    우린 평생 알바해도 못 갚을 
+                    <span class="text-red-500 bg-red-100 px-2 rounded-lg">어마어마한 빚</span>을 지고 있었어.
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    Reality check 💣 We had a massive debt we could never pay off.
+                </p>
+                <div class="mt-6 p-4 bg-white/50 rounded-2xl border border-red-100">
+                    <p class="text-lg text-gray-600">
+                        빚을 못 갚으면? 자유를 뺏기고<br>결국 '죽음'이라는 책임을 져야 했지 😱
+                    </p>
+                    <p class="mt-2 text-sm text-gray-400 font-en">Can't pay? We lose our freedom and face the ultimate cost: 'Death' 😱</p>
+                </div>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 4 -->
-        <section class="section-snap" data-index="3">
-            <div class="story-card grad-4">
-                <div class="bg-typography" style="font-size: 4rem;">TARGET OF<br>LOVE</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-neon-orange text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">The Truth</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            너의 행동을<br>조종하시는 게 아니야.
-                        </h1>
-                        <p class="en-title text-xs text-neon-orange opacity-70">He's not trying to control your actions.</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            예정과 선택은 네가 앞으로 뭘 할지 미리 정해두고 리모컨처럼 통제한다는 뜻이 절대 아니야.<br><br>
-                            오직 너를 <strong>'완벽한 사랑의 대상'</strong>으로 삼겠다고 흔들림 없이 작정(Plan)하셨다는 뜻이지.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Predestination and election don't mean pre-programming your future like a remote control. It means He firmly planned to make you the 'target of His perfect love'.
-                        </p>
-                    </div>
+        <section class="card-section" id="card-3">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-blue-100">REDEMPTION</div>
+                <div class="text-5xl mb-6 flex space-x-2">
+                    <span>💸</span><span>✨</span><span>✝️</span>
                 </div>
+                <h2 class="font-en text-blue-500 font-bold text-2xl mb-3">REDEMPTION</h2>
+                <h3 class="text-3xl text-gray-800 mb-4">예수님의 '구속' 플렉스!</h3>
+                <p class="text-xl leading-relaxed text-gray-600">
+                    근데 여기서 반전!<br>
+                    예수님이 대신 죽으심으로 우리 빚을 
+                    <span class="text-blue-600 font-bold">싹 다 갚아주셨어!</span>
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    Plot twist! Jesus paid off ALL our debt by dying in our place!
+                </p>
+                <p class="mt-4 text-xl text-blue-500 font-bold">
+                    드디어 내 삶의 권리를 되찾은 거야! 🎉
+                </p>
+                <p class="mt-1 text-sm text-blue-400 font-en">We finally got the ownership of our lives back! 🎉</p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 5 -->
-        <section class="section-snap" data-index="4">
-            <div class="story-card grad-5">
-                <div class="bg-typography" style="font-size: 3.8rem;">ETERNAL<br>CHOICE</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-neon-green text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">Unconditional</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            어떤 모습이든<br><span class="text-neon-green">끝까지 사랑하겠다는</span> 결심.
-                        </h1>
-                        <p class="en-title text-[0.65rem] text-neon-green opacity-70">The determination to love you to the end, no matter what.</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            우리의 인생 경로를 프로그래밍하신 게 아니야.<br><br>
-                            네가 어떤 상황에 있든 <strong>너라는 존재 자체</strong>를 끝까지 사랑하고 책임지겠다고 미리 선택해 두신 거야.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            He didn't program your life path. He chose in advance to love and take responsibility for you—your very existence—to the very end, regardless of the situation.
-                        </p>
-                    </div>
+        <section class="card-section" id="card-4">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-teal-100">FORGIVEN</div>
+                <div class="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center text-teal-400 text-3xl mb-6 shadow-sm">
+                    <i class="fas fa-dove"></i>
                 </div>
+                <h2 class="font-en text-teal-500 font-bold text-2xl mb-3">FORGIVEN STATUS</h2>
+                <p class="text-2xl leading-relaxed text-gray-700">
+                    '구속'이 예수님의 행동이라면,<br>
+                    그 결과로 얻게 된 우리의 상태가 바로 
+                    <span class="text-teal-600 bg-teal-100 px-2 rounded-lg">용서받은 자</span>야.
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    If 'Redemption' is His action, our resulting status is 'Forgiven'.
+                </p>
+                <div class="mt-6 p-4 bg-white/50 rounded-2xl border border-teal-100 text-center">
+                    <p class="text-xl text-teal-600">
+                        "더 이상 죽음에 묶이지 않은<br>완.벽.한. FREE 상태!" 🕊️
+                    </p>
+                    <p class="mt-2 text-sm text-teal-500 font-en">"A perfectly FREE state, no longer bound by death!" 🕊️</p>
+                </div>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 6 -->
-        <section class="section-snap" data-index="5">
-            <div class="story-card grad-6">
-                <div class="bg-typography" style="font-size: 3.5rem;">LOVE IN<br>ACTION</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-white text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">True Meaning</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-[1.7rem] font-bold leading-tight break-keep mb-1">
-                            예정은 <span class="text-neon-blue">사랑의 결심</span>,<br>선택은 <span class="text-neon-pink">확실한 Action</span>.
-                        </h1>
-                        <p class="en-title text-[0.65rem] text-white/70">Predestination is the resolve of love,<br>Election is the definite Action.</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            예정은 감정 없는 운명이 아니야. 널 향한 뜨거운 사랑의 Foundation이지!<br><br>
-                            그리고 그 관계를 이루어가는 적극적인 Action이 바로 '선택'이야. <strong>우리는 그저 사랑받기 위해 선택된 존재야.</strong>
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Predestination is not an emotionless fate. It's the foundation of His burning love for you! And 'Election' is the active step to build that relationship. We are simply chosen to be loved.
-                        </p>
-                    </div>
-                </div>
+        <section class="card-section" id="card-5">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-yellow-100">HOLD ON</div>
+                <div class="text-5xl mb-6">🤔</div>
+                <h2 class="font-en text-yellow-600 font-bold text-2xl mb-3">WAIT A MINUTE</h2>
+                <p class="text-2xl leading-relaxed text-gray-700">
+                    "와 대박 자유다!<br>이제 맘대로 막 살아도 되겠다!"<br>
+                    ...라고 생각했어? 놉! ✋
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    "Wow, total freedom! I can do whatever I want!" ...Thought so? Nope! ✋
+                </p>
+                <p class="mt-6 text-lg text-gray-600 leading-relaxed">
+                    캐나다 영주권 땄다고 법 안 지키고 세금 안 낼 거야?<br>
+                    자유로운 시민이 됐으면 그에 맞는 <span class="border-b-2 border-yellow-400">의무</span>도 생기는 법이지!
+                </p>
+                <p class="mt-2 text-sm text-gray-400 font-en leading-snug">
+                    You wouldn't dodge taxes just because you got Canadian PR, right?<br>Freedom comes with duties!
+                </p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 7 -->
-        <section class="section-snap" data-index="6">
-            <div class="story-card grad-7">
-                <div class="bg-typography">ADOPTION</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-yellow-400 text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">Not a Force</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            "사랑을 강요하는 건<br>폭력 아닌가요?"
-                        </h1>
-                        <p class="en-title text-[0.65rem] text-yellow-400 opacity-70">"Isn't forcing love a kind of violence?"</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            아니! 성경은 이걸 <strong>'입양(Adoption)'</strong>이라고 해.<br><br>
-                            "네가 날 밀어내도, 난 평생 널 책임질게"라는 완벽한 Guarantee야. 이 엄청난 약속이 어떻게 폭력이겠어? 최고의 Blessing이지!
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            No! The Bible calls this 'Adoption'. It's a perfect guarantee: "Even if you push me away, I will take care of you for life." How can this massive promise be violence? It's the ultimate Blessing!
-                        </p>
-                    </div>
+        <section class="card-section" id="card-6">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-indigo-100">DUTY</div>
+                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 text-3xl mb-6 shadow-sm">
+                    <i class="fas fa-puzzle-piece"></i>
                 </div>
+                <h2 class="font-en text-indigo-500 font-bold text-2xl mb-3">RESPONSIBILITY</h2>
+                <h3 class="text-3xl text-gray-800 mb-4">자유에는 책임이 따르는 법</h3>
+                <p class="text-xl leading-relaxed text-gray-600">
+                    하나님이 우릴 자유롭게 하신 진짜 목적?<br>
+                    모든 것을 그리스도 안에서 
+                    <span class="text-indigo-600 font-bold">통일(질서 있게 정돈)</span>되게 하려는 거야.
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    The real purpose of our freedom? To unite and bring order to all things in Christ.
+                </p>
+                <p class="mt-4 text-lg text-gray-500">
+                    마치 아담이 세상을 돌보고 이름을 지었던 것처럼! 🧩
+                </p>
+                <p class="mt-1 text-sm text-gray-400 font-en">Just like Adam caring for the world and naming things! 🧩</p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 8 -->
-        <section class="section-snap" data-index="7">
-            <div class="story-card grad-8">
-                <div class="bg-typography">RESPONSE</div>
-                <div class="safe-zone">
-                    <h3 class="font-display text-neon-blue text-xs font-bold tracking-widest mb-6 stagger-item delay-1 uppercase">The Purpose</h3>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            우릴 선택하신 이유?<br>바로 <span class="text-neon-blue">'찬송'</span>하게 하시려고.
-                        </h1>
-                        <p class="en-title text-xs text-neon-blue opacity-70">Why did He choose us? So that we may 'praise' Him.</p>
-                    </div>
-
-                    <div class="stagger-item delay-3">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            이것도 억지일까? 아니, 이건 완벽한 사랑에 대한 아주 자연스러운 <strong>'반응(Response)'</strong>이야.<br><br>
-                            손절한 사이엔 아무 반응도 없잖아? 우린 이 사랑에 반응하도록 초대받은 거야.
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Is this forced, too? No, it's a completely natural 'Response' to perfect love. There's no response when a relationship is cut off. We are invited to respond to this love.
-                        </p>
-                    </div>
-                </div>
+        <section class="card-section" id="card-7">
+            <div class="clay-card flex flex-col justify-center">
+                <div class="watermark font-en text-orange-100">VISION</div>
+                <div class="text-5xl mb-6">🌍</div>
+                <h2 class="font-en text-orange-500 font-bold text-2xl mb-3">NEW PERSPECTIVE</h2>
+                <p class="text-2xl leading-relaxed text-gray-700">
+                    그러니까 우리 시선이<br>
+                    구원받은 '나'에게만 멈춰있으면 안 돼.<br>
+                    구원받은 <span class="text-orange-500 bg-orange-100 px-2 rounded-lg">세상</span>을 봐야 해!
+                </p>
+                <p class="mt-3 text-base text-gray-500 font-en leading-snug">
+                    So, don't just focus on 'me' being saved. We must look at the saved 'world'!
+                </p>
+                <p class="mt-6 text-lg text-gray-600">
+                    나 혼자 천국 간다고 끝? 그건 하나님의 빅 픽쳐를 막는 장애물일 뿐이야. 🚧
+                </p>
+                <p class="mt-2 text-sm text-gray-400 font-en">Going to heaven alone isn't the end. That just blocks God's big picture. 🚧</p>
+                <i class="fas fa-chevron-down scroll-indicator"></i>
             </div>
         </section>
 
-        <!-- Slide 9 -->
-        <section class="section-snap" data-index="8">
-            <div class="story-card grad-9">
-                <div class="bg-typography">PRAISE</div>
-                <div class="safe-zone text-center">
-                    
-                    <i class="fa-solid fa-heart text-white text-3xl mb-4 stagger-item delay-1 opacity-80"></i>
-                    
-                    <div class="stagger-item delay-2 mb-6">
-                        <h1 class="text-3xl font-bold leading-tight break-keep mb-1">
-                            지금 너는<br>어떻게 반응하고 있어?
-                        </h1>
-                        <p class="en-title text-xs text-white opacity-70">How are you responding right now?</p>
-                    </div>
-
-                    <div class="stagger-item delay-3 mb-8">
-                        <p class="text-gray-200 text-[1.05rem] leading-relaxed break-keep mb-2">
-                            찬양이든, 섬김이든, 작은 행동이든 다 좋아.<br>
-                            네가 받은 그 엄청난 사랑을 너만의 방식으로 표현해봐. 너의 삶 전체가 아름다운 찬송이 되기를 응원할게!
-                        </p>
-                        <p class="en-body text-[0.75rem] text-white/50 leading-relaxed">
-                            Whether it's praise, service, or a small action—anything is good. Express the incredible love you've received in your own way. I pray your entire life becomes a beautiful song of praise!
-                        </p>
-                    </div>
-                    
-                    <div class="inline-block px-6 py-3 border border-white/30 rounded-full font-display text-sm tracking-widest stagger-item delay-4">
-                        Ephesians 1:4-6
-                    </div>
+        <section class="card-section" id="card-8">
+            <div class="clay-card flex flex-col justify-center text-center">
+                <div class="watermark font-en text-pink-100">ACTION</div>
+                <div class="text-6xl mb-4 text-pink-500">🚀💖</div>
+                <h2 class="font-en text-pink-500 font-bold text-3xl mb-4">ACTION PLAN</h2>
+                <p class="text-2xl leading-relaxed text-gray-800 mb-6">
+                    오늘부터 시작해볼까?
+                    <br><span class="text-lg text-gray-500 font-en">Shall we start today?</span>
+                </p>
+                <div class="space-y-3 mb-6">
+                    <p class="text-xl text-gray-600 bg-pink-50 py-2 px-4 rounded-full inline-block">💕 사랑으로 <span class="text-sm text-pink-400 font-en ml-2">With Love</span></p><br>
+                    <p class="text-xl text-gray-600 bg-pink-50 py-2 px-4 rounded-full inline-block">🤲 섬김으로 <span class="text-sm text-pink-400 font-en ml-2">By Serving</span></p><br>
+                    <p class="text-xl text-gray-600 bg-pink-50 py-2 px-4 rounded-full inline-block">🎁 나눔으로 <span class="text-sm text-pink-400 font-en ml-2">By Sharing</span></p>
                 </div>
+                <p class="text-xl text-pink-600 font-bold">
+                    세상 속에 하나님의 질서를 세우며<br>진짜 감사를 힙하게 표현해보자!
+                </p>
+                <p class="mt-2 text-sm text-pink-400 font-en">Let's build God's order in the world and express our true gratitude! ✨</p>
             </div>
         </section>
 
@@ -462,121 +389,133 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('scroll-container');
-            const sections = document.querySelectorAll('.section-snap');
-            const progressBarsContainer = document.getElementById('progress-bars');
+            const container = document.getElementById('appContainer');
+            const sections = document.querySelectorAll('.card-section');
+            const progressBar = document.getElementById('progressBar');
+            let currentIndex = 0;
+            const totalCards = sections.length;
+            let isScrolling = false; // 중복 스크롤 방지 플래그
 
-            // 1. Progress Bar 초기화
-            sections.forEach((_, index) => {
-                const bar = document.createElement('div');
-                bar.className = 'progress-bar';
-                bar.innerHTML = `<div class="progress-fill" id="fill-${index}"></div>`;
-                progressBarsContainer.appendChild(bar);
-            });
-
-            // 2. Intersection Observer (스크롤 애니메이션 및 프로그레스바 업데이트)
+            // --- 1. Intersection Observer (풍선 팝 애니메이션 & 프로그레스 바 갱신) ---
             const observerOptions = {
                 root: container,
-                threshold: 0.5 // 화면에 50% 이상 보일 때 활성화
+                rootMargin: '0px',
+                threshold: 0.5 // 카드가 50% 이상 보일 때 트리거
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        const index = parseInt(entry.target.getAttribute('data-index'));
-                        updateProgress(index);
-                        currentIndex = index; // 현재 인덱스 동기화
+                        // 애니메이션 클래스 추가
+                        entry.target.classList.add('is-visible');
+                        
+                        // 현재 인덱스 업데이트
+                        const id = entry.target.id;
+                        currentIndex = parseInt(id.split('-')[1]);
+                        
+                        // 프로그레스 바 업데이트
+                        const progress = ((currentIndex + 1) / totalCards) * 100;
+                        progressBar.style.width = `${progress}%`;
+
+                        // 마지막 카드면 화살표 숨기기 처리 등 필요시 여기에 추가
                     } else {
-                        entry.target.classList.remove('active');
+                        // 화면 밖으로 나가면 클래스 제거 (다시 들어올 때 애니메이션 재생)
+                        entry.target.classList.remove('is-visible');
                     }
                 });
             }, observerOptions);
 
-            sections.forEach(section => observer.observe(section));
+            sections.forEach(sec => observer.observe(sec));
 
-            function updateProgress(activeIndex) {
-                sections.forEach((_, index) => {
-                    const fill = document.getElementById(`fill-${index}`);
-                    if (index <= activeIndex) {
-                        fill.style.width = '100%';
-                    } else {
-                        fill.style.width = '0%';
-                    }
-                });
-            }
-
-            // 3. 하이브리드 내비게이션 로직
-            let currentIndex = 0;
-            let isAnimating = false;
-            
-            function scrollToSection(index) {
-                if (isAnimating) return; // 중복 실행 방지
+            // --- 2. 스무스 스크롤 이동 함수 ---
+            const scrollToCard = (index) => {
+                if (index < 0 || index >= totalCards) return;
+                isScrolling = true;
                 
-                if (index >= 0 && index < sections.length) {
-                    isAnimating = true;
-                    sections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    currentIndex = index;
-                    
-                    // 스크롤 애니메이션 끝날 때쯤 lock 해제
-                    setTimeout(() => {
-                        isAnimating = false;
-                    }, 600);
-                }
-            }
+                const targetCard = document.getElementById(`card-${index}`);
+                // 컨테이너 스크롤 이동
+                container.scrollTo({
+                    top: targetCard.offsetTop,
+                    behavior: 'smooth'
+                });
 
-            // 키보드 방향키 (좌우, 상하)
+                // 스크롤이 끝날 즈음 락 해제
+                setTimeout(() => { isScrolling = false; }, 600);
+            };
+
+            // --- 3. 키보드 방향키 하이브리드 네비게이션 ---
             window.addEventListener('keydown', (e) => {
+                if (isScrolling) return;
+                
+                // 아래 or 오른쪽 화살표 -> 다음 카드
                 if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
                     e.preventDefault();
-                    scrollToSection(currentIndex + 1);
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    scrollToCard(currentIndex + 1);
+                }
+                // 위 or 왼쪽 화살표 -> 이전 카드
+                else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    scrollToSection(currentIndex - 1);
+                    scrollToCard(currentIndex - 1);
                 }
             });
 
-            // 모바일 터치 스와이프 (좌우, 상하)
+            // --- 4. 마우스 휠 및 트랙패드 스와이프 감지 ---
+            // y축 스크롤은 기본 CSS 스냅이 처리하도록 놔두고, x축 스와이프만 감지하여 세로로 매핑
+            container.addEventListener('wheel', (e) => {
+                // 가로 스크롤(트랙패드)이 발생했을 때
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    e.preventDefault(); // 기본 가로 스크롤 방지
+                    if (isScrolling) return;
+                    
+                    if (e.deltaX > 20) {
+                        scrollToCard(currentIndex + 1); // 오른쪽 스와이프 -> 아래로
+                    } else if (e.deltaX < -20) {
+                        scrollToCard(currentIndex - 1); // 왼쪽 스와이프 -> 위로
+                    }
+                }
+            }, { passive: false });
+
+            // --- 5. 모바일 터치 스와이프 감지 (상하/좌우 모두 매핑) ---
             let touchStartX = 0;
             let touchStartY = 0;
 
-            container.addEventListener('touchstart', e => {
+            container.addEventListener('touchstart', (e) => {
                 touchStartX = e.changedTouches[0].screenX;
                 touchStartY = e.changedTouches[0].screenY;
-            }, {passive: true});
+            }, { passive: true });
 
-            container.addEventListener('touchend', e => {
+            container.addEventListener('touchend', (e) => {
+                if (isScrolling) return;
+
                 const touchEndX = e.changedTouches[0].screenX;
                 const touchEndY = e.changedTouches[0].screenY;
                 
-                const diffX = touchStartX - touchEndX;
-                const diffY = touchStartY - touchEndY;
+                const diffX = touchEndX - touchStartX;
+                const diffY = touchEndY - touchStartY;
 
-                // 움직임이 50px 이상일 때만 스와이프로 인정
-                if (Math.abs(diffX) > 50 || Math.abs(diffY) > 50) {
-                    // 가로 스와이프 혹은 세로 스와이프 모두 다음/이전 장으로 넘김
-                    if (diffX > 50 || diffY > 50) {
-                        // 왼쪽이나 위로 스와이프 -> 다음 장
-                        scrollToSection(currentIndex + 1);
-                    } else if (diffX < -50 || diffY < -50) {
-                        // 오른쪽이나 아래로 스와이프 -> 이전 장
-                        scrollToSection(currentIndex - 1);
-                    }
-                }
-            }, {passive: true});
-            
-            // 데스크톱 마우스 휠(가로 휠) 지원
-            container.addEventListener('wheel', (e) => {
-                // 가로 스크롤(deltaX)이 발생했을 때
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                    e.preventDefault();
-                    if (e.deltaX > 0) {
-                        scrollToSection(currentIndex + 1);
+                // 스와이프 임계값
+                const threshold = 50;
+
+                // 좌우 스와이프가 상하보다 클 때
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+                    if (diffX < 0) {
+                        // 왼쪽 스와이프 (다음)
+                        scrollToCard(currentIndex + 1);
                     } else {
-                        scrollToSection(currentIndex - 1);
+                        // 오른쪽 스와이프 (이전)
+                        scrollToCard(currentIndex - 1);
                     }
                 }
-            }, {passive: false});
+                // 상하 스와이프는 CSS Scroll Snap이 자연스럽게 처리하도록 냅둠
+            }, { passive: true });
+
+            // 초기화: 첫 번째 카드 팝업 효과를 위해 약간의 딜레이 후 활성화 시도
+            setTimeout(() => {
+                if (currentIndex === 0) {
+                    document.getElementById('card-0').classList.add('is-visible');
+                    progressBar.style.width = `${(1 / totalCards) * 100}%`;
+                }
+            }, 100);
         });
     </script>
 </body>
