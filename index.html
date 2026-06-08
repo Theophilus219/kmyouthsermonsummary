@@ -2,38 +2,26 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>확실히 주시는가? | ARE WE GUARANTEED?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>They Saw Him - 말랑퐁퐁 듀얼 스크롤</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Fredoka (영문 볼드 라운드), Outfit (영문 제목 고딕) -->
+  <!-- Google Fonts: Fredoka (둥근 대문자용) & Plus Jakarta Sans (영문 본문용) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- Pretendard 고가독성 본문 폰트 -->
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Pretendard (국문 본문용 프리미엄 네오-그로테스크 서체) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+  
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            fredoka: ['"Fredoka"', 'sans-serif'],
-            pretendard: ['"Pretendard"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-            outfit: ['"Outfit"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              pink: '#FFB7CE',
-              yellow: '#FFF3B0',
-              purple: '#D4C5F9',
-              mint: '#C1F0E5',
-              clay: '#FDFBF7',
-              text: '#3A3238',
-            }
+            pretendard: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            fredoka: ['Fredoka', 'sans-serif'],
+            jakarta: ['Plus Jakarta Sans', 'sans-serif'],
           }
         }
       }
@@ -41,554 +29,580 @@
   </script>
 
   <style>
-    /* 전체 스크롤바 숨기기 */
-    ::-webkit-scrollbar {
+    /* 스크롤바 완전히 숨기기 */
+    .scrollbar-none::-webkit-scrollbar {
       display: none;
     }
-    
-    body {
+    .scrollbar-none {
       -ms-overflow-style: none;
       scrollbar-width: none;
-      font-family: 'Pretendard', -apple-system, sans-serif;
     }
 
-    /* 엠보싱 클레이모피즘 스타일링 */
+    /* iOS 뷰포트 바운스 방지 및 스냅 터치 최적화 */
+    html, body {
+      overscroll-behavior-y: none;
+      background-color: #f7f9fc;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    /* 클레이모피즘 3D 입체 카드 효과 (보송보송하고 밝게 유지) */
     .clay-card {
-      background: rgba(255, 255, 255, 0.78);
-      backdrop-filter: blur(16px);
-      border: 2.5px solid rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.93);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      border-radius: 2.75rem;
       box-shadow: 
-        0 15px 35px rgba(244, 164, 194, 0.25),
-        inset 4px 4px 8px rgba(255, 255, 255, 0.9),
-        inset -4px -4px 8px rgba(220, 180, 200, 0.15);
-      border-radius: 2.5rem;
-      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform: scale(0.94);
-      opacity: 0.4;
+        0 30px 60px rgba(165, 180, 252, 0.18), 
+        inset 6px 6px 12px rgba(255, 255, 255, 1), 
+        inset -6px -6px 15px rgba(199, 210, 254, 0.2);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: scale(0.93);
+      opacity: 0.3;
+      filter: blur(5px);
     }
 
-    /* 벌룬 팝 애니메이션 트리거 */
-    .slide-active .clay-card {
+    /* 화면 중앙에 들어왔을 때 퐁! 하고 부풀어 오르는 활성화 애니메이션 */
+    .slide-container.active .clay-card {
       transform: scale(1);
       opacity: 1;
-      box-shadow: 
-        0 20px 45px rgba(244, 164, 194, 0.4),
-        inset 6px 6px 12px rgba(255, 255, 255, 1),
-        inset -6px -6px 12px rgba(220, 180, 200, 0.2);
+      filter: blur(0);
     }
 
-    /* 버블 플로팅 효과 */
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(2deg); }
-    }
-    .floating-bubble {
-      animation: float 4s ease-in-out infinite;
-    }
-    .floating-bubble-delayed {
-      animation: float 5s ease-in-out infinite;
-      animation-delay: 1.5s;
+    /* 화사하게 톤업된 오로라 그라데이션 배경 */
+    .aurora-bg {
+      background: linear-gradient(135deg, #ffecf1 0%, #f4eaff 35%, #e8f4ff 65%, #e6faf4 100%);
+      background-size: 200% 200%;
+      animation: auroraMovement 15s ease infinite alternate;
     }
 
-    /* 퐁퐁 튀는 단어 애니메이션 */
-    .bounce-element {
-      transform: translateY(15px);
+    @keyframes auroraMovement {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 카드 내부 요소들의 시간차 페이드인 */
+    .fade-up-element {
       opacity: 0;
-      transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateY(20px);
+      transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .slide-active .bounce-element {
-      transform: translateY(0);
+
+    .slide-container.active .fade-up-element {
       opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 시간차 딜레이 설정 */
+    .slide-container.active .delay-100 { transition-delay: 150ms; }
+    .slide-container.active .delay-200 { transition-delay: 300ms; }
+    .slide-container.active .delay-300 { transition-delay: 450ms; }
+    .slide-container.active .delay-400 { transition-delay: 600ms; }
+
+    /* 클레이모피즘 입체 구체 스타일 데코레이션 */
+    .clay-sphere-pink {
+      background: radial-gradient(circle at 30% 30%, #ffeef2, #ffb3c1 50%, #fa5c7c 100%);
+      box-shadow: inset -5px -5px 15px rgba(0,0,0,0.08), 8px 18px 28px rgba(255, 179, 193, 0.35);
+    }
+    .clay-sphere-yellow {
+      background: radial-gradient(circle at 30% 30%, #fffae6, #ffd166 60%, #f7a01b 100%);
+      box-shadow: inset -5px -5px 15px rgba(0,0,0,0.08), 8px 18px 28px rgba(255, 209, 102, 0.35);
+    }
+    .clay-sphere-mint {
+      background: radial-gradient(circle at 30% 30%, #e8faf4, #a3f0d4 60%, #2ec4b6 100%);
+      box-shadow: inset -5px -5px 15px rgba(0,0,0,0.08), 8px 18px 28px rgba(163, 240, 212, 0.35);
     }
   </style>
 </head>
+<body class="flex justify-center items-center h-screen overflow-hidden">
 
-<body class="bg-gradient-to-tr from-rose-200 via-pink-100 to-amber-100 min-h-screen flex items-center justify-center p-0 sm:p-4 overflow-hidden select-none">
-
-  <!-- 디바이스 프레임 (PC에서는 예쁘게 폰 형태로 고정, 모바일은 꽉 차게) -->
-  <div class="relative w-full max-w-md h-screen sm:h-[840px] bg-brand-clay sm:rounded-[3rem] sm:shadow-[0_25px_60px_rgba(235,140,175,0.45)] overflow-hidden flex flex-col border-[6px] border-white/40 backdrop-blur-md">
+  <!-- 데스크탑 브라우저 대응을 위한 모바일 시뮬레이터 프레임 -->
+  <div class="relative w-full h-full max-w-[430px] max-h-[932px] overflow-hidden shadow-[0_15px_70px_rgba(165,180,252,0.25)] md:rounded-[3.2rem] bg-white flex flex-col">
     
-    <!-- 배경 데코 풍선 오브제들 -->
-    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-purple-200/40 filter blur-xl floating-bubble"></div>
-      <div class="absolute top-1/2 -right-16 w-56 h-56 rounded-full bg-rose-200/40 filter blur-2xl floating-bubble-delayed"></div>
-      <div class="absolute bottom-12 -left-20 w-64 h-64 rounded-full bg-amber-200/30 filter blur-xl floating-bubble"></div>
+    <!-- 3D 파스텔 무드 배경 그래픽 영역 -->
+    <div class="absolute inset-0 aurora-bg -z-10 overflow-hidden">
+      <!-- 동글동글 둥둥 떠있는 구체들 -->
+      <div class="absolute w-48 h-48 rounded-full clay-sphere-pink -top-8 -left-12 opacity-80 animate-bounce" style="animation-duration: 9s;"></div>
+      <div class="absolute w-56 h-56 rounded-full clay-sphere-yellow -bottom-12 -right-16 opacity-75 animate-bounce" style="animation-duration: 12s;"></div>
+      <div class="absolute w-36 h-36 rounded-full clay-sphere-mint top-[40%] -right-16 opacity-60 animate-pulse" style="animation-duration: 6s;"></div>
     </div>
 
-    <!-- 메인 세로 스크롤 컨테이너 -->
-    <div id="scroll-container" class="relative z-10 w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth">
-      
-      <!-- Slide 1: 타이틀 (Opening) -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="0">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-center p-8 text-brand-text relative overflow-hidden gap-5">
-          <div class="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-rose-300/30"></div>
+    <!-- 스크롤 래퍼 (Snap-Y 활성화) -->
+    <div id="scroll-wrapper" class="w-full h-full overflow-y-scroll snap-y snap-mandatory scrollbar-none scroll-smooth">
+
+      <!-- SLIDE 1: 오프닝 톡 (벌룬 커버 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="0">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-pink-300/25 select-none">01</div>
           
-          <div class="bounce-element delay-[100ms] flex justify-start items-center">
-            <span class="px-4 py-1.5 bg-brand-pink/30 text-rose-600 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">Ephesians 1:13-14</span>
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-pink-500 font-jakarta fade-up-element bg-pink-100/60 px-3 py-1 rounded-full w-max mx-auto">WELCOME LADS</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THEY SAW<br><span class="text-pink-500">HIM</span></h1>
           </div>
 
-          <div class="flex flex-col gap-3 my-auto">
-            <h2 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black leading-none text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-500 to-purple-500 uppercase">
-              ARE WE<br>GUARANTEED?
-            </h2>
-            <div class="bounce-element delay-[350ms] text-lg font-black font-pretendard tracking-tight mt-1 flex items-center gap-2">
-              <span>확실히 주시는가? </span>
-              <span class="text-xl inline-block floating-bubble">🎈</span>
-            </div>
-            
-            <div class="bounce-element delay-[450ms] flex flex-col gap-2.5 mt-2">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-medium tracking-tight">
-                우릴 향한 하나님의 엄청난 복 세트, 이거 진짜 우리 꺼 맞아? 먹튀 아냐? 오늘 완벽하게 확인 사살 들어간다!
-              </p>
-              <p class="text-xs text-rose-700/60 font-pretendard leading-relaxed italic">
-                God’s massive blessing package for us... is it really ours, or is it a scam? Let's lock in and verify it once and for all today!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 2: 복습 드가자 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="1">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-7 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-amber-200/40 text-amber-700 rounded-full font-fredoka font-semibold text-xs uppercase tracking-wider">RECAP TIME</span>
+          <!-- 3D 둥실 풍선 그래픽 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(255,143,163,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="balloonGrad1" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#fff5f7"/>
+                  <stop offset="60%" stop-color="#ffa6c1"/>
+                  <stop offset="100%" stop-color="#f53d68"/>
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="45" r="32" fill="url(#balloonGrad1)"/>
+              <path d="M50 77 C50 82, 47 88, 43 90" stroke="#ff7096" stroke-width="3" stroke-linecap="round"/>
+              <polygon points="50,73 45,79 55,79" fill="#f53d68"/>
+            </svg>
           </div>
 
-          <div class="flex flex-col gap-3 my-auto">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-amber-500 uppercase leading-none">
-              Spiritual<br>Blessings!
-            </h3>
-            
-            <div class="bounce-element delay-[300ms] flex flex-col gap-1">
-              <p class="text-sm font-pretendard font-bold text-gray-700 leading-tight tracking-tight">
-                벌써 영적인 복 나눈지 5주차 실화냐? 😎 머릿속 리셋 방지, 속성 요약 가보자고!
-              </p>
-              <p class="text-xs font-pretendard text-amber-700/70 italic leading-none">
-                Already week 5 of Spiritual Blessings? Let's do a quick recap!
-              </p>
-            </div>
-            
-            <div class="bounce-element delay-[400ms] grid grid-cols-2 gap-2 mt-1 text-[11px] font-pretendard">
-              <div class="p-2 bg-white/60 rounded-xl border border-pink-100 flex flex-col justify-between">
-                <div>
-                  <span class="block font-black text-rose-400 text-[10px] mb-0.5">1. WHO?</span>
-                  오직 하나님만의 초능력 복!
-                </div>
-                <span class="text-[9px] text-gray-400 italic block mt-1">Supernatural blessings only from God!</span>
-              </div>
-              <div class="p-2 bg-white/60 rounded-xl border border-amber-100 flex flex-col justify-between">
-                <div>
-                  <span class="block font-black text-amber-500 text-[10px] mb-0.5">2. TO WHOM?</span>
-                  세상 이전부터 원픽된 너!
-                </div>
-                <span class="text-[9px] text-gray-400 italic block mt-1">Chosen as His favorite before time!</span>
-              </div>
-              <div class="p-2 bg-white/60 rounded-xl border border-purple-100 flex flex-col justify-between">
-                <div>
-                  <span class="block font-black text-purple-500 text-[10px] mb-0.5">3. WHAT?</span>
-                  죄에서 자유케 하신 리얼 구원!
-                </div>
-                <span class="text-[9px] text-gray-400 italic block mt-1">Cosmic salvation setting you free!</span>
-              </div>
-              <div class="p-2 bg-white/60 rounded-xl border border-teal-100 flex flex-col justify-between">
-                <div>
-                  <span class="block font-black text-teal-500 text-[10px] mb-0.5">4. WHY?</span>
-                  빛나는 존재로의 완전 리셋!
-                </div>
-                <span class="text-[9px] text-gray-400 italic block mt-1">To completely reboot you to shine!</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              근데 이걸 어떻게 100% 보증하지? / <span class="italic text-[10px]">But how is this 100% guaranteed? 🤔</span>
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              오늘부터 한 달간 마태복음의 대미를 장식할 아주 힙하고 엄청난 약속을 함께 파헤쳐 볼 거야. 우리의 믿음을 제대로 불태워줄 레전드 대화가 시작돼!
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              Starting today, we're diving deep into the epic finale of Matthew, exploring an incredible promise that will truly fire up our faith!
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Slide 3: 개런티의 개념 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="2">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-8 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-purple-200/40 text-purple-700 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">GUARANTEE</span>
-          </div>
-
-          <div class="flex flex-col gap-4 my-auto">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-purple-500 leading-none">
-              GUESS WHAT<br>WE TRUST?
-            </h3>
-            <div class="bounce-element delay-[300ms] flex justify-center py-1">
-              <span class="text-3xl animate-bounce">✍️</span>
-            </div>
-            
-            <div class="bounce-element delay-[400ms] flex flex-col gap-2.5">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-medium tracking-tight">
-                우리는 미래의 불안을 지우기 위해 여러 <b>계약서</b>를 주고받아. 보험에 가입하거나 나라끼리 약속할 때처럼 말야. 그리고 그 종이들에 오피셜한 힘을 부여하는 결정적 한 방! 바로 <b>서명(Signature)</b>이지.
-              </p>
-              <p class="text-xs text-purple-700/60 font-pretendard leading-relaxed italic">
-                We sign contracts to erase anxiety about the future. Insurance policies, official treaties between nations... and the ultimate punch that makes them legally binding is the <b>Signature</b>.
-              </p>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              하나님도 우리 인생 계약서에 서명을 하셨을까? / <span class="italic text-[10px]">Did God sign His contract for us?</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 4: 도장 쾅 (Sealed) -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="3">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-8 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-rose-200/40 text-rose-700 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">EPHESIANS 1:13</span>
-          </div>
-
-          <div class="flex flex-col gap-3 my-auto relative">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-rose-500 leading-none uppercase">
-              IN HIM, <br>YOU WERE <br>SEALED!
-            </h3>
-            
-            <div class="bounce-element delay-[300ms]">
-              <p class="text-sm font-pretendard font-bold text-rose-600">"도장 쾅! 넌 완전 내 꺼야!"</p>
-              <p class="text-[10px] text-rose-400 italic leading-none">"STAMPED! You are absolutely Mine!"</p>
-            </div>
-            
-            <div class="bounce-element delay-[400ms] flex flex-col gap-2">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-medium tracking-tight">
-                우리는 예수 안에서 <b>인 치심(Sealed)</b>을 받았어. 옛날엔 왕이 소유권을 보증하기 위해 왕의 도장을 쾅 찍었잖아. 이 도장이 찍히는 순간 아무도 못 건드려!
-              </p>
-              <p class="text-xs text-rose-700/60 font-pretendard leading-relaxed italic">
-                Apostle Paul says we were sealed in Jesus. In ancient times, the King’s stamp proved absolute ownership. Once sealed, ownership is locked—nobody can touch it!
-              </p>
-            </div>
-            
-            <!-- 3D 도장 그래픽 가상 구현 -->
-            <div class="bounce-element delay-[500ms] flex justify-center mt-2">
-              <div class="px-5 py-1.5 border-[3px] border-rose-500 rounded-2xl rotate-[-4deg] text-rose-600 font-bold font-outfit text-sm tracking-widest animate-pulse">
-                APPROVED BY GOD
-              </div>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[600ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              이거 그냥 도장이 아냐. 무려 3중 잠금장치임! / <span class="italic text-[10px]">And it's a triple-security lock!</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 5: 삼위일체 삼중보증 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="4">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-6 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-blue-100 text-blue-700 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">TRINITY GUARD</span>
-          </div>
-
-          <div class="flex flex-col gap-2 my-auto">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-blue-500 leading-none uppercase">
-              Trinity Combo!
-            </h3>
-            
-            <div class="bounce-element delay-[280ms] flex flex-col gap-0.5">
-              <p class="text-sm text-gray-700 font-pretendard font-medium tracking-tight">
-                삼위일체 하나님이 다 같이 힘을 합쳐 너의 구원을 완전 캐리하고 계셔!
-              </p>
-              <p class="text-xs text-blue-700/60 font-pretendard italic">
-                The Trinity is teaming up to carry your salvation to the finish line!
-              </p>
-            </div>
-            
-            <!-- 삼중 카드 목록 -->
-            <div class="bounce-element delay-[350ms] flex flex-col gap-1.5 text-xs font-pretendard">
-              <div class="p-2 bg-rose-50/70 rounded-xl border-l-4 border-rose-400 flex flex-col gap-0.5">
-                <div class="flex items-center gap-1.5">
-                  <span class="font-outfit font-black text-rose-500 text-[10px]">1. 성부 THE FATHER</span>
-                  <span class="text-[10px] text-rose-800 font-bold">계획&예정 (The Ultimate Plan)</span>
-                </div>
-                <p class="text-[10px] text-gray-600 leading-tight">변덕 제로! 신실한 계획 자체가 이미 완벽한 개런티야.</p>
-                <p class="text-[9px] text-rose-700/60 italic leading-none">Zero changes! His faithful plan itself is an absolute guarantee.</p>
-              </div>
-              <div class="p-2 bg-amber-50/70 rounded-xl border-l-4 border-amber-400 flex flex-col gap-0.5">
-                <div class="flex items-center gap-1.5">
-                  <span class="font-outfit font-black text-amber-500 text-[10px]">2. 성자 THE SON</span>
-                  <span class="text-[10px] text-amber-800 font-bold">부활&새생명 (The Firstfruits)</span>
-                </div>
-                <p class="text-[10px] text-gray-600 leading-tight">우리의 저주를 안고 승리하사, 부활의 첫 열매로 증명 완료!</p>
-                <p class="text-[9px] text-amber-700/60 italic leading-none">Bore our curses and rose! He confirmed it as the firstfruits of life.</p>
-              </div>
-              <div class="p-2 bg-purple-50/70 rounded-xl border-l-4 border-purple-400 flex flex-col gap-0.5">
-                <div class="flex items-center gap-1.5">
-                  <span class="font-outfit font-black text-purple-500 text-[10px]">3. 성령 THE SPIRIT</span>
-                  <span class="text-[10px] text-purple-800 font-bold">실시간 인증 (Unstealable Seal)</span>
-                </div>
-                <p class="text-[10px] text-gray-600 leading-tight">믿음을 주시고 우리 마음에 직접 임하셔서 선언하시는 마크!</p>
-                <p class="text-[9px] text-purple-700/60 italic leading-none">Gives faith and lives inside us as a real-time, official security mark.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              이 3중 결계는 누구도 못 깨지! / <span class="italic text-[10px]">This triple-lock can never be broken!</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 6: 현대인의 안정감 팩폭 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="5">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-8 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-red-100 text-red-600 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">REAL TALK</span>
-          </div>
-
-          <div class="flex flex-col gap-3 my-auto">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-red-400 leading-none">
-              THE STABILITY<br>TRAP
-            </h3>
-            <div class="bounce-element delay-[300ms] flex justify-center py-1 text-3xl">
-              💸📉
-            </div>
-            
-            <div class="bounce-element delay-[400ms] flex flex-col gap-2.5">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-medium tracking-tight">
-                우리는 늘 '안정감'을 꿈꿔. 주식, 코인, 연봉, 스펙... 안전하려고 오히려 위험한 도박에 인생을 배팅하곤 해. 손익 계산기만 굴리다 보면 우리 가치를 오직 돈으로만 따지는 메마른 광야가 돼버려.
-              </p>
-              <p class="text-xs text-red-700/60 font-pretendard leading-relaxed italic">
-                We crave stability—stocks, crypto, wages, credentials. We gamble on risks just to feel safe. If we only live checking our calculators, our lives become as dry as a desert in a world that only values money.
-              </p>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              하지만 우린 이미 평생 보증권을 받았어! / <span class="italic text-[10px]">But we already got our lifetime guarantee!</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 7: 계산기 던져버리기 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="6">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-8 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-teal-100 text-teal-700 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">NO CALCULATIONS</span>
-          </div>
-
-          <div class="flex flex-col gap-3 my-auto">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-teal-500 leading-none uppercase">
-              He Didn't<br>Calculate!
-            </h3>
-            
-            <div class="bounce-element delay-[300ms] flex flex-col gap-2.5">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-medium tracking-tight">
-                하나님은 너를 살릴 때 가성비 따지지 않으셨어. 가장 귀중한 독생자 예수님을 그냥 내주셨지! 💸❌ 완벽한 보증이 있으니 세상처럼 살 필요 없어. 이제 내 손익을 계산하지 말자!
-              </p>
-              <p class="text-xs text-teal-700/60 font-pretendard leading-relaxed italic">
-                God didn't tap a cost-benefit calculator to save you. He simply gave up His most valuable possession—Jesus! 💸❌ Since we have this guarantee, our way of living must change.
-              </p>
-            </div>
-            
-            <div class="bounce-element delay-[400ms] p-3 bg-teal-50/80 rounded-2xl border border-teal-100 text-center">
-              <span class="text-teal-700 font-bold block text-sm font-pretendard">평가하는 삶 ➡️ 살리는 삶</span>
-              <span class="text-teal-600/70 block text-xs font-pretendard italic">Evaluating Life ➡️ Saving Life</span>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              가치와 상관없이 내 최고를 배팅해! / <span class="italic text-[10px]">Bet your best, regardless of calculations!</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 8: 액션 플랜 - 빛에 배팅하라! -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="7">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-6 text-brand-text">
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-brand-pink/40 text-rose-600 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">ACTION PLAN</span>
-          </div>
-
-          <div class="flex flex-col gap-3 my-auto font-pretendard">
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-rose-400 leading-none uppercase">
-              BET ON THE LIGHT!
-            </h3>
-            
-            <div class="bounce-element delay-[300ms] flex flex-col gap-1">
-              <p class="text-sm text-gray-700 leading-relaxed font-medium tracking-tight">
-                계산기 때려치우고, 우울해하는 친구나 차가운 내 도시와 학교를 향해 내가 가진 하나님의 빛을 <b>올인(Betting)</b>해봐! ✨
-              </p>
-              <p class="text-xs text-rose-700/60 leading-relaxed italic">
-                Stop counting benefits. Go all-in on bringing God's light to your friends, school, and city! ✨
-              </p>
-            </div>
-            
-            <div class="bounce-element delay-[400ms] flex flex-col gap-2 mt-1">
-              <div class="flex items-start gap-3 p-2.5 bg-white/50 rounded-2xl">
-                <span class="text-xl">📣</span>
-                <div class="flex flex-col">
-                  <span class="text-xs text-gray-800 font-bold"><b>예수를 Proclaim 하기</b> / Proclaim Jesus</span>
-                  <span class="text-[11px] text-gray-500 leading-tight">내 든든한 백, 예수님에 대해 수줍어말고 은근슬쩍 자랑하기</span>
-                  <span class="text-[9px] text-rose-700/60 italic leading-none">Don't be shy about your ultimate backup, Jesus!</span>
-                </div>
-              </div>
-              <div class="flex items-start gap-3 p-2.5 bg-white/50 rounded-2xl">
-                <span class="text-xl">💖</span>
-                <div class="flex flex-col">
-                  <span class="text-xs text-gray-800 font-bold"><b>기쁨 배달하기</b> / Deliver Joy</span>
-                  <span class="text-[11px] text-gray-500 leading-tight">지친 친구에게 대가 없이 따뜻한 리액션과 말 한마디 배달하기</span>
-                  <span class="text-[9px] text-rose-700/60 italic leading-none">Send love and encouragement to struggling friends unconditionally!</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="bounce-element delay-[500ms] text-center">
-            <p class="text-xs text-gray-400 font-pretendard leading-tight">
-              무한 충전 가능한 보증서가 있으니까! / <span class="italic text-[10px]">Since we are backed by an infinite supply!</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 9: 아웃트로 & 축복 -->
-      <section class="slide-section w-full h-full flex-shrink-0 snap-start flex items-center justify-center p-6" data-index="8">
-        <div class="clay-card w-full h-[90%] flex flex-col justify-between p-8 text-brand-text relative overflow-hidden">
-          <div class="absolute -right-12 -bottom-12 w-32 h-32 rounded-full bg-yellow-300/30"></div>
+      <!-- SLIDE 2: 공감 (라벤더 빛 구름 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="1">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-purple-300/25 select-none">02</div>
           
-          <div class="bounce-element delay-[100ms] flex justify-between items-center">
-            <span class="px-4 py-1 bg-brand-yellow/50 text-amber-700 rounded-full font-fredoka font-semibold text-xs tracking-wider uppercase">BLESS YOU</span>
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-purple-500 font-jakarta fade-up-element bg-purple-100/60 px-3 py-1 rounded-full w-max mx-auto">FEAR & DUST</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THE SCATTERED<br><span class="text-purple-500">ONES</span></h1>
           </div>
 
-          <div class="flex flex-col gap-3 my-auto text-center items-center">
-            <span class="text-5xl floating-bubble">⛪✨</span>
-            <h3 class="bounce-element delay-[200ms] font-fredoka text-3xl font-black text-amber-500 leading-none mt-1 uppercase">
-              YOU ARE SECURED!
-            </h3>
-            
-            <div class="bounce-element delay-[350ms] flex flex-col gap-2.5">
-              <p class="text-sm text-gray-700 font-pretendard leading-relaxed font-semibold tracking-tight">
-                세상 최고의 3중 보험! 하나님의 구원이 너를 완전히 지키고 있어. 이제 그분의 영광을 노래하며, 세상을 완전히 살리는 멋진 하루를 살아내자! 🎈
-              </p>
-              <p class="text-xs text-amber-700/60 font-pretendard leading-relaxed italic">
-                The ultimate triple-insurance! God's salvation is guarding you completely. Now, let's live to praise His glory and save the world today! 🎈
-              </p>
+          <!-- 폭신폭신 입체 구름 그래픽 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(180,150,250,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="cloudGrad" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#fdfbfb"/>
+                  <stop offset="60%" stop-color="#ebedee"/>
+                  <stop offset="100%" stop-color="#b3c0f5"/>
+                </radialGradient>
+              </defs>
+              <path d="M30 65 A 15 15 0 0 1 35 35 A 22 22 0 0 1 70 35 A 18 18 0 0 1 75 65 Z" fill="url(#cloudGrad)"/>
+              <circle cx="45" cy="53" r="3" fill="#6c7aab"/>
+              <circle cx="60" cy="53" r="3" fill="#6c7aab"/>
+              <path d="M48 60 Q52.5 57 57 60" stroke="#6c7aab" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              십자가 사건 이후 제자들은 멘붕 그 자체였어. 두려움에 휩싸여 뿔뿔이 흩어졌고 컴컴한 골방에 숨었지. 완전히 끝난 줄 알았을 거야.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              After the crucifixion, the disciples were in total panic. Terrified, they scattered and hid in dark rooms, thinking it was all over.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: 뜻밖의 소식 (민트 지침서/경로 스타일) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="2">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-teal-300/25 select-none">03</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-emerald-500 font-jakarta fade-up-element bg-emerald-100/60 px-3 py-1 rounded-full w-max mx-auto">GALILEE PROMISE</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THE SECRET<br><span class="text-emerald-500">ROUTE</span></h1>
+          </div>
+
+          <!-- 입체 나침반/경로 그래픽 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(50,200,150,0.3)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="compassGrad" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="70%" stop-color="#b6f3df"/>
+                  <stop offset="100%" stop-color="#14cc96"/>
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="50" r="30" fill="url(#compassGrad)"/>
+              <path d="M50 30 L58 50 L50 70 L42 50 Z" fill="#ff7096"/>
+              <path d="M50 30 L50 70" stroke="#ffffff" stroke-width="2"/>
+              <circle cx="50" cy="50" r="4" fill="#ffffff"/>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              하지만 무덤을 찾은 여인들을 통해 충격적인 반전 메시지가 들려와. "예수님 부활하셨어! 그리고 약속대로 먼저 갈릴리로 가셨대!"
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              But the women brought shocking news from the empty tomb: "He is risen! And just as He promised, He has gone ahead to Galilee!"
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: 약속의 산 (기하학 등산 정상 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="3">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-sky-300/25 select-none">04</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-sky-500 font-jakarta fade-up-element bg-sky-100/60 px-3 py-1 rounded-full w-max mx-auto">STEP OUT</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THE APPOINTED<br><span class="text-sky-500">MOUNTAIN</span></h1>
+          </div>
+
+          <!-- 계단식 3D 마운틴 플래그 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(100,181,246,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="mountainGrad" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#e3f2fd"/>
+                  <stop offset="60%" stop-color="#4fc3f7"/>
+                  <stop offset="100%" stop-color="#0288d1"/>
+                </radialGradient>
+              </defs>
+              <path d="M50 20 L80 80 L20 80 Z" fill="url(#mountainGrad)"/>
+              <line x1="50" y1="20" x2="50" y2="80" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 4"/>
+              <!-- 펄럭이는 오렌지 깃발 -->
+              <path d="M50 20 L68 28 L50 36 Z" fill="#ff9f1c"/>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              "맞아, 우리끼리 나눴던 사적인 약속이었어!" 제자들의 심장이 요동쳤지. 그들은 두려운 숨바꼭질을 끝내고 마침내 약속하신 갈릴리 산으로 달려갔어.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              "That private promise He made us!" Their hearts raced. They abandoned their hiding spots and set off for that designated mountain in Galilee.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5 (★추가): 갈릴리 산에서의 첫 대면과 경배 -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="4">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-amber-300/20 select-none">05</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-amber-600 font-jakarta fade-up-element bg-amber-100/60 px-3 py-1 rounded-full w-max mx-auto">THE ENCOUNTER</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THEY SAW &<br><span class="text-amber-500">WORSHIPPED</span></h1>
+          </div>
+
+          <!-- 부활의 영광을 상징하는 황금빛 찬란한 광채 태양/크라운 SVG -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(255,167,38,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="sunGrad" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#fffde7"/>
+                  <stop offset="55%" stop-color="#ffd54f"/>
+                  <stop offset="100%" stop-color="#f57c00"/>
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="50" r="26" fill="url(#sunGrad)"/>
+              <!-- 사방으로 뻗어 나가는 부활의 찬란한 빛줄기선들 -->
+              <line x1="50" y1="12" x2="50" y2="2" stroke="#ffb74d" stroke-width="4" stroke-linecap="round" />
+              <line x1="50" y1="88" x2="50" y2="98" stroke="#ffb74d" stroke-width="4" stroke-linecap="round" />
+              <line x1="12" y1="50" x2="2" y2="50" stroke="#ffb74d" stroke-width="4" stroke-linecap="round" />
+              <line x1="88" y1="50" x2="98" y2="50" stroke="#ffb74d" stroke-width="4" stroke-linecap="round" />
+              <line x1="23" y1="23" x2="16" y2="16" stroke="#ffb74d" stroke-width="3" stroke-linecap="round" />
+              <line x1="77" y1="77" x2="84" y2="84" stroke="#ffb74d" stroke-width="3" stroke-linecap="round" />
+              <line x1="77" y1="23" x2="84" y2="16" stroke="#ffb74d" stroke-width="3" stroke-linecap="round" />
+              <line x1="23" y1="77" x2="16" y2="84" stroke="#ffb74d" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              산 정상에 올라선 제자들은 마침내 진짜 살아나신 예수님을 보았어! 압도적인 감격 속에 그들은 주저 없이 엎드려 그분을 경배했지. 드디어 부활의 약속이 이루어진 순간이야.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              On that mountain, they finally saw the risen Jesus! Overwhelmed by joy and awe, they fell down and worshipped Him as the living Lord.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: 예배의 질문 (대담한 물음표 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="5">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-amber-300/25 select-none">06</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-amber-500 font-jakarta fade-up-element bg-amber-100/60 px-3 py-1 rounded-full w-max mx-auto">TRUTH BOMB</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">WHY ARE WE<br><span class="text-amber-500">HERE?</span></h1>
+          </div>
+
+          <!-- 노란색 3D 물음표 입체 아트 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(255,183,77,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="qGrad" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#fffde7"/>
+                  <stop offset="60%" stop-color="#ffd54f"/>
+                  <stop offset="100%" stop-color="#ff8f00"/>
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="50" r="32" fill="url(#qGrad)"/>
+              <text x="50" y="65" font-family="'Fredoka', sans-serif" font-size="48" font-weight="900" fill="#ffffff" text-anchor="middle">?</text>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              우리도 졸린 눈 비비며 매주 교회에 오잖아. 근데 솔까말 우리 눈에 뭐 보이는 거 있어? 예수님의 비주얼도, 성령님의 형체도 전혀 보이지 않잖아.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              We drag ourselves to church every Sunday. But let's be totally honest: can you actually see anything? No physical Jesus, no visible Holy Spirit.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: 핵심 해결책 (약속의 성취) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="6">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-indigo-300/25 select-none">07</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-indigo-500 font-jakarta fade-up-element bg-indigo-100/60 px-3 py-1 rounded-full w-max mx-auto">THE KEY</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THE PROMISE<br><span class="text-indigo-500">FULFILLED</span></h1>
+          </div>
+
+          <!-- 반짝반짝 입체 보석 별 그래픽 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(121,134,203,0.35)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="starGrad1" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="50%" stop-color="#9fa8da"/>
+                  <stop offset="100%" stop-color="#3f51b5"/>
+                </radialGradient>
+              </defs>
+              <path d="M50 15 L62 38 L88 42 L68 60 L73 85 L50 73 L27 85 L32 60 L12 42 L38 38 Z" fill="url(#starGrad1)"/>
+              <circle cx="50" cy="50" r="6" fill="#ffffff" class="animate-ping"/>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              제자들이 엎드려 경배한 건, 단지 예수를 육안으로 봐서가 아냐. 그분의 ‘말씀’이 한 치의 오차도 없이 다 이루어진 현장을 목격했기 때문이지!
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              The disciples worshipped not simply because they saw His body, but because they saw His exact Words coming to life before their eyes!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: 믿음의 타임라인 (3단 파스텔 캡슐 그리드) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="7">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-emerald-300/25 select-none">08</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-emerald-600 font-jakarta fade-up-element bg-emerald-100/60 px-3 py-1 rounded-full w-max mx-auto">TIMELINE</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">3 STORIES OF<br><span class="text-emerald-500">FAITH</span></h1>
+          </div>
+
+          <!-- 폭신폭신 알약 형태의 3색 그리드 -->
+          <div class="grid grid-cols-3 gap-3 w-full fade-up-element delay-200">
+            <!-- 과거 (핑크 캡슐) -->
+            <div class="bg-gradient-to-b from-pink-50 to-pink-100/60 p-3 rounded-[1.8rem] border-2 border-pink-200/50 flex flex-col items-center text-center shadow-[inset_3px_3px_6px_rgba(255,255,255,0.8)]">
+              <span class="text-[10px] font-bold text-pink-500 font-jakarta mb-1">PAST</span>
+              <p class="text-xs font-bold text-slate-800 font-pretendard leading-snug">이미 날<br>살리신<br>십자가</p>
+              <p class="text-[9px] text-pink-400 italic font-jakarta mt-1">Cross-done</p>
             </div>
+            <!-- 현재 (옐로우 캡슐) -->
+            <div class="bg-gradient-to-b from-amber-50 to-amber-100/60 p-3 rounded-[1.8rem] border-2 border-amber-200/50 flex flex-col items-center text-center shadow-[inset_3px_3px_6px_rgba(255,255,255,0.8)]">
+              <span class="text-[10px] font-bold text-amber-500 font-jakarta mb-1">PRESENT</span>
+              <p class="text-xs font-bold text-slate-800 font-pretendard leading-snug">오늘 나와<br>함께 걷는<br>성령님</p>
+              <p class="text-[9px] text-amber-500 italic font-jakarta mt-1">Walks today</p>
+            </div>
+            <!-- 미래 (민트 캡슐) -->
+            <div class="bg-gradient-to-b from-emerald-50 to-emerald-100/60 p-3 rounded-[1.8rem] border-2 border-emerald-200/50 flex flex-col items-center text-center shadow-[inset_3px_3px_6px_rgba(255,255,255,0.8)]">
+              <span class="text-[10px] font-bold text-emerald-600 font-jakarta mb-1">FUTURE</span>
+              <p class="text-xs font-bold text-slate-800 font-pretendard leading-snug">마침내<br>나를 구원할<br>그 약속</p>
+              <p class="text-[9px] text-emerald-500 italic font-jakarta mt-1">Sure destiny</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              약속을 '본다'는 건 오감으로 느끼는 걸 넘어 ‘믿는 것’을 말해. 어제의 구원, 오늘의 동행, 내일의 영광을 단단하게 온전히 다 믿는 거야.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              To "see" His promises is to trust completely in Him. Embracing His past victory, His present walk, and His ultimate future glory.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: 의심에 대처하는 자세 (빨강 vs 초록 스플릿 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="8">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-5 p-7 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-red-300/20 select-none">09</div>
+          
+          <div class="flex flex-col gap-1 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-red-500 font-jakarta fade-up-element bg-red-100/60 px-3 py-1 rounded-full w-max mx-auto">SHIFT TARGET</span>
+            <h1 class="text-2xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">DOUBT ME, <span class="text-red-500">NOT HIM</span></h1>
+          </div>
+
+          <!-- 의심과 믿음의 대비를 보여주는 스플릿 카드 디자인 -->
+          <div class="flex flex-col gap-2 w-full fade-up-element delay-200">
+            <!-- 상단: 나에 대한 의심 (빨강) -->
+            <div class="bg-red-50/80 border-l-4 border-red-400 p-3 rounded-r-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-red-500 uppercase tracking-wider font-jakarta">DOUBT ME 🚨</span>
+              <p class="text-xs font-bold text-slate-800 mt-0.5 font-pretendard">"내가 구원받을 만큼 진짜 가치 있는 존재일까?"</p>
+              <p class="text-[10px] text-slate-500 font-pretendard">내 자격과 능력은 끝없이 철저히 의심하라!</p>
+            </div>
+            
+            <!-- 하단: 하나님을 향한 확신 (초록) -->
+            <div class="bg-emerald-50/80 border-l-4 border-emerald-400 p-3 rounded-r-2xl shadow-sm">
+              <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider font-jakarta">TRUST HIM ✅</span>
+              <p class="text-xs font-bold text-slate-800 mt-0.5 font-pretendard">"그럼에도 하나님은 성경의 약속을 다 지키셨다!"</p>
+              <p class="text-[10px] text-slate-500 font-pretendard">변함없는 그분의 신실함만 온전히 바라보라!</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 z-10">
+            <p class="text-xs font-medium tracking-tight leading-[1.5] text-slate-700 font-pretendard fade-up-element delay-300">
+              의심이 밀려올 때 하나님 대신 자격 없는 '나 자신'을 조준해 봐. 내 상태를 완전히 부정하고 의심하는 그 끝에서야, 비로소 내 행동과 상관없이 약속을 그대로 지키시는 하나님만 선명하게 보일 거야!
+            </p>
+            <p class="text-[10px] font-normal italic leading-normal text-slate-400 font-jakarta fade-up-element delay-400">
+              When doubts arise, shift the focus. Question your own merit, not His covenant. Only at the end of doubting yourself can you behold His absolute faithfulness.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: 아웃트로 (축제 감성 피날레 하트 레이아웃) -->
+      <section class="slide-container snap-start w-full h-full flex items-center justify-center p-6 flex-shrink-0" data-index="9">
+        <div class="clay-card w-full h-[82%] flex flex-col justify-center gap-y-7 p-8 relative overflow-hidden">
+          <div class="absolute top-4 right-6 text-[80px] font-fredoka font-bold text-sky-300/25 select-none">10</div>
+          
+          <div class="flex flex-col gap-2 z-10 text-center">
+            <span class="text-xs font-bold tracking-widest uppercase text-sky-500 font-jakarta fade-up-element bg-sky-100/60 px-3 py-1 rounded-full w-max mx-auto">GENUINE WORSHIP</span>
+            <h1 class="text-3xl font-[700] uppercase tracking-tight leading-none text-slate-800 font-fredoka fade-up-element delay-100">THE REASON<br><span class="text-sky-500">TO BOW</span></h1>
+          </div>
+
+          <!-- 폭신폭신 입체 꿀하트 그래픽 -->
+          <div class="flex justify-center items-center fade-up-element delay-200">
+            <svg class="w-32 h-32 drop-shadow-[0_15px_15px_rgba(244,143,177,0.4)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="heartGrad1" cx="30%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#fff0f5"/>
+                  <stop offset="50%" stop-color="#ff7096"/>
+                  <stop offset="100%" stop-color="#ff477e"/>
+                </radialGradient>
+              </defs>
+              <path d="M12 35 C12 20, 32 15, 50 35 C68 15, 88 20, 88 35 C88 58, 50 85, 50 85 C50 85, 12 58, 12 35 Z" fill="url(#heartGrad1)"/>
+            </svg>
+          </div>
+
+          <div class="flex flex-col gap-3 z-10">
+            <p class="text-sm font-medium tracking-tight leading-[1.6] text-slate-700 font-pretendard fade-up-element delay-300">
+              "내가 착해서가 아니구나. 하나님이 약속을 그대로 다 지키셨구나!" 이걸 믿는 순간, 우리는 제자들처럼 기쁨으로 그분을 찬양하게 될 거야.
+            </p>
+            <p class="text-xs font-normal italic leading-relaxed text-slate-400 font-jakarta fade-up-element delay-400">
+              "It's not because of my goodness; it's because He kept His promise!" That's the moment we bow down and worship Him in pure joy.
+            </p>
           </div>
         </div>
       </section>
 
     </div>
-
   </div>
 
+  <!-- 모바일 및 데스크탑 상하 하이브리드 인터랙션 스크립트 -->
   <script>
-    const container = document.getElementById('scroll-container');
-    const slides = document.querySelectorAll('.slide-section');
-    const totalSlides = slides.length;
-    let currentActiveIndex = 0;
-
-    // 슬라이드 내비게이션 인터랙션 상태 플래그
+    const wrapper = document.getElementById('scroll-wrapper');
+    const slides = document.querySelectorAll('.slide-container');
+    let currentIdx = 0;
     let isScrolling = false;
 
-    // 특정 슬라이드로 부드럽게 이동하는 함수
-    function scrollToSlide(index) {
-      if (index < 0 || index >= totalSlides) return;
-      isScrolling = true;
-      slides[index].scrollIntoView({ behavior: 'smooth' });
-      currentActiveIndex = index;
-      setTimeout(() => { isScrolling = false; }, 800);
-    }
-
-    // 인터랙션 옵저버 설정 (화면 노출 비율에 따른 활성화 클래스 분배)
+    // 1. IntersectionObserver로 현재 보고 있는 카드 활성화 및 벌룬팝 효과 부여
     const observerOptions = {
-      root: container,
-      threshold: 0.5
+      root: wrapper,
+      threshold: 0.6 // 카드가 60% 이상 노출되었을 때 동작
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const index = parseInt(entry.target.getAttribute('data-index'));
-          
-          // 기존 활성화 제거
-          slides.forEach(slide => slide.classList.remove('slide-active'));
-          
-          // 대상 슬라이드 활성화 트리거
-          entry.target.classList.add('slide-active');
-          
-          currentActiveIndex = index;
+          // 기존 활성화 해제 후 새 카드 활성화
+          slides.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+          currentIdx = parseInt(entry.target.getAttribute('data-index'));
         }
       });
     }, observerOptions);
 
     slides.forEach(slide => observer.observe(slide));
 
-    // 키보드 방향키 바인딩 (가로/세로 화살표 및 스페이스바 대응)
+    // 2. 키보드 방향키 이동 제어
     window.addEventListener('keydown', (e) => {
       if (isScrolling) return;
-      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
-        scrollToSlide(currentActiveIndex + 1);
-      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        scrollToIndex(currentIdx + 1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault();
-        scrollToSlide(currentActiveIndex - 1);
+        scrollToIndex(currentIdx - 1);
       }
     });
 
-    // 마우스 휠 동작 보정 로직
-    let wheelTimeout;
-    container.addEventListener('wheel', (e) => {
+    // 3. 데스크탑 마우스 휠 부드러운 스크롤 최적화 (바운스 방지)
+    wrapper.addEventListener('wheel', (e) => {
+      e.preventDefault(); // 기본 긴 자연 스크롤 제어 방지
       if (isScrolling) return;
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault();
-        clearTimeout(wheelTimeout);
-        wheelTimeout = setTimeout(() => {
-          if (e.deltaX > 20) {
-            scrollToSlide(currentActiveIndex + 1);
-          } else if (e.deltaX < -20) {
-            scrollToSlide(currentActiveIndex - 1);
-          }
-        }, 50);
+
+      if (e.deltaY > 30) {
+        scrollToIndex(currentIdx + 1);
+      } else if (e.deltaY < -30) {
+        scrollToIndex(currentIdx - 1);
       }
     }, { passive: false });
 
-    // 모바일 기기 터치 스와이프 감지 및 가로/세로 전역 맵핑
+    // 4. 모바일 정밀 터치 감지 (터치 바운스 대신 명확한 스와이프 전이 지원)
     let touchStartY = 0;
-    let touchStartX = 0;
     let touchEndY = 0;
-    let touchEndX = 0;
 
-    container.addEventListener('touchstart', (e) => {
+    wrapper.addEventListener('touchstart', (e) => {
       touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
     }, { passive: true });
 
-    container.addEventListener('touchend', (e) => {
-      if (isScrolling) return;
+    wrapper.addEventListener('touchend', (e) => {
       touchEndY = e.changedTouches[0].clientY;
-      touchEndX = e.changedTouches[0].clientX;
+      const swipeDistance = touchStartY - touchEndY;
 
-      const diffY = touchStartY - touchEndY;
-      const diffX = touchStartX - touchEndX;
-
-      // X축 또는 Y축 중 우세한 제스처를 감지하여 하이브리드 슬라이딩 처리
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-        if (diffX > 0) {
-          scrollToSlide(currentActiveIndex + 1);
+      // 최소 50px 이상 쓸어내렸을 때 작동
+      if (Math.abs(swipeDistance) > 50) {
+        if (isScrolling) return;
+        if (swipeDistance > 0) {
+          scrollToIndex(currentIdx + 1);
         } else {
-          scrollToSlide(currentActiveIndex - 1);
+          scrollToIndex(currentIdx - 1);
         }
       }
     }, { passive: true });
+
+    // 정교한 부드러운 스크롤 이동 연출 함수
+    function scrollToIndex(index) {
+      if (index < 0 || index >= slides.length) return;
+      isScrolling = true;
+      
+      slides[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // 자연스러운 전환 락(Lock) 해제
+      setTimeout(() => {
+        isScrolling = false;
+        currentIdx = index;
+      }, 700);
+    }
   </script>
 </body>
 </html>
